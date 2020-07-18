@@ -20,5 +20,6 @@ from RuralCaravan import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('fpo/', include('fpo.urls')),
+    path('farmer/', include('farmer.urls')),
     path('', views.home),
 ]
