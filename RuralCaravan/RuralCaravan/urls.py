@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from RuralCaravan import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('fpo/', include('fpo.urls'))
+    path('fpo/', include('fpo.urls')),
+    path('', views.home),
 ]
