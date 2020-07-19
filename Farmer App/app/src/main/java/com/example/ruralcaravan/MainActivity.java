@@ -54,19 +54,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectDrawerItem(MenuItem menuItem) {
-        // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
         Class fragmentClass;
         switch(menuItem.getItemId()) {
-            case R.id.nav_second_fragment:
-                fragmentClass = SecondFragment.class;
-                break;
-            case R.id.nav_third_fragment:
-                fragmentClass = ThirdFragment.class;
-                break;
-            case R.id.first_sub_item:
-                fragmentClass = FirstSubItem.class;
-                break;
+//            case R.id.first_sub_item:
+//                fragmentClass = FirstSubItem.class;
+//                break;
             default:
                 fragmentClass = FirstFragment.class;
         }
@@ -87,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         return true;
     }
 
@@ -122,5 +115,13 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START))
+            drawerLayout.closeDrawer(GravityCompat.START);
+        else
+            super.onBackPressed();
     }
 }
