@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 //                fragmentClass = FirstSubItem.class;
 //                break;
             default:
-                fragmentClass = FirstFragment.class;
+                fragmentClass = HomeFragment.class;
         }
 
         try {
