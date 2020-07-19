@@ -1,5 +1,13 @@
 package com.example.ruralcaravan;
 
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,12 +17,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
-
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private NavigationView navigationView;
+    private static final int CALL_PERMISSION_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         drawerLayout = findViewById(R.id.drawer_layout);
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
 
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
@@ -40,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView = findViewById(R.id.navigationView);
         setupDrawerContent(navigationView);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, new HomeFragment())
+                .commit();
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -54,28 +62,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectDrawerItem(MenuItem menuItem) {
-        Fragment fragment = null;
-        Class fragmentClass;
-        switch(menuItem.getItemId()) {
+        switch (menuItem.getItemId()) {
 //            case R.id.first_sub_item:
 //                fragmentClass = FirstSubItem.class;
 //                break;
+            case R.id.contact: {
+                contactFPO();
+                break;
+            }
             default:
-                fragmentClass = HomeFragment.class;
+                switchToNewFragment(HomeFragment.class, menuItem);
         }
+    }
 
+    private void switchToNewFragment(Class fragmentClass, MenuItem menuItem) {
+        Fragment fragment = null;
         try {
             fragment = (Fragment) fragmentClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
 
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
         drawerLayout.closeDrawers();
+    }
+
+    private void contactFPO() {
+        String url = "tel:1234567890";
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
     }
 
     @Override
@@ -124,4 +143,5 @@ public class MainActivity extends AppCompatActivity {
         else
             super.onBackPressed();
     }
+
 }
