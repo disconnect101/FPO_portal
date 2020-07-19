@@ -6,7 +6,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="greeting_message">Hello, Manas</string>
-    <string name="home">home</string>
+    <string name="home">Home</string>
     <string name="catalogue">Catalogue</string>
     <string name="eWallet">E-wallet</string>
     <string name="meetings">Meetings</string>
@@ -18,4 +18,5 @@
     <string name="language">Language</string>
     <string name="contact">Contact FPO</string>
     <string name="about">About Rural Caravan</string>
+    <string name="cart">Cart</string>
 </resources>
