@@ -1,9 +1,13 @@
 package com.example.ruralcaravan;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -25,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private NavigationView navigationView;
-    private static final int CALL_PERMISSION_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, new HomeFragment())
                 .commit();
+
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -56,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         selectDrawerItem(menuItem);
-                        return true;
+                        return false;
                     }
                 });
     }
@@ -91,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void contactFPO() {
+        //TODO: Add FPO contact number
         String url = "tel:1234567890";
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse(url));
