@@ -1,13 +1,9 @@
-package com.example.ruralcaravan;
+package com.example.ruralcaravan.Activities;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -21,6 +17,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.ruralcaravan.Fragments.HomeFragment;
+import com.example.ruralcaravan.Fragments.WeatherFragment;
+import com.example.ruralcaravan.R;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -67,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void selectDrawerItem(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case R.id.weather:
+                switchToNewFragment(WeatherFragment.class, menuItem);
+                break;
 //            case R.id.first_sub_item:
 //                fragmentClass = FirstSubItem.class;
 //                break;
