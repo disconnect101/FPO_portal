@@ -31,14 +31,19 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    #MyApps
+    'farmer.apps.FarmerConfig',
+    'fpo.apps.FpoConfig',
+
+    #DjangoApps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'farmer.apps.FarmerConfig',
-    'fpo.apps.FpoConfig',
+    'rest_framework.authtoken',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -71,6 +76,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'RuralCaravan.wsgi.application'
 
+AUTH_USER_MODEL = 'farmer.UserProfile'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION _CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -120,3 +135,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+MEDIA_URL = '/media/'
