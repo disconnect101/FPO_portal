@@ -8,14 +8,16 @@ public class CurrentWeather {
     int humidityPercentage;
     int cloudiness;
     double windSpeed;
+    long unixTimeStamp;
 
-    public CurrentWeather(String iconId, double temperature, String description, int humidityPercentage, int cloudiness, double windSpeed) {
+    public CurrentWeather(String iconId, double temperature, String description, int humidityPercentage, int cloudiness, double windSpeed, long dateTime) {
         this.iconId = iconId;
         this.temperature = temperature;
         this.description = description;
         this.humidityPercentage = humidityPercentage;
         this.cloudiness = cloudiness;
         this.windSpeed = windSpeed;
+        this.unixTimeStamp = dateTime;
     }
 
     public String getIconId() {
@@ -66,6 +68,14 @@ public class CurrentWeather {
         this.windSpeed = windSpeed;
     }
 
+    public long getUnixTimeStamp() {
+        return unixTimeStamp;
+    }
+
+    public void setUnixTimeStamp(long unixTimeStamp) {
+        this.unixTimeStamp = unixTimeStamp;
+    }
+
     @Override
     public String toString() {
         return "CurrentWeather{" +
@@ -75,6 +85,8 @@ public class CurrentWeather {
                 ", humidityPercentage=" + humidityPercentage +
                 ", cloudiness=" + cloudiness +
                 ", windSpeed=" + windSpeed +
+                ", unixTimeStamp=" + unixTimeStamp +
                 '}';
     }
+
 }

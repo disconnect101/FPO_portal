@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragmentContainer, new HomeFragment())
+                .replace(R.id.fragmentContainer, new WeatherFragment())
                 .commit();
 
     }
@@ -69,9 +69,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.weather:
                 switchToNewFragment(WeatherFragment.class, menuItem);
                 break;
-//            case R.id.first_sub_item:
-//                fragmentClass = FirstSubItem.class;
-//                break;
             case R.id.contact: {
                 contactFPO();
                 break;

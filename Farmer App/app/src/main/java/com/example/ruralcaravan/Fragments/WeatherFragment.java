@@ -1,10 +1,10 @@
 package com.example.ruralcaravan.Fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -23,21 +23,31 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class WeatherFragment extends Fragment {
+
+    private View rootView;
+    private TextView textViewDateTime;
+    private TextView textViewDescription;
+    private TextView textViewTemperature;
+    private TextView textViewHumidity;
+    private TextView textViewCloudiness;
+    private TextView textViewWind;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_weather, container, false);
+        rootView = inflater.inflate(R.layout.fragment_weather, container, false);
         String url = "https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&exclude=minutely&units=metric&appid=" + BuildConfig.openWeatherMapAPIKey;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                extractWeatherData(response);
+                processWeatherData(response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -49,10 +59,11 @@ public class WeatherFragment extends Fragment {
         return rootView;
     }
 
-    private void extractWeatherData(JSONObject response) {
+    private void processWeatherData(JSONObject response) {
         CurrentWeather currentWeather = getCurrentWeatherData(response);
         ArrayList<DailyWeather> dailyWeather = getDailyWeatherData(response);
         ArrayList<HourlyWeather> hourlyWeather = getHourlyWeatherData(response);
+        setCurrentWeather(currentWeather);
     }
 
     private CurrentWeather getCurrentWeatherData(JSONObject response) {
@@ -62,7 +73,8 @@ public class WeatherFragment extends Fragment {
                     response.getJSONObject("current").getJSONArray("weather").getJSONObject(0).getString("description"),
                     response.getJSONObject("current").getInt("humidity"),
                     response.getJSONObject("current").getInt("clouds"),
-                    response.getJSONObject("current").getDouble("wind_speed")
+                    response.getJSONObject("current").getDouble("wind_speed"),
+                    response.getJSONObject("current").getLong("dt")
             );
         } catch (JSONException e) {
             e.printStackTrace();
@@ -113,6 +125,30 @@ public class WeatherFragment extends Fragment {
             e.printStackTrace();
         }
         return hourlyWeatherArrayList;
+    }
+
+    private void setCurrentWeather(final CurrentWeather currentWeather) {
+        textViewDateTime = rootView.findViewById(R.id.textViewDateTime);
+        textViewDescription = rootView.findViewById(R.id.textViewDescription);
+        textViewTemperature = rootView.findViewById(R.id.textViewTemperature);
+        textViewHumidity = rootView.findViewById(R.id.textViewHumidity);
+        textViewCloudiness = rootView.findViewById(R.id.textViewCloudiness);
+        textViewWind = rootView.findViewById(R.id.textViewWind);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(currentWeather.getUnixTimeStamp()*1000);
+        final String dateTime = calendar.getDisplayName(Calendar.DAY_OF_WEEK ,Calendar.LONG, Locale.getDefault()) + ", " +
+                new SimpleDateFormat("MMM dd").format(calendar.getTime());
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textViewDateTime.setText(dateTime);
+                textViewDescription.setText(currentWeather.getDescription().substring(0,1).toUpperCase() + currentWeather.getDescription().substring(1));
+                textViewTemperature.setText(currentWeather.getTemperature() + " \u2103");
+                textViewHumidity.setText(currentWeather.getHumidityPercentage() + "%");
+                textViewCloudiness.setText(currentWeather.getCloudiness() + "%");
+                textViewWind.setText(currentWeather.getWindSpeed() + "%");
+            }
+        });
     }
 
     private String get12HourFormat(int hour) {
