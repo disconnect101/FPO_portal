@@ -72,6 +72,7 @@ public class WeatherFragment extends Fragment {
         HourlyWeatherAdapter hourlyWeatherAdapter = new HourlyWeatherAdapter(getActivity(), hourlyWeatherAdapterArrayList);
         hourlyForecastRecyclerView.setAdapter(hourlyWeatherAdapter);
 
+        //TODO: Store latitude and longitude while logging in
         String url = "https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&exclude=minutely&units=metric&appid=" + BuildConfig.openWeatherMapAPIKey;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override

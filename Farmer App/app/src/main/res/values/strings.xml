@@ -18,10 +18,10 @@
     <string name="language">Language</string>
     <string name="contact">Contact FPO</string>
     <string name="about">About Rural Caravan</string>
-    <string name="cart">Cart</string>
     <string name="humidity">Humidity</string>
     <string name="cloudiness">Cloudiness</string>
     <string name="wind">Wind</string>
     <string name="dailyForecast">Daily Forecast</string>
     <string name="hourlyForecast">Hourly Forecast</string>
+    <string name="yourCart">Your Cart</string>
 </resources>

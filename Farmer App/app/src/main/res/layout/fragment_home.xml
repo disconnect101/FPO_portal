@@ -20,6 +20,7 @@
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewEWallet"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_margin="10dp"
@@ -50,6 +51,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewCatalogue"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_margin="10dp"
@@ -88,6 +90,7 @@
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewMeetings"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_margin="10dp"
@@ -118,6 +121,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewNews"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_margin="10dp"
@@ -156,6 +160,7 @@
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewYourOrders"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_margin="10dp"
@@ -186,6 +191,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewYourCart"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_margin="10dp"
@@ -196,10 +202,10 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/Cart"
+                        android:id="@+id/yourCart"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/cart"
+                        android:contentDescription="@string/yourCart"
                         android:padding="15dp"
                         android:src="@drawable/app_logo" />
 
@@ -210,7 +216,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:paddingBottom="10dp"
-                        android:text="@string/cart" />
+                        android:text="@string/yourCart" />
 
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
@@ -224,6 +230,7 @@
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewWeather"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_margin="10dp"
@@ -254,6 +261,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewPlans"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_margin="10dp"
@@ -284,73 +292,6 @@
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
-        <LinearLayout
-
-            android:id="@+id/linearLayout5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="150dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/temp1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/eWallet"
-                        android:padding="15dp"
-                        android:src="@drawable/app_logo" />
-
-                    <TextView
-                        android:id="@+id/temp2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:paddingBottom="10dp"
-                        android:text="@string/eWallet" />
-
-                </RelativeLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="150dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1">
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/temp3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/catalogue"
-                        android:padding="15dp"
-                        android:src="@drawable/app_logo" />
-
-                    <TextView
-                        android:id="@+id/temp4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:paddingBottom="10dp"
-                        android:text="@string/catalogue" />
-w
-                </RelativeLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
     </LinearLayout>
     ̥
 

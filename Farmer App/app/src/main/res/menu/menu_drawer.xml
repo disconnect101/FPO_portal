@@ -34,6 +34,11 @@
             android:title="@string/yourOrders" />
 
         <item
+            android:id="@+id/yourCart"
+            android:icon="@drawable/ic_your_cart"
+            android:title="@string/yourCart" />
+
+        <item
             android:id="@+id/news"
             android:icon="@drawable/ic_news"
             android:title="@string/news" />

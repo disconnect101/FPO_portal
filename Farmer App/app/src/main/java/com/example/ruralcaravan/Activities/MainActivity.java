@@ -17,8 +17,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.ruralcaravan.Fragments.YourCartFragment;
+import com.example.ruralcaravan.Fragments.CatalogueFragment;
+import com.example.ruralcaravan.Fragments.EWalletFragment;
 import com.example.ruralcaravan.Fragments.HomeFragment;
+import com.example.ruralcaravan.Fragments.MeetingsFragment;
+import com.example.ruralcaravan.Fragments.NewsFragment;
+import com.example.ruralcaravan.Fragments.PlansFragment;
 import com.example.ruralcaravan.Fragments.WeatherFragment;
+import com.example.ruralcaravan.Fragments.YourOrdersFragment;
 import com.example.ruralcaravan.R;
 import com.google.android.material.navigation.NavigationView;
 
@@ -48,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragmentContainer, new WeatherFragment())
+                .replace(R.id.fragmentContainer, new HomeFragment())
                 .commit();
 
     }
@@ -66,8 +73,29 @@ public class MainActivity extends AppCompatActivity {
 
     private void selectDrawerItem(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case R.id.eWallet:
+                switchToNewFragment(EWalletFragment.class, menuItem);
+                break;
+            case R.id.catalogue:
+                switchToNewFragment(CatalogueFragment.class, menuItem);
+                break;
+            case R.id.meetings:
+                switchToNewFragment(MeetingsFragment.class, menuItem);
+                break;
+            case R.id.news:
+                switchToNewFragment(NewsFragment.class, menuItem);
+                break;
+            case R.id.yourOrders:
+                switchToNewFragment(YourOrdersFragment.class, menuItem);
+                break;
+            case R.id.yourCart:
+                switchToNewFragment(YourCartFragment.class, menuItem);
+                break;
             case R.id.weather:
                 switchToNewFragment(WeatherFragment.class, menuItem);
+                break;
+            case R.id.plans:
+                switchToNewFragment(PlansFragment.class, menuItem);
                 break;
             case R.id.contact: {
                 contactFPO();
