@@ -2,14 +2,14 @@ package com.example.ruralcaravan.DataClasses;
 
 public class DailyWeather {
 
-    int dayOfWeek;
+    String dayOfWeek;
     int dayOfMonth;
     String iconId;
     double maxTemperature;
     double minTemperature;
     String description;
 
-    public DailyWeather(int dayOfWeek, int dayOfMonth, String iconId, double maxTemperature, double minTemperature, String description) {
+    public DailyWeather(String dayOfWeek, int dayOfMonth, String iconId, double maxTemperature, double minTemperature, String description) {
         this.dayOfWeek = dayOfWeek;
         this.dayOfMonth = dayOfMonth;
         this.iconId = iconId;
@@ -18,11 +18,11 @@ public class DailyWeather {
         this.description = description;
     }
 
-    public int getDayOfWeek() {
+    public String getDayOfWeek() {
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(int dayOfWeek) {
+    public void setDayOfWeek(String dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
     }
 
@@ -69,7 +69,7 @@ public class DailyWeather {
     @Override
     public String toString() {
         return "DailyWeather{" +
-                "dayOfWeek=" + dayOfWeek +
+                "dayOfWeek='" + dayOfWeek + '\'' +
                 ", dayOfMonth=" + dayOfMonth +
                 ", iconId='" + iconId + '\'' +
                 ", maxTemperature=" + maxTemperature +

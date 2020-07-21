@@ -22,4 +22,5 @@
     <string name="humidity">Humidity</string>
     <string name="cloudiness">Cloudiness</string>
     <string name="wind">Wind</string>
+    <string name="dailyForecast">Daily Forecast</string>
 </resources>

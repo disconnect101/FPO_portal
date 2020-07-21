@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.WeatherFragment">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/CurrentWeatherCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp">
@@ -42,6 +43,7 @@
                 android:textStyle="bold" />
 
             <ImageView
+                android:id="@+id/imageViewIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -143,4 +145,19 @@
         ̥
     </androidx.cardview.widget.CardView>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/dailyForecastHeading"
+        android:layout_below="@+id/CurrentWeatherCardView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textSize="40dp"
+        android:text="@string/dailyForecast"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/dailyForecastRecyclerView"
+        android:layout_below="@+id/dailyForecastHeading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
