@@ -1,19 +1,17 @@
 package com.example.ruralcaravan.DataClasses;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class HourlyWeather {
 
     String iconId;
     double temperature;
     String hour;
+    String description;
 
-    public HourlyWeather(String iconId, double temperature, String hour) {
+    public HourlyWeather(String iconId, double temperature, String hour, String description) {
         this.iconId = iconId;
         this.temperature = temperature;
         this.hour = hour;
+        this.description = description;
     }
 
     public String getIconId() {
@@ -36,6 +34,14 @@ public class HourlyWeather {
         return hour;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void setHour(String hour) {
         this.hour = hour;
     }
@@ -45,7 +51,8 @@ public class HourlyWeather {
         return "HourlyWeather{" +
                 "iconId='" + iconId + '\'' +
                 ", temperature=" + temperature +
-                ", hour=" + getHour() +
+                ", hour='" + hour + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

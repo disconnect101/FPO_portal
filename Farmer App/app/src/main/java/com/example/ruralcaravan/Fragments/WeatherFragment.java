@@ -1,15 +1,12 @@
 package com.example.ruralcaravan.Fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ruralcaravan.Adapters.DailyWeatherAdapter;
+import com.example.ruralcaravan.Adapters.HourlyWeatherAdapter;
 import com.example.ruralcaravan.BuildConfig;
 import com.example.ruralcaravan.DataClasses.CurrentWeather;
 import com.example.ruralcaravan.DataClasses.DailyWeather;
@@ -47,20 +45,32 @@ public class WeatherFragment extends Fragment {
     private ImageView imageViewIcon;
     private RecyclerView dailyForecastRecyclerView;
     private ArrayList<DailyWeather> dailyWeatherAdapterArrayList;
+    private RecyclerView hourlyForecastRecyclerView;
+    private ArrayList<HourlyWeather> hourlyWeatherAdapterArrayList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_weather, container, false);
+
         dailyForecastRecyclerView = rootView.findViewById(R.id.dailyForecastRecyclerView);
         dailyForecastRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(
+        LinearLayoutManager linearLayoutManagerDaily = new LinearLayoutManager(
                 getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        dailyForecastRecyclerView.setLayoutManager(linearLayoutManager);
+        dailyForecastRecyclerView.setLayoutManager(linearLayoutManagerDaily);
         dailyWeatherAdapterArrayList = new ArrayList<>();
         DailyWeatherAdapter dailyWeatherAdapter = new DailyWeatherAdapter(getActivity(), dailyWeatherAdapterArrayList);
         dailyForecastRecyclerView.setAdapter(dailyWeatherAdapter);
+
+        hourlyForecastRecyclerView = rootView.findViewById(R.id.hourlyForecastRecyclerView);
+        hourlyForecastRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManagerHourly = new LinearLayoutManager(
+                getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        hourlyForecastRecyclerView.setLayoutManager(linearLayoutManagerHourly);
+        hourlyWeatherAdapterArrayList = new ArrayList<>();
+        HourlyWeatherAdapter hourlyWeatherAdapter = new HourlyWeatherAdapter(getActivity(), hourlyWeatherAdapterArrayList);
+        hourlyForecastRecyclerView.setAdapter(hourlyWeatherAdapter);
 
         String url = "https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&exclude=minutely&units=metric&appid=" + BuildConfig.openWeatherMapAPIKey;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -84,6 +94,7 @@ public class WeatherFragment extends Fragment {
         ArrayList<HourlyWeather> hourlyWeatherArrayList = getHourlyWeatherData(response);
         setCurrentWeather(currentWeather);
         setDailyWeather(dailyWeatherArrayList);
+        setHourlyWeatherData(hourlyWeatherArrayList);
     }
 
     private CurrentWeather getCurrentWeatherData(JSONObject response) {
@@ -137,7 +148,8 @@ public class WeatherFragment extends Fragment {
                 calendar.setTimeInMillis(unixTimeStamp * 1000);
                 hourlyWeatherArrayList.add(new HourlyWeather(hourlyWeatherStats.getJSONArray("weather").getJSONObject(0).getString("icon"),
                                 hourlyWeatherStats.getDouble("feels_like"),
-                                get12HourFormat(calendar.get(Calendar.HOUR_OF_DAY))
+                                get12HourFormat(calendar.get(Calendar.HOUR_OF_DAY)),
+                                hourlyWeatherStats.getJSONArray("weather").getJSONObject(0).getString("main")
                         )
                 );
             }
@@ -184,6 +196,16 @@ public class WeatherFragment extends Fragment {
         });
     }
 
+    private void setHourlyWeatherData(final ArrayList<HourlyWeather> hourlyWeatherArrayList) {
+        hourlyWeatherAdapterArrayList.clear();
+        hourlyWeatherAdapterArrayList.addAll(hourlyWeatherArrayList);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                hourlyForecastRecyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
+    }
     private String get12HourFormat(int hour) {
         String _12HourFomat = null;
         if (hour == 0) {
