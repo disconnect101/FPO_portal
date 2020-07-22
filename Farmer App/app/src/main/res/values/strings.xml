@@ -26,4 +26,6 @@
     <string name="yourCart">Your Cart</string>
     <string name="tagLine">Bridging the gap between farmers and FPO</string>
     <string name="login">LOGIN</string>
+    <string name="enterUserName">Enter User Name</string>
+    <string name="signUp">SIGN UP</string>
 </resources>

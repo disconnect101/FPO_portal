@@ -52,7 +52,7 @@
                 android:layout_weight="1"
                 android:text="@string/login"
                 android:layout_marginRight="10dp"
-                android:background="#FCEC3C"
+                android:background="@color/yellow"
                 android:textColor="@color/black"/>
 
             <Button
@@ -61,7 +61,7 @@
                 android:layout_weight="1"
                 android:text="@string/login"
                 android:layout_marginLeft="10dp"
-                android:background="#FCEC3C"
+                android:background="@color/yellow"
                 android:textColor="@color/black"/>
 
         </LinearLayout>
