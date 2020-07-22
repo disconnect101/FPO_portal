@@ -24,4 +24,6 @@
     <string name="dailyForecast">Daily Forecast</string>
     <string name="hourlyForecast">Hourly Forecast</string>
     <string name="yourCart">Your Cart</string>
+    <string name="tagLine">Bridging the gap between farmers and FPO</string>
+    <string name="login">LOGIN</string>
 </resources>

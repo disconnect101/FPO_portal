@@ -1,6 +1,7 @@
 package com.example.ruralcaravan.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public class DailyWeatherAdapter extends RecyclerView.Adapter<DailyWeatherAdapte
     @Override
     public DailyWeatherViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.daily_weather_column_layout, parent, false);
-        view.getLayoutParams().width = parent.getWidth() / 7;
+        view.getLayoutParams().width = (parent.getWidth()) / 7;
         DailyWeatherViewHolder dailyWeatherViewHolder = new DailyWeatherViewHolder(view);
         return dailyWeatherViewHolder;
     }

@@ -62,6 +62,7 @@ public class WeatherFragment extends Fragment {
         dailyWeatherAdapterArrayList = new ArrayList<>();
         DailyWeatherAdapter dailyWeatherAdapter = new DailyWeatherAdapter(getActivity(), dailyWeatherAdapterArrayList);
         dailyForecastRecyclerView.setAdapter(dailyWeatherAdapter);
+        dailyForecastRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         hourlyForecastRecyclerView = rootView.findViewById(R.id.hourlyForecastRecyclerView);
         hourlyForecastRecyclerView.setHasFixedSize(true);
@@ -71,6 +72,7 @@ public class WeatherFragment extends Fragment {
         hourlyWeatherAdapterArrayList = new ArrayList<>();
         HourlyWeatherAdapter hourlyWeatherAdapter = new HourlyWeatherAdapter(getActivity(), hourlyWeatherAdapterArrayList);
         hourlyForecastRecyclerView.setAdapter(hourlyWeatherAdapter);
+        hourlyForecastRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         //TODO: Store latitude and longitude while logging in
         String url = "https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&exclude=minutely&units=metric&appid=" + BuildConfig.openWeatherMapAPIKey;
