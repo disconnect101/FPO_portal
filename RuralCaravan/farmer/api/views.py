@@ -20,14 +20,12 @@ import pytz
 def register(request):
     if request.method=='POST':
         serializer = RegistrationSerializer(data=request.data)
-        phone_number = request.POST['contact']
-        if len(phone_number) != 10:
-            return Response({
-                'statuscode': '1',  # Invalid Phone Number.
-            })
+        category = request.POST.get('category')
+
         data = {}
         User = None
 
+        ##User Registration code
         username = request.POST.get('username')
         check_user = UserProfile.objects.filter(username=username)
         if check_user.count()>0 and check_user.first().category!='N':
@@ -50,6 +48,18 @@ def register(request):
             data = serializer.errors
             data['statuscode'] = '7'
             return Response(data)
+
+        ##OTP code
+        if category!='N':
+            phone_number = request.POST['contact']
+            if len(phone_number) != 10:
+                return Response({
+                    'statuscode': '1',  # Invalid Phone Number.
+                })
+        else:
+            return Response({
+                'statuscode': '0',
+            })
 
         otp = random.randint(100000, 999999)
         if Contact.objects.filter(number=phone_number).count()==0:
@@ -172,7 +182,10 @@ class CustomAuthToken(ObtainAuthToken):
         else:
             return Response({'statuscode': '9'})
 
-        verification_status = Contact.objects.get(user=user).verification_status
+        try:
+            verification_status = Contact.objects.get(user=user).verification_status
+        except:
+            verification_status = False
         if verification_status or user.category == 'N':
             token = Token.objects.get(user=user).key
         else:
