@@ -32,4 +32,6 @@
     <string name="enterName">Enter name</string>
     <string name="enterPhoneNumber">Enter phone number</string>
     <string name="nextButton">Next</string>
+    <string name="enter_user_name">Enter user name</string>
+    <string name="enter_password">Enter password</string>
 </resources>
