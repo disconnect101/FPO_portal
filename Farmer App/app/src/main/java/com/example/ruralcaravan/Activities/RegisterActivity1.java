@@ -3,9 +3,12 @@ package com.example.ruralcaravan.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.example.ruralcaravan.R;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class RegisterActivity1 extends AppCompatActivity {
 
@@ -16,4 +19,5 @@ public class RegisterActivity1 extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register1);
     }
+
 }

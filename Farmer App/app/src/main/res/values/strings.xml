@@ -34,4 +34,7 @@
     <string name="nextButton">Next</string>
     <string name="enter_user_name">Enter user name</string>
     <string name="enter_password">Enter password</string>
+    <string name="state">State</string>
+    <string name="district">District</string>
+    <string name="village">Village</string>
 </resources>
