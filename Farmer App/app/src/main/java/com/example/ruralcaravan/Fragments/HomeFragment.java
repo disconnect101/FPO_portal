@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        Fragment fragment = null;
+        Fragment fragment;
         int menuItemId;
         switch(v.getId()) {
             case R.id.cardViewEWallet:

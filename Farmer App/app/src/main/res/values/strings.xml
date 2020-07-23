@@ -28,4 +28,8 @@
     <string name="login">LOGIN</string>
     <string name="enterUserName">Enter User Name</string>
     <string name="signUp">SIGN UP</string>
+    <string name="createAccount">Create\nAccount</string>
+    <string name="enterName">Enter name</string>
+    <string name="enterPhoneNumber">Enter phone number</string>
+    <string name="nextButton">Next</string>
 </resources>
