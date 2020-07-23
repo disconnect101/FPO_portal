@@ -27,7 +27,6 @@
     <string name="tagLine">Bridging the gap between farmers and FPO</string>
     <string name="login">LOGIN</string>
     <string name="enterUserName">Enter User Name</string>
-    <string name="signUp">SIGN UP</string>
     <string name="createAccount">Create\nAccount</string>
     <string name="enterName">Enter name</string>
     <string name="enterPhoneNumber">Enter phone number</string>
@@ -38,8 +37,12 @@
     <string name="district">District</string>
     <string name="village">Village</string>
     <string name="submit">Submit</string>
-    <string name="code">Co\nde</string>
     <string name="otp_description_text">Enter one time password sent on\n</string>
     <string name="otp_verification_text">Verification</string>
     <string name="verify_code">Verify code</string>
+    <string name="otp_verification">OTP\nVerification</string>
+    <string name="OTP">OTP</string>
+    <string name="verification">Verification</string>
+    <string name="base_end_point_ip">http://207.46.228.104:8000/farmer/api/</string>
+    <string name="register">Register</string>
 </resources>

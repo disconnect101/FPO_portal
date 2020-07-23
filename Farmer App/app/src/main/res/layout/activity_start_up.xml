@@ -51,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/login"
+                android:onClick="moveToLoginActivity"
                 android:layout_marginRight="10dp"
                 android:background="@color/yellow"
                 android:textColor="@color/black"/>
@@ -59,7 +60,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/signUp"
+                android:text="@string/register"
+                android:onClick="moveToRegisterActivity"
                 android:layout_marginLeft="10dp"
                 android:background="@color/yellow"
                 android:textColor="@color/black"/>

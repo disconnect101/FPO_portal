@@ -15,33 +15,64 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:src="@drawable/ic_back"
+            android:src="@drawable/ic_close"
             android:tint="@color/black"
             android:contentDescription="Back Button" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/muli_black"
-            android:includeFontPadding="false"
-            android:text="@string/code"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@color/black"
-            android:textSize="100sp" />
+            android:layout_marginTop="60dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/muli_black"
-            android:includeFontPadding="false"
-            android:text="@string/otp_verification_text"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@color/black"
-            android:textSize="24sp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:weightSum="3"
+                android:orientation="vertical"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/muli_black"
+                    android:includeFontPadding="false"
+                    android:text="@string/OTP"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black"
+                    android:textSize="100sp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="2"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/muli_black"
+                    android:includeFontPadding="false"
+                    android:text="@string/verification"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/signup_slide_text"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/circle_black_border"
+                android:fontFamily="@font/muli_black"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="2/3"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="30sp"/>
+
+        </RelativeLayout>
 
 
         <TextView
@@ -70,7 +101,7 @@
             android:itemBackground="#65EAEAEA"
             app:cursorColor="@color/black"
             app:hideLineWhenFilled="true"
-            app:itemCount="4"
+            app:itemCount="6"
             app:itemHeight="50dp"
             app:itemRadius="5dp"
             app:itemWidth="50dp"
@@ -84,7 +115,6 @@
             android:background="@color/colorPrimary"
             android:text="@string/verify_code"
             android:textColor="@color/black"/>
-
 
     </LinearLayout>
 
