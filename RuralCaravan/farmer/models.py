@@ -4,7 +4,8 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-
+from django.utils import timezone
+from datetime import datetime
 from ckeditor.fields import RichTextField
 
 
@@ -46,7 +47,9 @@ class UserProfile(AbstractBaseUser):
     CATEGORIES = (
         ('A', 'FPO Admin'),
         ('L', 'Leader'),
-        ('F', 'Farmer'),
+        ('F', 'Farmer with Smart Phone'),
+        ('P', 'Farmer with Feature Phone'),
+        ('N', 'Farmer with No Phone'),
     )
 
     category = models.CharField(max_length=10, choices=CATEGORIES)
@@ -94,7 +97,7 @@ class Farmer(models.Model):
     contact = models.CharField(max_length=10)
     village = models.CharField(max_length=100)
     district = models.CharField(max_length=100)
-    pin = models.IntegerField()
+    pin = models.CharField(max_length=6, null=True, blank=True)
     photo = models.ImageField(upload_to='images/profile_photos/', null=True, blank=True)
 
     def __str__(self):
@@ -245,5 +248,15 @@ class Produce_FPOLedger_Map(models.Model):
     refno = models.CharField(max_length=15)
 
 
+
+class Contact(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    number = models.CharField(max_length=13, unique=True)
+    otp = models.CharField(max_length=6)
+    verification_status = models.BooleanField(default=False)
+    datetime = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.number
 
 

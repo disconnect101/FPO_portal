@@ -7,6 +7,8 @@ app_name = "farmer"
 
 urlpatterns = [
     path('register/', views.register, name='register'),
-    path('login/', obtain_auth_token, name='login'),
-    path('getuserdata/', views.getUserData, name='getuserdata')
+    path('login/', views.CustomAuthToken.as_view(), name='login'),
+    path('userdata/', views.userData, name='getuserdata'),
+    path('register/OTP/', views.verifyOTP, name='OTP'),
+    path('villages/', views.getVillageInfo, name='OTP'),
 ]
