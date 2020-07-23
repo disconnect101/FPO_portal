@@ -7,13 +7,13 @@ import android.view.WindowManager;
 
 import com.example.ruralcaravan.R;
 
-public class RegisterActivity3 extends AppCompatActivity {
+public class VerifyOTPActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_register3);
+        setContentView(R.layout.activity_verify_otp);
     }
 }
