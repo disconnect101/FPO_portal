@@ -3,11 +3,10 @@ from farmer.models import UserProfile, Farmer
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
     class Meta:
         model = UserProfile
-        fields = ['username', 'category', 'password', 'password2']
+        fields = ['username', 'category', 'password']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -18,10 +17,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
             category=self.validated_data['category'],
         )
         password = self.validated_data['password']
-        password2 = self.validated_data['password2']
 
-        if password!=password2:
-            raise serializers.ValidationError({'error': 'Passwords must match'})
 
         User.set_password(password)
         User.save()
@@ -32,6 +28,17 @@ class FarmerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Farmer
-        fields = ['first_name', 'last_name', 'village', 'photo']
+        fields = ['first_name', 'last_name', 'village', 'district', 'contact']
 
+    def save(self, user):
+        farmer = Farmer(
+            user=user,
+            first_name=self.validated_data['first_name'],
+            last_name=self.validated_data['last_name'],
+            district=self.validated_data['district'],
+            village=self.validated_data['village'],
+            contact=self.validated_data['contact'],
+        )
+
+        farmer.save()
 
