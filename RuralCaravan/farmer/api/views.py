@@ -20,13 +20,12 @@ import pytz
 def register(request):
     if request.method=='POST':
         serializer = RegistrationSerializer(data=request.data)
-        category = request.POST.get('category')
+        category = request.data.get('category')
 
         data = {}
         User = None
-
         ##User Registration code
-        username = request.POST.get('username')
+        username = request.data.get('username')
         check_user = UserProfile.objects.filter(username=username)
         if check_user.count()>0 and check_user.first().category!='N':
             old_user = check_user.first()
@@ -53,7 +52,7 @@ def register(request):
         phone_number = ''
         if category!='N':
             try:
-                phone_number = request.POST.get('contact')
+                phone_number = request.data.get('contact')
             except:
                 return Response({'statuscode' : '1'})
             if len(phone_number)!=10:
@@ -129,8 +128,8 @@ def userData(request):
 def verifyOTP(request):
 
     if request.method=='POST':
-        phone_number = request.POST.get('contact')
-        otp = request.POST.get('otp')
+        phone_number = request.data.get('contact')
+        otp = request.data.get('otp')
         if len(phone_number) != 10:
             return Response({
                 'statuscode': '1',          #Invalid Phone Number.
