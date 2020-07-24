@@ -50,15 +50,14 @@ def register(request):
             return Response(data)
 
         ##OTP code
+        phone_number = ''
         if category!='N':
-			try:
-				phone_number = request.POST.get('contact')
+            try:
+                phone_number = request.POST.get('contact')
             except:
-				return Response({'statuscode': '1'})
-			if len(phone_number) != 10:
-                return Response({
-                    'statuscode': '1',  # Invalid Phone Number.
-                })
+                return Response({'statuscode' : '1'})
+            if len(phone_number)!=10:
+                return Response({'statuscode': '1'})
         else:
             return Response({
                 'statuscode': '0',

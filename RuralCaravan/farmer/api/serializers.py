@@ -28,7 +28,7 @@ class FarmerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Farmer
-        fields = ['first_name', 'last_name', 'village', 'district', 'contact']
+        fields = ['first_name', 'last_name', 'village', 'district']
 
     def save(self, user):
         farmer = Farmer(
@@ -37,7 +37,6 @@ class FarmerSerializer(serializers.ModelSerializer):
             last_name=self.validated_data['last_name'],
             district=self.validated_data['district'],
             village=self.validated_data['village'],
-            contact=self.validated_data['contact'],
         )
 
         farmer.save()
