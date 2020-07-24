@@ -51,8 +51,11 @@ def register(request):
 
         ##OTP code
         if category!='N':
-            phone_number = request.POST['contact']
-            if len(phone_number) != 10:
+			try:
+				phone_number = request.POST.get('contact')
+            except:
+				return Response({'statuscode': '1'})
+			if len(phone_number) != 10:
                 return Response({
                     'statuscode': '1',  # Invalid Phone Number.
                 })
