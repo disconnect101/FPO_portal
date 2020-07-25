@@ -1,7 +1,5 @@
 package com.example.ruralcaravan.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,16 +7,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.LoginResponse;
-import com.example.ruralcaravan.Utilities.Constants;
+import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
 import com.example.ruralcaravan.Utilities.SharedPreferenceUtils;
 import com.example.ruralcaravan.Utilities.VolleySingleton;
-import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -64,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     textViewErrorMessage.setText("Unable to connect to server");
-                    Log.e("Login","Error");
                 }
             };
             JsonObjectRequest loginServerRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody, responseListener, errorListener);
@@ -76,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleLoginResponse(LoginResponse loginResponse) {
         if(ResponseStatusCodeHandler.isSuccessful(loginResponse.getStatuscode())) {
+            SharedPreferenceUtils.setToken(LoginActivity.this, loginResponse.getToken());
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         } else {

@@ -6,5 +6,6 @@ public class Constants {
     public static final int ACTIVITY_HOME = 2;
     public static final String KEY_STATE = "state";
     public static final String KEY_TOKEN = "token";
-    public static final String TOKEN_NOT_FOUND = "";
+    public static final String DEFAULT_STRING = "";
+    public static final String KEY_USER = "user";
 }

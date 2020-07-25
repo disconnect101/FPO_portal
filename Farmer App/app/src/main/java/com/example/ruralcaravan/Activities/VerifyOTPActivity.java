@@ -57,12 +57,13 @@ public class VerifyOTPActivity extends AppCompatActivity {
         textViewErrorMessage.setText("");
         String otp = pinViewOTP.getText().toString();
         if (otp.length() == 6) {
-            String url = getResources().getString(R.string.base_end_point_ip) + "register/OTP/";
+            String verifyOTPUrl = getResources().getString(R.string.base_end_point_ip) + "register/OTP/";
             JSONObject jsonBody = new JSONObject();
             try {
                 jsonBody.put("otp", pinViewOTP.getText().toString());
                 jsonBody.put("contact", phoneNumber);
-                Log.e("url", url);
+//                jsonBody.put("contact", "8439740130");
+                Log.e("url", verifyOTPUrl);
                 Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -80,7 +81,7 @@ public class VerifyOTPActivity extends AppCompatActivity {
                     }
                 };
                 Log.e("json", String.valueOf(jsonBody));
-                JsonObjectRequest otpValidationRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody, responseListener, errorListener);
+                JsonObjectRequest otpValidationRequest = new JsonObjectRequest(Request.Method.POST, verifyOTPUrl, jsonBody, responseListener, errorListener);
                 VolleySingleton.getInstance(VerifyOTPActivity.this).addToRequestQueue(otpValidationRequest);
             } catch (JSONException e) {
                 e.printStackTrace();

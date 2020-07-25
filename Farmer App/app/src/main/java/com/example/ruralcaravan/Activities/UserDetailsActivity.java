@@ -9,17 +9,21 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.Utilities.Constants;
+import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
 import com.example.ruralcaravan.Utilities.SharedPreferenceUtils;
 import com.example.ruralcaravan.Utilities.VolleySingleton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
@@ -33,13 +37,14 @@ import java.util.Map;
 
 public class UserDetailsActivity extends AppCompatActivity {
 
-    private TextInputLayout textInputLayoutDistrict;
-    private TextInputLayout textInputLayoutVillage;
+    private TextInputEditText editTextFirstName;
+    private TextInputEditText editTextLastName;
     private EditText editTextDistrict;
     private EditText editTextVillage;
     private ArrayList<String> districts;
     private ArrayList<String> villages;
     private JSONObject locationResponse;
+    private TextView textViewErrorMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +53,14 @@ public class UserDetailsActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_user_details);
         SharedPreferenceUtils.setActivityState(UserDetailsActivity.this, Constants.ACTIVITY_USER_DETAILS);
+        editTextFirstName = findViewById(R.id.editTextFirstName);
+        editTextLastName = findViewById(R.id.editTextLastName);
         editTextDistrict = findViewById(R.id.editTextDistrict);
         editTextVillage = findViewById(R.id.editTextVillage);
+        textViewErrorMessage = findViewById(R.id.textViewErrorMessage);
         districts = new ArrayList<>();
         villages = new ArrayList<>();
-        String url = getResources().getString(R.string.base_end_point_ip) + "villages/";
+        String getLocationListUrl = getResources().getString(R.string.base_end_point_ip) + "villages/";
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -63,10 +71,10 @@ public class UserDetailsActivity extends AppCompatActivity {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                textViewErrorMessage.setText("SERVER error");
             }
         };
-        JsonObjectRequest locationListRequest = new JsonObjectRequest(Request.Method.GET, url, null, responseListener, errorListener){
+        JsonObjectRequest locationListRequest = new JsonObjectRequest(Request.Method.GET, getLocationListUrl, null, responseListener, errorListener){
             @Override
             public Map<String, String> getHeaders() {
                 Map<String,String> params = new HashMap<>();
@@ -75,8 +83,6 @@ public class UserDetailsActivity extends AppCompatActivity {
             }
         };
         VolleySingleton.getInstance(UserDetailsActivity.this).addToRequestQueue(locationListRequest);
-        textInputLayoutDistrict = findViewById(R.id.textInputLayoutDistrict);
-        textInputLayoutVillage = findViewById(R.id.textInputLayoutVillage);
     }
 
     private void handleLocationListResponse(JSONObject response) {
@@ -146,7 +152,51 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
     public void moveToMainActivity(View view) {
-        Intent intent = new Intent(UserDetailsActivity.this, MainActivity.class);
-        startActivity(intent);
+        //TODO: Check the inputs
+        String postUserDataUrl = getResources().getString(R.string.base_end_point_ip) + "userdata/";
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("first_name", editTextFirstName.getText().toString());
+            jsonBody.put("last_name", editTextLastName.getText().toString());
+            jsonBody.put("village", editTextVillage.getText().toString());
+            jsonBody.put("district", editTextDistrict.getText().toString());
+            Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    handlePostUserDataResponse(response);
+                }
+            };
+            Response.ErrorListener errorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    textViewErrorMessage.setText("SERVER Error");
+                }
+            };
+            JsonObjectRequest postUserDetails = new JsonObjectRequest(Request.Method.POST, postUserDataUrl, jsonBody, responseListener, errorListener){
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String,String> params = new HashMap<>();
+                    params.put("Authorization", "Token " + SharedPreferenceUtils.getToken(UserDetailsActivity.this));
+                    return params;
+                }
+            };
+            VolleySingleton.getInstance(UserDetailsActivity.this).addToRequestQueue(postUserDetails);
+        } catch (JSONException e) {
+            textViewErrorMessage.setText(e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    private void handlePostUserDataResponse(JSONObject response) {
+        try {
+            if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
+                Intent intent = new Intent(UserDetailsActivity.this, MainActivity.class);
+                startActivity(intent);
+            } else {
+                textViewErrorMessage.setText(ResponseStatusCodeHandler.getMessage(response.getString("statuscode")));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

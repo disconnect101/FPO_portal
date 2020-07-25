@@ -58,9 +58,9 @@
     <group android:checkableBehavior="single"
         android:id="@+id/group3">
         <item
-            android:id="@+id/signOut"
+            android:id="@+id/logOut"
             android:icon="@drawable/ic_sign_out"
-            android:title="@string/signOut" />
+            android:title="@string/logOut" />
         <item
             android:id="@+id/language"
             android:icon="@drawable/ic_language"

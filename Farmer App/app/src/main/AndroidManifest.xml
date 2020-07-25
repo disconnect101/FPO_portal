@@ -17,9 +17,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".Activities.VerifyOTPActivity" />
+        <activity android:name=".Activities.VerifyOTPActivity" >
+        </activity>
         <activity android:name=".Activities.UserDetailsActivity">
         </activity>
         <activity android:name=".Activities.RegisterActivity"></activity>

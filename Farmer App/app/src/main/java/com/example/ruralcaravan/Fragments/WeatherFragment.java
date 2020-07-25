@@ -1,5 +1,6 @@
 package com.example.ruralcaravan.Fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
+
 public class WeatherFragment extends Fragment {
 
     private View rootView;
@@ -47,13 +51,21 @@ public class WeatherFragment extends Fragment {
     private ArrayList<DailyWeather> dailyWeatherAdapterArrayList;
     private RecyclerView hourlyForecastRecyclerView;
     private ArrayList<HourlyWeather> hourlyWeatherAdapterArrayList;
+    private ACProgressFlower dialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.fragment_weather, container, false);
+        dialog = new ACProgressFlower.Builder(getActivity())
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
 
+        rootView = inflater.inflate(R.layout.fragment_weather, container, false);
+        rootView.setVisibility(View.INVISIBLE);
         dailyForecastRecyclerView = rootView.findViewById(R.id.dailyForecastRecyclerView);
         dailyForecastRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManagerDaily = new LinearLayoutManager(
@@ -98,6 +110,8 @@ public class WeatherFragment extends Fragment {
         setCurrentWeather(currentWeather);
         setDailyWeather(dailyWeatherArrayList);
         setHourlyWeatherData(hourlyWeatherArrayList);
+        rootView.setVisibility(View.VISIBLE);
+        dialog.dismiss();
     }
 
     private CurrentWeather getCurrentWeatherData(JSONObject response) {
