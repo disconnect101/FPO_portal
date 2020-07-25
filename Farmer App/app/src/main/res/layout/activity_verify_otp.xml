@@ -17,6 +17,7 @@
             android:padding="5dp"
             android:src="@drawable/ic_close"
             android:tint="@color/black"
+            android:onClick="moveToStartUpScreen"
             android:contentDescription="Back Button" />
 
         <RelativeLayout
@@ -90,7 +91,7 @@
 
 
         <com.chaos.view.PinView
-            android:id="@+id/pin_view"
+            android:id="@+id/pinViewOTP"
             style="@style/PinWidget.PinView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -114,6 +115,7 @@
             android:layout_marginTop="30dp"
             android:background="@color/colorPrimary"
             android:text="@string/verify_code"
+            android:onClick="verifyCodeButtonPressed"
             android:textColor="@color/black"/>
 
     </LinearLayout>

@@ -43,6 +43,6 @@
     <string name="otp_verification">OTP\nVerification</string>
     <string name="OTP">OTP</string>
     <string name="verification">Verification</string>
-    <string name="base_end_point_ip">http://207.46.228.104:8000/farmer/api/</string>
+    <string name="base_end_point_ip">http://192.168.43.132:8000/farmer/api/</string>
     <string name="register">Register</string>
 </resources>

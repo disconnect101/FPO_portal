@@ -13,6 +13,7 @@
 
         <ImageView
             android:id="@+id/signup_back_button"
+            android:onClick="backButtonPressed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
@@ -22,7 +23,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="10dp">
 
 
             <TextView
@@ -52,16 +53,22 @@
                 android:textColor="@color/black"
                 android:textSize="30sp"/>
 
-
         </RelativeLayout>
 
+        <TextView
+            android:id="@+id/textViewErrorMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/black"
+            android:layout_marginTop="20dp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
-
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/signup_fullname"
@@ -80,6 +87,7 @@
 
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextFullName"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/muli_semibold"
@@ -119,6 +127,7 @@
 
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextPhoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/muli_semibold"
@@ -147,6 +156,7 @@
 
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextUserName"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/muli_semibold"
@@ -177,6 +187,7 @@
 
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextPassword"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/muli_semibold"
@@ -191,6 +202,7 @@
 
         <Button
             android:id="@+id/signup_next_button"
+            android:onClick="validateDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -202,6 +214,7 @@
 
         <Button
             android:id="@+id/signup_login_button"
+            android:onClick="moveToLoginActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

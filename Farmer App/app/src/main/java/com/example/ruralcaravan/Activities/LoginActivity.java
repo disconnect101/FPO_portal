@@ -42,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginButtonPressed(View view) {
+        textViewErrorMessage.setText("");
         //Server request for login
         String url = getResources().getString(R.string.base_end_point_ip) + "login/";
         JSONObject jsonBody = new JSONObject();
@@ -60,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    textViewErrorMessage.setText("Unable to connect to server");
                     Log.e("Login","Error");
                 }
             };
