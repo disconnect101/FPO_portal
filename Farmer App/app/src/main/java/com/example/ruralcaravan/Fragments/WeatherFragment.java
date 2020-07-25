@@ -22,7 +22,7 @@ import com.example.ruralcaravan.DataClasses.CurrentWeather;
 import com.example.ruralcaravan.DataClasses.DailyWeather;
 import com.example.ruralcaravan.DataClasses.HourlyWeather;
 import com.example.ruralcaravan.R;
-import com.example.ruralcaravan.SingletonClasses.VolleySingleton;
+import com.example.ruralcaravan.Utilities.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;

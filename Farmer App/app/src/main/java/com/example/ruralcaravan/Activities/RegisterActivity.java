@@ -15,7 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.RegistrationDetailsValidationResponse;
-import com.example.ruralcaravan.SingletonClasses.VolleySingleton;
+import com.example.ruralcaravan.Utilities.VolleySingleton;
 import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
@@ -58,7 +58,6 @@ public class RegisterActivity extends AppCompatActivity {
                 jsonBody.put("password", editTextPassword.getText().toString());
                 jsonBody.put("contact", editTextPhoneNumber.getText().toString());
                 jsonBody.put("category","F");
-                Log.e("contact",editTextPhoneNumber.getText().toString());
                 Log.e("url",url);
                 Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
                     @Override

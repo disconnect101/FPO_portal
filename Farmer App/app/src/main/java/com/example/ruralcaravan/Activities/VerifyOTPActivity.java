@@ -16,7 +16,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaos.view.PinView;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.OTPValidationResponse;
-import com.example.ruralcaravan.SingletonClasses.VolleySingleton;
+import com.example.ruralcaravan.Utilities.SharedPreferenceUtils;
+import com.example.ruralcaravan.Utilities.VolleySingleton;
 import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -89,6 +90,7 @@ public class VerifyOTPActivity extends AppCompatActivity {
 
     private void handleOTPValidation(OTPValidationResponse otpValidationResponse) {
         if (ResponseStatusCodeHandler.isSuccessful(otpValidationResponse.getStatuscode())) {
+            SharedPreferenceUtils.setToken(VerifyOTPActivity.this, otpValidationResponse.getToken());
             Intent intent = new Intent(VerifyOTPActivity.this, UserDetailsActivity.class);
             startActivity(intent);
         } else {

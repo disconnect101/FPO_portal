@@ -1,4 +1,4 @@
-package com.example.ruralcaravan.SingletonClasses;
+package com.example.ruralcaravan.Utilities;
 
 import android.content.Context;
 
@@ -8,7 +8,7 @@ import com.android.volley.toolbox.Volley;
 
 public class VolleySingleton {
 
-    private static VolleySingleton instance;
+    private static VolleySingleton instance = null;
     private static RequestQueue requestQueue;
     private static Context context;
 
