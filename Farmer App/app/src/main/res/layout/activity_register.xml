@@ -70,37 +70,8 @@
             android:layout_marginTop="20dp"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/signup_fullname"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/enterName"
-                android:textColorHint="@color/black"
-                app:boxStrokeColor="@color/black"
-                app:boxStrokeWidthFocused="2dp"
-                app:endIconMode="clear_text"
-                app:endIconTint="@color/black"
-                app:hintTextColor="@color/black"
-                app:startIconDrawable="@drawable/ic_name"
-                app:startIconTint="@color/black">
-
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextFullName"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/muli_semibold"
-                    android:inputType="text"
-                    android:textColor="@color/black"
-                    android:textCursorDrawable="@null" />
-
-
-            </com.google.android.material.textfield.TextInputLayout>
-
             <com.hbb20.CountryCodePicker
                 android:id="@+id/country_code_picker"
-                android:layout_below="@+id/signup_fullname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="7dp"

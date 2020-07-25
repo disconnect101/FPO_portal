@@ -10,14 +10,14 @@ import android.view.WindowManager;
 import com.example.ruralcaravan.R;
 import com.google.android.material.textfield.TextInputEditText;
 
-public class AddressActivity extends AppCompatActivity {
+public class UserDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_address);
+        setContentView(R.layout.activity_user_details);
     }
 
     public void stateBtnPressed(View view) {

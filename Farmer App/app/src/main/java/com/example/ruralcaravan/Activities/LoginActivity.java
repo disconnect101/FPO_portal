@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleLoginResponse(LoginResponse loginResponse) {
-        if(ResponseStatusCodeHandler.isLoginSuccessful(loginResponse.getStatuscode())) {
+        if(ResponseStatusCodeHandler.isSuccessful(loginResponse.getStatuscode())) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         } else {

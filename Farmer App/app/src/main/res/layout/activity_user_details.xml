@@ -28,7 +28,6 @@
                 android:textColor="@color/black"
                 android:textSize="40sp"/>
 
-
             <TextView
                 android:id="@+id/signup_slide_text"
                 android:layout_width="100dp"

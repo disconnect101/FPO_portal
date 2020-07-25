@@ -26,7 +26,6 @@ import org.json.JSONObject;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private TextInputEditText editTextFullName;
     private TextInputEditText editTextPhoneNumber;
     private TextInputEditText editTextUserName;
     private TextInputEditText editTextPassword;
@@ -38,7 +37,6 @@ public class RegisterActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register);
-        editTextFullName = findViewById(R.id.editTextFullName);
         editTextPhoneNumber = findViewById(R.id.editTextPhoneNumber);
         editTextUserName = findViewById(R.id.editTextUserName);
         editTextPassword = findViewById(R.id.editTextPassword);
@@ -88,13 +86,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void handleRegisterValidation(RegistrationDetailsValidationResponse registrationDetailsValidationResponse) {
-        if(ResponseStatusCodeHandler.isLoginSuccessful(registrationDetailsValidationResponse.getStatuscode())) {
+        if(ResponseStatusCodeHandler.isSuccessful(registrationDetailsValidationResponse.getStatuscode())) {
             //Move on to the next activity
+            Log.e("Success","Hello");
             Intent intent = new Intent(RegisterActivity.this, VerifyOTPActivity.class);
-            intent.putExtra("fullName", editTextFullName.getText().toString());
             intent.putExtra("phoneNumber", editTextPhoneNumber.getText().toString());
-            intent.putExtra("userName", editTextUserName.getText().toString());
-            intent.putExtra("password", editTextPassword.getText().toString());
             startActivity(intent);
         } else {
             //Prompt error
@@ -103,10 +99,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean checkInput() {
-        if(editTextFullName.getText().toString().isEmpty()) {
-            textViewErrorMessage.setText("Name can't be empty");
-            return false;
-        }
         if(editTextPhoneNumber.getText().toString().isEmpty()) {
             textViewErrorMessage.setText("Phone number can't be empty");
             return false;
