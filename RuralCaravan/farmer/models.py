@@ -162,7 +162,8 @@ class Meetings(models.Model):
     description = RichTextField(null=True, blank=True)
     photo = models.ImageField(upload_to='images/meeting_photos/', null=True, blank=True)
 
-
+    def __str__(self):
+        return self.agenda
 
 class Products(models.Model):
     name = models.CharField(max_length=100)

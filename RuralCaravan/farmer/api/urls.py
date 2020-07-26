@@ -1,6 +1,7 @@
 from django.urls import path
 from farmer.api.LoginSignup import views as auth
 from farmer.api.CatalogueOrders import views as catalogue
+from farmer.api.MeetingsNewsSchemes import views as notice
 
 app_name = "farmer"
 
@@ -14,4 +15,5 @@ urlpatterns = [
     path('product/', catalogue.product, name='product'),
     path('kart/', catalogue.kart, name='kart'),
     path('order/', catalogue.order, name='order'),
+    path('meetings/', notice.meetings, name='meetings'),
 ]
