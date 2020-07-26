@@ -28,6 +28,7 @@ admin.site.register(ew_transaction)
 admin.site.register(FPOLedger)
 admin.site.register(Produce_FPOLedger_Map)
 admin.site.register(Contact)
+admin.site.register(Ewallet)
 
 
 
