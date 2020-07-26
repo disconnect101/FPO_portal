@@ -23,7 +23,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.ruralcaravan.Fragments.CatalogueFragment;
+import com.example.ruralcaravan.Fragments.CatalogueCategoryFragment;
 import com.example.ruralcaravan.Fragments.EWalletFragment;
 import com.example.ruralcaravan.Fragments.HomeFragment;
 import com.example.ruralcaravan.Fragments.MeetingsFragment;
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 switchToNewFragment(EWalletFragment.class, menuItem);
                 break;
             case R.id.catalogue:
-                switchToNewFragment(CatalogueFragment.class, menuItem);
+                switchToNewFragment(CatalogueCategoryFragment.class, menuItem);
                 break;
             case R.id.meetings:
                 switchToNewFragment(MeetingsFragment.class, menuItem);
