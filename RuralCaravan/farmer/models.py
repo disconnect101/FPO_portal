@@ -73,6 +73,7 @@ class UserProfile(AbstractBaseUser):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+        Ewallet.objects.create(user=instance)
 
 
 
@@ -88,6 +89,8 @@ class Crops(models.Model):
     guidance = RichTextField(null=True, blank=True)
     live = models.BooleanField()
 
+    def __str__(self):
+        return self.name
 
 class Farmer(models.Model):
     user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
@@ -161,10 +164,6 @@ class Meetings(models.Model):
 
 
 
-
-
-
-
 class Products(models.Model):
     name = models.CharField(max_length=100)
     associated_crop = models.ForeignKey(Crops, on_delete=models.SET_DEFAULT, default=-1)
@@ -181,7 +180,9 @@ class Products(models.Model):
     description = RichTextField(null=True, blank=True)
     image = models.ImageField(upload_to='images/products_images/', null=True, blank=True)
 
-
+    def __str__(self):
+        ID = str(self.id)
+        return ID + " " + self.name
 
 class Orders(models.Model):
     TYPE = (
@@ -197,9 +198,10 @@ class Orders(models.Model):
     rate = models.FloatField()
     quantity = models.IntegerField()
     is_paid = models.BooleanField(default=False)
-    is_delivered = models.BooleanField()
+    is_delivered = models.BooleanField(default=False)
 
-
+    def __str__(self):
+        return self.buyer.username + " - " + self.item.name
 
 class Produce(models.Model):
     crop = models.ForeignKey(Crops, on_delete=models.PROTECT)
@@ -212,13 +214,19 @@ class Produce(models.Model):
 
 
 class Kart(models.Model):
-    owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
+    user = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
     item = models.ForeignKey(Products, on_delete=models.SET_DEFAULT, default=-1)
     quantity = models.IntegerField()
-    rate = models.FloatField()
-    price = models.FloatField()
 
+    def __str__(self):
+        return self.user.username + " " + self.item.name
 
+class Ewallet(models.Model):
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+    amount = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.user.username
 
 class ew_transaction(models.Model):
     refno = models.CharField(max_length=20)
@@ -228,6 +236,8 @@ class ew_transaction(models.Model):
     currrent_amount = models.FloatField()
     description = models.CharField(max_length=200)
 
+    def __str__(self):
+        return self.refno
 
 class FPOLedger(models.Model):
     crop = models.ForeignKey(Crops, on_delete=models.PROTECT)

@@ -60,6 +60,7 @@ def register(request):
         else:
             return Response({
                 'statuscode': '0',
+                'token': Token.objects.get(user=User)
             })
 
         otp = random.randint(100000, 999999)
