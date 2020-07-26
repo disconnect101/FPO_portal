@@ -2,6 +2,7 @@ from django.urls import path
 from farmer.api.LoginSignup import views as auth
 from farmer.api.CatalogueOrders import views as catalogue
 from farmer.api.MeetingsNewsSchemes import views as notice
+from farmer.api.CropPlan import views as crops
 
 app_name = "farmer"
 
@@ -16,4 +17,5 @@ urlpatterns = [
     path('kart/', catalogue.kart, name='kart'),
     path('order/', catalogue.order, name='order'),
     path('meetings/', notice.meetings, name='meetings'),
+    path('crops/', crops.cropPlan, name='cropplan'),
 ]

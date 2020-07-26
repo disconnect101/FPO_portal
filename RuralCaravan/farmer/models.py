@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.conf import settings
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.utils import timezone
@@ -75,9 +75,31 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
         Ewallet.objects.create(user=instance)
 
+# @receiver(post_delete, sender=settings.AUTH_USER_MODEL)
+# def delete_ewallet(sender, instance=None, *args, **kwargs):
+#     if Ewallet.objects.filter(user=instance).count()!=0:
+#         Ewallet.objects.get(user=instance).delete()
 
 
+class Products(models.Model):
+    name = models.CharField(max_length=100)
 
+    CATEGORY = (
+        ('SED', 'Seeds'),
+        ('FER', 'Fertilizer'),
+        ('PES', 'Pesticide'),
+        ('EQP', 'Equipment'),
+        ('OTH', 'Others'),
+    )
+    category = models.CharField(max_length=3, choices=CATEGORY)
+    rate = models.FloatField()
+    description = RichTextField(null=True, blank=True)
+    image = models.ImageField(upload_to='images/products_images/', null=True, blank=True)
+    available = models.BooleanField(default=True)
+
+    def __str__(self):
+        ID = str(self.id)
+        return ID + " " + self.name
 
 class Crops(models.Model):
     code = models.CharField(max_length=6)
@@ -88,6 +110,9 @@ class Crops(models.Model):
     weigth_per_land = models.FloatField()
     guidance = RichTextField(null=True, blank=True)
     live = models.BooleanField()
+    image = models.ImageField(upload_to='images/crop_images', null=True, blank=True)
+    products = models.ManyToManyField(Products, null=True, blank=True)
+    subscribers = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -165,25 +190,7 @@ class Meetings(models.Model):
     def __str__(self):
         return self.agenda
 
-class Products(models.Model):
-    name = models.CharField(max_length=100)
-    associated_crop = models.ForeignKey(Crops, on_delete=models.SET_DEFAULT, default=-1)
 
-    CATEGORY = (
-        ('SED', 'Seeds'),
-        ('FER', 'Fertilizer'),
-        ('PES', 'Pesticide'),
-        ('EQP', 'Equipment'),
-        ('OTH', 'Others'),
-    )
-    category = models.CharField(max_length=3, choices=CATEGORY)
-    rate = models.FloatField()
-    description = RichTextField(null=True, blank=True)
-    image = models.ImageField(upload_to='images/products_images/', null=True, blank=True)
-
-    def __str__(self):
-        ID = str(self.id)
-        return ID + " " + self.name
 
 class Orders(models.Model):
     TYPE = (
@@ -215,7 +222,7 @@ class Produce(models.Model):
 
 
 class Kart(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     item = models.ForeignKey(Products, on_delete=models.SET_DEFAULT, default=-1)
     quantity = models.IntegerField()
 
