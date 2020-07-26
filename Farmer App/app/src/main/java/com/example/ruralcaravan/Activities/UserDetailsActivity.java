@@ -191,6 +191,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         try {
             if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
                 Intent intent = new Intent(UserDetailsActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             } else {
                 textViewErrorMessage.setText(ResponseStatusCodeHandler.getMessage(response.getString("statuscode")));
