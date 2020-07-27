@@ -53,7 +53,7 @@ def product(request):
     return Response(serializedProduct)
 
 
-@api_view(['POST', 'GET', 'DELETE', 'PUT'])
+@api_view(['POST', 'GET', 'PUT'])
 @permission_classes((IsAuthenticated, ))
 def kart(request):
 
@@ -95,27 +95,6 @@ def kart(request):
         }
         return Response(kartList)
 
-    if request.method=='DELETE':
-        user = request.user
-        kartItemID = request.data.get('id')
-
-        try:
-            kartItem = Kart.objects.get(id=kartItemID, user=user)
-        except:
-            return Response({
-                'statuscode': '13'
-            })
-
-        try:
-            kartItem.delete()
-        except:
-            return Response({
-                'statuscode': '14'
-            })
-
-        return Response({
-            'statuscode': '0'
-        })
 
     if request.method=='POST':
         user = request.user
@@ -138,6 +117,32 @@ def kart(request):
         return Response({
             'statuscode': '0'
         })
+
+
+@api_view(['POST', ])
+@permission_classes((IsAuthenticated, ))
+def kartdelete(request):
+    user = request.user
+    kartItemID = request.data.get('id')
+
+    try:
+        kartItem = Kart.objects.get(id=kartItemID, user=user)
+    except:
+        return Response({
+            'statuscode': '13'
+        })
+
+    try:
+        kartItem.delete()
+    except:
+        return Response({
+            'statuscode': '14'
+        })
+
+    return Response({
+        'statuscode': '0'
+    })
+
 
 
 
