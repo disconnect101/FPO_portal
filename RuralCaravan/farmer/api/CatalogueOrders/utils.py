@@ -28,8 +28,7 @@ def makeTransaction(user, amount, description):
     ew_t = ew_transaction(refno=refno,
                           user=user,
                           amount=-1*amount,
-                          description=description,
-                          currrent_amount=ewallet.amount)
+                          description=description)
     try:
         ewallet.save()
         ew_t.save()

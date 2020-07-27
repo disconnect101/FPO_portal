@@ -211,14 +211,19 @@ def order(request):
 
                 orderIDs.append(orderID)
 
+            orders = Orders.objects.filter(id__in=orderIDs).values('price')
+            amount = 0
+            for order in orders:
+                amount += order.get('price')
+
             kart.delete()
-            return Response(statuscode('0', {'orderIDs': orderIDs}))
+            return Response(statuscode('0', {'orderIDs': orderIDs, 'total_cost': amount}))
 
     if request.method=='GET':
         user = request.user
         try:
-            completed_orders = Orders.objects.filter(buyer=user, is_delivered=True).values()
-            pending_orders = Orders.objects.filter(buyer=user, is_delivered=False).values()
+            completed_orders = Orders.objects.filter(buyer=user, is_delivered=True).order_by('-date').values()
+            pending_orders = Orders.objects.filter(buyer=user, is_delivered=False).order_by('-date').values()
         except:
             return Response(statuscode('12'))
 

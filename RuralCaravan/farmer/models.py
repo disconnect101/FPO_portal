@@ -209,6 +209,7 @@ class Orders(models.Model):
     quantity = models.IntegerField()
     is_paid = models.BooleanField(default=False)
     is_delivered = models.BooleanField(default=False)
+    date = models.DateField(default=timezone.now)
 
     def __str__(self):
         return self.buyer.username + " - " + self.item.name
