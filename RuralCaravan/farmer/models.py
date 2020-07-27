@@ -151,7 +151,7 @@ class Leader(models.Model):
     pin = models.IntegerField()
     photo = models.ImageField(upload_to='images/profile_photos/', null=True, blank=True)
     profession = models.CharField(max_length=100, null=True, blank=True)
-    farmers = models.ManyToManyField(Farmer)
+    farmers = models.ManyToManyField(UserProfile, related_name='downlines', null=True, blank=True)
 
     def __str__(self):
         return self.user.username + '-' + self.first_name

@@ -4,6 +4,7 @@ from farmer.api.CatalogueOrders import views as catalogue
 from farmer.api.MeetingsNewsSchemes import views as notice
 from farmer.api.CropPlan import views as crops
 from farmer.api.Balancesheet import views as balancesheet
+from farmer.api.LeaderAccess import views as leaderaccess
 
 app_name = "farmer"
 
@@ -22,4 +23,6 @@ urlpatterns = [
     path('cropproducts/<int:cropID>/', crops.cropproducts, name='cropproducts'),
     path('confcrop/<int:cropID>/', crops.confcrop, name='confcrop'),
     path('balancesheet/', balancesheet.balancesheet, name='balancesheet'),
+    path('leaderaccess/', leaderaccess.downlinefarmers, name='downlinefarmers'),
+    path('leaderaccess/add/', leaderaccess.addfarmer, name='addfarmerdownline'),
 ]

@@ -19,4 +19,6 @@ status_codes = [
     ('17', 'Insufficient Funds'),
     ('18', 'Unable to update Kart'),
     ('19', 'Crop not available'),
+    ('20', 'Unauthorized Access'),
+    ('21', 'arguments missing')
 ]
