@@ -62,8 +62,10 @@ class MeetingsSerializer(serializers.ModelSerializer):
         model = Meetings
         fields = ['organiser', 'agenda', 'venue', 'date', 'time', 'description', 'photo']
 
+
 class CropSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Crops
         fields = [ 'id', 'code', 'name', 'type', 'max_cap', 'current_amount', 'weigth_per_land', 'guidance', 'live', 'image', 'subscribers' ]
+

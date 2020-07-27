@@ -242,8 +242,8 @@ class ew_transaction(models.Model):
     refno = models.CharField(max_length=20)
     user = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
     amount = models.FloatField()
-    date = models.DateTimeField(auto_now_add=True)
-    currrent_amount = models.FloatField()
+    date = models.DateTimeField(default=timezone.now)
+    #currrent_amount = models.FloatField()
     description = models.CharField(max_length=200)
 
     def __str__(self):
