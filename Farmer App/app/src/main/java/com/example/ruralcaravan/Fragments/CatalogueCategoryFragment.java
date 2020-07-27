@@ -42,6 +42,7 @@ public class CatalogueCategoryFragment extends Fragment {
         categoryIcons.add(R.drawable.pesticides);
         categoryIcons.add(R.drawable.equipment);
         categoryIcons.add(R.drawable.others);
+
         CatalogueCategoryAdapter catalogueCategoryAdapter = new CatalogueCategoryAdapter(getActivity(), categories, categoryIcons);
         recyclerViewCatalogueCategory.setAdapter(catalogueCategoryAdapter);
         recyclerViewCatalogueCategory.setOverScrollMode(View.OVER_SCROLL_NEVER);

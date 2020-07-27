@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ruralcaravan.Activities.CatalogueActivity;
 import com.example.ruralcaravan.R;
+import com.example.ruralcaravan.Utilities.Constants;
 
 import java.util.ArrayList;
 
@@ -45,7 +46,7 @@ public class CatalogueCategoryAdapter extends RecyclerView.Adapter<CatalogueCate
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, CatalogueActivity.class);
-                intent.putExtra("category", position);
+                intent.putExtra(Constants.KEY_CATEGORY, position);
                 context.startActivity(intent);
             }
         });
