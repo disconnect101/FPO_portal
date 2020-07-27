@@ -17,5 +17,7 @@ urlpatterns = [
     path('kart/', catalogue.kart, name='kart'),
     path('order/', catalogue.order, name='order'),
     path('meetings/', notice.meetings, name='meetings'),
-    path('crops/', crops.cropPlan, name='cropplan'),
+    path('crops/<int:cropID>/', crops.cropplan, name='cropplan'),
+    path('cropproducts/<int:cropID>/', crops.cropproducts, name='cropproducts'),
+    #path('confcrop/<int:cropID>/', crops.confcrop, name='confcrop'),
 ]

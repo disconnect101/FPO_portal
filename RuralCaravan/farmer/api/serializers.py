@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from farmer.models import UserProfile, Farmer, Products, Kart, Meetings
+from farmer.models import UserProfile, Farmer, Products, Kart, Meetings, Crops
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -61,3 +61,9 @@ class MeetingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meetings
         fields = ['organiser', 'agenda', 'venue', 'date', 'time', 'description', 'photo']
+
+class CropSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Crops
+        fields = [ 'id', 'code', 'name', 'type', 'max_cap', 'current_amount', 'weigth_per_land', 'guidance', 'live', 'image', 'subscribers' ]

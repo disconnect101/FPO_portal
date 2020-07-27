@@ -18,4 +18,5 @@ status_codes = [
     ('16', 'Transaction Failed'),
     ('17', 'Insufficient Funds'),
     ('18', 'Unable to update Kart'),
+    ('19', 'Crop not available'),
 ]

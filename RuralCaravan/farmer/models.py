@@ -113,6 +113,8 @@ class Crops(models.Model):
     image = models.ImageField(upload_to='images/crop_images', null=True, blank=True)
     products = models.ManyToManyField(Products, null=True, blank=True)
     subscribers = models.IntegerField(default=0)
+    investment_requirements = models.TextField(null=True, blank=True, default=None)
+    facilities = models.TextField(null=True, blank=True, default=None)
 
     def __str__(self):
         return self.name
@@ -133,7 +135,7 @@ class Farmer(models.Model):
 
 
 class FarmerCropMap(models.Model):
-    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)
+    farmer = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     crop = models.ForeignKey(Crops, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
 
