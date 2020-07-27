@@ -9,18 +9,17 @@ from farmer.api.utils import statuscode
 import json
 
 
-@api_view(['GET',])
+@api_view(['POST',])
 @permission_classes((IsAuthenticated, ))
 def catalogue(request):
 
     user = request.user
     category = request.data.get('category')
-    products = Products.objects.filter(category=category).values('id',
-                                                                    'name',
-                                                                    'discounted',
-                                                                    'category',
-                                                                    'rate',
-                                                                    'image')
+    products = Products.objects.filter(category=category, available=True).values('id',
+                                                                                'name',
+                                                                                'category',
+                                                                                'rate',
+                                                                                'image')
 
     data = {
         'data': list(products)
@@ -29,14 +28,14 @@ def catalogue(request):
 
     # categorizedProducts = {}
     # for product in allProducts:
-    #     if product.get('category') in categorizedProducts:
-    #         categorizedProducts[product.get('category')] += [product]
-    #     else:
-    #         categorizedProducts[product.get('category')] = [product]
+    #      if product.get('category') in categorizedProducts:
+    #          categorizedProducts[product.get('category')] += [product]
+    #      else:
+    #          categorizedProducts[product.get('category')] = [product]
 
 
 
-@api_view(['GET',])
+@api_view(['POST',])
 @permission_classes((IsAuthenticated, ))
 def product(request):
 
