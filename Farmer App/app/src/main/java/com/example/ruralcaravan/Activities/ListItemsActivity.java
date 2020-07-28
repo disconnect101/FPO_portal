@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CatalogueActivity extends AppCompatActivity {
+public class ListItemsActivity extends AppCompatActivity {
 
     private RecyclerView listItemsRecyclerView;
     private ArrayList<ItemsResponse> catalogueAdapterArrayList;
@@ -38,14 +38,14 @@ public class CatalogueActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_catalogue);
+        setContentView(R.layout.activity_list_items);
 
         listItemsRecyclerView = findViewById(R.id.listItemsRecyclerView);
         listItemsRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CatalogueActivity.this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ListItemsActivity.this);
         listItemsRecyclerView.setLayoutManager(linearLayoutManager);
         catalogueAdapterArrayList = new ArrayList<>();
-        CatalogueAdapter catalogueAdapter = new CatalogueAdapter(CatalogueActivity.this, catalogueAdapterArrayList);
+        CatalogueAdapter catalogueAdapter = new CatalogueAdapter(ListItemsActivity.this, catalogueAdapterArrayList);
         listItemsRecyclerView.setAdapter(catalogueAdapter);
 
         Intent intent = getIntent();
@@ -97,11 +97,11 @@ public class CatalogueActivity extends AppCompatActivity {
         JsonObjectRequest itemsListRequest = new JsonObjectRequest(Request.Method.POST, itemsUrl, jsonBody, responseListener, errorListener){
             public Map<String, String> getHeaders() {
                 Map<String,String> params = new HashMap<>();
-                params.put("Authorization", "Token " + SharedPreferenceUtils.getToken(CatalogueActivity.this));
+                params.put("Authorization", "Token " + SharedPreferenceUtils.getToken(ListItemsActivity.this));
                 return params;
             }
         };
-        VolleySingleton.getInstance(CatalogueActivity.this).addToRequestQueue(itemsListRequest);
+        VolleySingleton.getInstance(ListItemsActivity.this).addToRequestQueue(itemsListRequest);
     }
 
     private void handleItemsResponse(ItemsResponse[] response) {

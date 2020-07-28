@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ruralcaravan.Activities.CatalogueActivity;
+import com.example.ruralcaravan.Activities.ListItemsActivity;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.Utilities.Constants;
 
@@ -45,7 +45,7 @@ public class CatalogueCategoryAdapter extends RecyclerView.Adapter<CatalogueCate
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, CatalogueActivity.class);
+                Intent intent = new Intent(context, ListItemsActivity.class);
                 intent.putExtra(Constants.KEY_CATEGORY, position);
                 context.startActivity(intent);
             }

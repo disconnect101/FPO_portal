@@ -16,4 +16,7 @@ public class Constants {
     public static final String KEY_USER = "user";
     public static final String KEY_CATEGORY = "category";
     public static final String KEY_PRODUCT_ID = "productId";
+    public static final int PAYMENT_COD = 0;
+    public static final int PAYMENT_PEW = 1;
+    public static final int PAYMENT_CAS = 2;
 }

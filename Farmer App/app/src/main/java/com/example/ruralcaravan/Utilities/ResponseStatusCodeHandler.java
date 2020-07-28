@@ -18,6 +18,17 @@ public class ResponseStatusCodeHandler {
             case "8": return "Number already registered";
             case "9": return "Invalid credentials";
             case "10": return "Contact number not verified";
+            case "11": return "Product not available";
+            case "12": return "Unable to access database";
+            case "13": return "Kart Item not available";
+            case "14": return "Unable to delete cart item";
+            case "15": return "Order couldn't be placed";
+            case "16": return "Transaction failed";
+            case "17": return "Insufficient funds";
+            case "18": return "Unable to update cart";
+            case "19": return "Crop not available";
+            case "20": return "Unauthorized access";
+            case "21": return "arguments missing";
         }
         return "Android system error";
     }

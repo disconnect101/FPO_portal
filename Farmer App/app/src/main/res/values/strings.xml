@@ -43,10 +43,24 @@
     <string name="otp_verification">OTP\nVerification</string>
     <string name="OTP">OTP</string>
     <string name="verification">Verification</string>
-    <string name="base_end_point_ip">http://207.46.228.104:8000/farmer/api/</string>
-    <string name="socket_address">http://207.46.228.104:8000</string>
+    <string name="base_end_point_ip">http://192.168.43.132:8000/farmer/api/</string>
+    <string name="socket_address">http://192.168.43.132:8000</string>
     <string name="register">Register</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
     <string name="about_the_event">About the event</string>
+    <string name="quantity">Quantity</string>
+    <string name="buy_now">Buy Now</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="item_added_to_cart">Item added to cart</string>
+    <string name="confirm_order_message">Are you sure you want to order this item?</string>
+    <string name="confirm_order">Confirm order</string>
+    <string name="amount">Amount</string>
+    <string name="payment_mode">Select payment mode</string>
+    <string name="cash_on_delivery">Cash On Delivery</string>
+    <string name="pay_with_e_wallet">Pay with E-Wallet</string>
+    <string name="pay_at_FPO_office">Pay at FPO Office</string>
+    <string name="pay">PAY</string>
+    <string name="cancel">CANCEL</string>
+    <string name="order_successful">Order successful</string>
 </resources>

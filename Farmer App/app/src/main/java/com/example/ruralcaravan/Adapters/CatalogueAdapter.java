@@ -2,7 +2,6 @@ package com.example.ruralcaravan.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.ruralcaravan.Activities.ItemDetailsActivity;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.ItemsResponse;
 import com.example.ruralcaravan.Utilities.Constants;
@@ -50,10 +50,10 @@ public class CatalogueAdapter extends RecyclerView.Adapter<CatalogueAdapter.Cata
         holder.cardViewCatalogue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(context, ItemDetailsActivity.class);
-//                intent.putExtra(Constants.KEY_PRODUCT_ID, item.getId());
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                context.startActivity(intent);
+                Intent intent = new Intent(context, ItemDetailsActivity.class);
+                intent.putExtra(Constants.KEY_PRODUCT_ID, item.getId());
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                context.startActivity(intent);
             }
         });
     }

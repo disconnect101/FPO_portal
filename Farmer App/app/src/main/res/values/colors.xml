@@ -6,4 +6,6 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="yellow">#FCDC04</color>
+    <color name="orange_buy_now">#f0942d</color>
+    <color name="yellow_add_to_cart">#f2ca68</color>
 </resources>
