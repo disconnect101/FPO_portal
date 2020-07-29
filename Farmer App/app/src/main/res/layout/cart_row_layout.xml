@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:id="@+id/cardViewCatalogue">
+    android:id="@+id/cardViewCart">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,6 +80,7 @@
                     android:id="@+id/buttonDecreaseQuantity"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:textSize="20sp"
                     android:text="-"
                     android:layout_weight="2"/>
 

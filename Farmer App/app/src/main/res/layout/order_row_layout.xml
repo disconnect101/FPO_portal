@@ -132,7 +132,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/textViewAmount"
+                android:id="@+id/textViewSummary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"/>

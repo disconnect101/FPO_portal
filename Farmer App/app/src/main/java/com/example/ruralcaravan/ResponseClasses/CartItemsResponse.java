@@ -23,6 +23,9 @@ public class CartItemsResponse {
     @SerializedName("image")
     @Expose
     private String image;
+    @SerializedName("rate")
+    @Expose
+    private String rate;
 
     public Integer getId() {
         return id;
@@ -72,4 +75,11 @@ public class CartItemsResponse {
         this.image = image;
     }
 
+    public String getRate() {
+        return rate;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
+    }
 }

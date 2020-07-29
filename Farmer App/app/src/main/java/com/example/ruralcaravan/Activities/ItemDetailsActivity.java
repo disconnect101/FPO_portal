@@ -161,6 +161,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
     }
 
     private void choosePaymentMethod() {
+        paymentMode = Constants.PAYMENT_COD;
         final CFAlertDialog.Builder builder = new CFAlertDialog.Builder(ItemDetailsActivity.this);
         builder.setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT);
         builder.setTitle(getString(R.string.payment_mode));
