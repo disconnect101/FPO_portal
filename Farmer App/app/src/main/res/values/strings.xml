@@ -68,4 +68,6 @@
     <string name="rate">Rate</string>
     <string name="paid">Paid</string>
     <string name="not_paid">Not paid</string>
+    <string name="proceed_to_buy">Proceed to Buy</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -1,8 +1,6 @@
 package com.example.ruralcaravan.Fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +43,7 @@ public class YourOrdersFragment extends Fragment {
     private OrdersResponse[] deliveredOrders;
     private OrdersResponse[] pendingOrders;
     private int previousSelection;
-    private int size;
+    private int jsonResponseSize;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -137,7 +135,7 @@ public class YourOrdersFragment extends Fragment {
     }
 
     private void handleResponse() {
-        size = deliveredOrders.length + pendingOrders.length;
+        jsonResponseSize = deliveredOrders.length + pendingOrders.length;
         for (int i = 0; i < deliveredOrders.length; i++) {
             fetchNameAndImage(deliveredOrders[i]);
         }
@@ -159,8 +157,8 @@ public class YourOrdersFragment extends Fragment {
                     ItemDetailedResponse itemDetailedResponse = gson.fromJson(response.toString(), ItemDetailedResponse.class);
                     order.setName(itemDetailedResponse.getName());
                     order.setImage(itemDetailedResponse.getImage());
-                    --size;
-                    if(size == 0) {
+                    --jsonResponseSize;
+                    if(jsonResponseSize == 0) {
                         updateRecyclerView(Constants.DELIVERED_ORDERS);
                     }
                 }

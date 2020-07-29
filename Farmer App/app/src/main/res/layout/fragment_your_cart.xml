@@ -5,17 +5,31 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.YourCartFragment">
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="Update"/>
-
-    <Button
-        android:id="@+id/button2"
+    <TextView
+        android:id="@+id/textViewAmount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button1"
-        android:text="deleteItem"/>
+        android:layout_margin="20dp"
+        android:textSize="20sp"
+        android:textAlignment="center"/>
+
+    <TextView
+        android:id="@+id/proceedToBuy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewAmount"
+        android:textSize="20sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textAlignment="center"
+        android:text="@string/proceed_to_buy"
+        android:background="@color/yellow_add_to_cart"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewCart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/proceedToBuy"
+        android:layout_marginTop="10dp"/>
 
 </RelativeLayout>
