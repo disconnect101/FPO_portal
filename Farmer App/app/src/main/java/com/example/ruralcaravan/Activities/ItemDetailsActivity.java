@@ -79,6 +79,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("id",productId);
+            Log.e("json", jsonBody.toString());
             Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {

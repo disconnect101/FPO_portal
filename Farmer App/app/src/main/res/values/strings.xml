@@ -63,4 +63,9 @@
     <string name="pay">PAY</string>
     <string name="cancel">CANCEL</string>
     <string name="order_successful">Order successful</string>
+    <string name="delivered">Delivered</string>
+    <string name="pending">Pending</string>
+    <string name="rate">Rate</string>
+    <string name="paid">Paid</string>
+    <string name="not_paid">Not paid</string>
 </resources>

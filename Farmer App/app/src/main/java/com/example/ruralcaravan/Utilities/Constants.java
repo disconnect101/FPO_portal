@@ -19,4 +19,6 @@ public class Constants {
     public static final int PAYMENT_COD = 0;
     public static final int PAYMENT_PEW = 1;
     public static final int PAYMENT_CAS = 2;
+    public static final int DELIVERED_ORDERS = 0;
+    public static final int PENDING_ORDERS = 1;
 }

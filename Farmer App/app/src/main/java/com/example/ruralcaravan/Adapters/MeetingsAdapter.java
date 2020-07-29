@@ -39,7 +39,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.Meetin
     public void onBindViewHolder(@NonNull MeetingsViewHolder holder, int position) {
         MeetingsResponse meeting = meetingsResponseArrayList.get(position);
         Glide.with(context)
-                .load("http://192.168.43.132:8000" + meeting.getPhoto())
+                .load(context.getString(R.string.socket_address) + meeting.getPhoto())
                 .placeholder(R.drawable.app_logo)
 //                .circleCrop()
                 .into(holder.organizerLogo);
