@@ -7,6 +7,7 @@ from rest_framework.authtoken.models import Token
 from django.utils import timezone
 from datetime import datetime
 from ckeditor.fields import RichTextField
+from farmer.SMSservice import sms
 
 
 class MyUserProfileManager(BaseUserManager):   ## not a Model
@@ -75,10 +76,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
         Ewallet.objects.create(user=instance)
 
-# @receiver(post_delete, sender=settings.AUTH_USER_MODEL)
-# def delete_ewallet(sender, instance=None, *args, **kwargs):
-#     if Ewallet.objects.filter(user=instance).count()!=0:
-#         Ewallet.objects.get(user=instance).delete()
+
 
 
 class Products(models.Model):
@@ -119,6 +117,7 @@ class Crops(models.Model):
     def __str__(self):
         return self.name
 
+
 class Farmer(models.Model):
     user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
@@ -130,6 +129,10 @@ class Farmer(models.Model):
     pin = models.CharField(max_length=6, null=True, blank=True)
     photo = models.ImageField(upload_to='images/profile_photos/', null=True, blank=True)
 
+    ##Extra changes by Aniket
+    govt_schemes = models.ManyToManyField('Govt', blank=True)
+    engagement = models.FloatField(default=0.0)
+
     def __str__(self):
         return self.user.username + '-' +  self.first_name
 
@@ -138,6 +141,10 @@ class FarmerCropMap(models.Model):
     farmer = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     crop = models.ForeignKey(Crops, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+    landarea = models.FloatField(default=0)
+
+    class Meta:
+        unique_together = (("farmer", "crop"),)
 
 
 class Leader(models.Model):
@@ -214,6 +221,7 @@ class Orders(models.Model):
     def __str__(self):
         return self.buyer.username + " - " + self.item.name
 
+
 class Produce(models.Model):
     crop = models.ForeignKey(Crops, on_delete=models.PROTECT)
     amount = models.FloatField()
@@ -221,6 +229,7 @@ class Produce(models.Model):
     land = models.ForeignKey(Land, models.SET_NULL, null=True, blank=True)
     quality = models.BooleanField()
     owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
+    income = models.FloatField(default=0)
 
 
 
@@ -244,11 +253,21 @@ class ew_transaction(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
     amount = models.FloatField()
     date = models.DateTimeField(default=timezone.now)
-    #currrent_amount = models.FloatField()
+    currrent_amount = models.FloatField(default=0)
     description = models.CharField(max_length=200)
 
     def __str__(self):
         return self.refno
+
+@receiver(post_save, sender='farmer.ew_transaction')
+def send_sms_conf(sender, instance=None, created=False, **kwargs):
+    if created:
+        if instance.amount>0:
+            message = "Your E-wallet has been credited with Rs." + str(instance.amount)
+        else:
+            message = "Your E-wallet has been debited for Rs." + str(instance.amount)
+        send_to = str(instance.user.contact_set.first().number)
+        sms.send_message( '+91'+send_to, sms.TWILIO_NUMBER, message)
 
 class FPOLedger(models.Model):
     crop = models.ForeignKey(Crops, on_delete=models.PROTECT)
@@ -273,11 +292,32 @@ class Produce_FPOLedger_Map(models.Model):
 class Contact(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     number = models.CharField(max_length=13, unique=True)
-    otp = models.CharField(max_length=6)
+    otp = models.CharField(max_length=6, default='0')
     verification_status = models.BooleanField(default=False)
     datetime = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.number
 
+class Govt(models.Model):
+    name = models.CharField(max_length = 200)
+    description = models.TextField()
 
+
+#Extra Changes by Aniket
+class MeetingToken(models.Model):
+    # This is a special token that we need to create in order to track the attendance.
+    token_number = models.CharField(max_length=250)
+    # Has RSVPed. This tracks if the information about the event has been received by the farmer and he has agreed to come to the event.
+    has_rsvped = models.BooleanField(default=False)
+    # Did attend maintains the attendance
+    did_attend = models.BooleanField(default=False)
+    # Is redeemed will check if the token has been redeemed for some incentive
+    # (the incentive is not decided yet)
+    is_redeemed = models.BooleanField(default=False)
+    # The creation of the token
+    created_at = models.DateTimeField(auto_now_add=True)
+    # The event for which the token was created
+    meeting = models.ForeignKey(Meetings, on_delete=models.CASCADE)
+    # The farmer for which the token was created
+    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)

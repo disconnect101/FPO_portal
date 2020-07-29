@@ -7,6 +7,7 @@ from farmer.api.serializers import CropSerializer
 import json
 from django.core import serializers
 from django.forms.models import model_to_dict
+from farmer.SMSservice import sms
 
 
 @api_view(['GET', ])
@@ -15,8 +16,8 @@ def cropplan(request, cropID=0):
 
     if cropID==0:
         user = request.user
-        farmer = Farmer.objects.get(user=user)
-        crop_subscriptions = FarmerCropMap.objects.filter(farmer=farmer).order_by('-date')
+
+        crop_subscriptions = FarmerCropMap.objects.filter(farmer=user).order_by('-date')
         crop_subscriptions_ids = []
 
         subscriptions = []
@@ -25,6 +26,7 @@ def cropplan(request, cropID=0):
             subscriptions += [ CropSerializer(subscription.crop).data ]
 
         crops = Crops.objects.filter(live=True).exclude(id__in=list(crop_subscriptions_ids)).values('id',
+                                                                                                    'code',
                                                                                                     'name',
                                                                                                     'type',
                                                                                                     'max_cap',
@@ -74,15 +76,23 @@ def confcrop(request, cropID):
 
     if request.method=='POST':
         user = request.user
+        landarea = int(request.data.get('landarea'))
+
         try:
             crop = Crops.objects.get(id=cropID, live=True)
         except:
             return Response(statuscode('19'))
         try:
-            FarmerCropMap(farmer=user, crop=crop).save()
+            FarmerCropMap(farmer=user, crop=crop, landarea=landarea).save()
+            crop.current_amount += crop.weigth_per_land*landarea
+            crop.save()
         except:
             return Response(statuscode('12'))
 
+        message = "You have successfully subcribed to " + crop.name
+        if user.category != 'N':
+            send_to = str(user.contact_set.first().number)
+            sms.send_message('+91' + send_to, sms.TWILIO_NUMBER, message)
         return Response(statuscode('0'))
 
     if request.method=='DELETE':
@@ -93,6 +103,7 @@ def confcrop(request, cropID):
             return Response(statuscode('19'))
         try:
             subscription = FarmerCropMap.objects.get(farmer=user, crop=crop)
+            crop.current_amount -= subscription.landarea*crop.weigth_per_land
             subscription.delete()
         except:
             return Response(statuscode('12'))

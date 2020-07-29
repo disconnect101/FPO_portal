@@ -1,12 +1,13 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from farmer.models import Products, Kart, Orders, Crops
+from farmer.models import Products, Kart, Orders, Crops, ew_transaction
 from farmer.api.serializers import ProductSerializer, KartSerializer
 from django.core import serializers
 from .utils import *
 from farmer.api.utils import statuscode
 import json
+from farmer.SMSservice import sms
 
 
 @api_view(['POST',])
@@ -102,11 +103,12 @@ def kart(request):
         quantity = request.data.get('quantity')
 
         try:
-            kartItem = Kart.objects.get(id=kartItemID, user=user)
+            kartItems = Kart.objects.filter(user=user)
         except:
             return Response({
                 'statuscode': '13'
             })
+        kartItem = kartItems.get(id=kartItemID)
         kartItem.quantity = quantity
         try:
             kartItem.save()
@@ -114,8 +116,14 @@ def kart(request):
             return Response({
                 'statuscode': '18'
             })
+
+        total = 0
+        for kartItem in kartItems:
+            total += kartItem.quantity*kartItem.item.rate
+
         return Response({
-            'statuscode': '0'
+            'statuscode': '0',
+            'total': total,
         })
 
 
@@ -144,6 +152,12 @@ def kartdelete(request):
     })
 
 
+def send_sms_conf(sender, instance=None, created=False, **kwargs):
+    if created:
+        message = "Your order has been placed successfully, OrderID : " + str(instance.id)
+        if instance.buyer.category!='N':
+            send_to = str(instance.buyer.contact_set.first().number)
+            sms.send_message( '+91'+send_to, sms.TWILIO_NUMBER, message)
 
 
 @api_view(['POST', 'GET', ])
@@ -165,23 +179,44 @@ def order(request):
                 })
 
             try:
-                orderID = makeOrder(type=paymentType,
-                            buyer=user,
-                            item=product,
-                            rate=product.rate,
-                            quantity=quantity,
-                            price=product.rate*quantity)
+                order = Orders(type=type,
+                               buyer=user,
+                               item=product,
+                               rate=product.rate,
+                               quantity=quantity,
+                               price=product.rate * quantity)
             except Exception as e:
                 return Response({
                     'statuscode': str(e)
                 })
+
+            if paymentType=="CAS" or paymentType=="PEW":
+                order.is_paid = True
+
+            if paymentType == "PEW":
+                description = "Paid to FPO for OrderID: " + str(order.id)
+                try:
+                    refno = makeTransaction(user, order.price, description)
+                except Exception as e:
+                    return Response(statuscode(str(e)))
+            try:
+                order.save()
+                message = "Your order has been placed successfully, Products : " + order.item.name + ", OrderID : " + str(order.id)
+                if order.buyer.category != 'N':
+                    send_to = str(order.buyer.contact_set.first().number)
+                    sms.send_message('+91' + send_to, sms.TWILIO_NUMBER, message)
+            except Exception as e:
+                return Response(statuscode(str(e)))
+
             return Response({
                 'statuscode': '0',
-                'orderID': orderID,
+                'orderID': order.id,
             })
 
         else:
             kart = Kart.objects.filter(user=user)
+            if kart.count()==0:
+                return Response(statuscode('0'))
             productIDs = []
             for kartItem in kart:
                 productIDs += str(kartItem.item.id)
@@ -189,35 +224,59 @@ def order(request):
             products = Products.objects.filter(id__in=productIDs)
             totalCost = 0
 
+            for kartItem in kart:
+                totalCost += kartItem.item.rate * kartItem.quantity
             if paymentType=='PEW':
-                for kartItem in kart:
-                    totalCost += kartItem.item.rate * kartItem.quantity
                 ewalletBalance = Ewallet.objects.get(user=user).amount
                 if ewalletBalance < totalCost:
                     return Response(statuscode('17'))
 
             orderIDs = []
-            for product in products:
-                quantity = kart.get(item=product).quantity
+            orders = []
+            amount = 0
+            for kartentry in kart:
+                quantity = kartentry.quantity
                 try:
-                    orderID = makeOrder(type=paymentType,
-                                buyer=user,
-                                item=product,
-                                rate=product.rate,
-                                quantity=quantity,
-                                price=product.rate*quantity)
+                    orders.append(Orders(type=type,
+                                           buyer=user,
+                                           item=kartentry.item,
+                                           rate=kartentry.item.rate,
+                                           quantity=quantity,
+                                           price=kartentry.item.rate * quantity))
                 except Exception as e:
                     return Response(statuscode(str(e)))
 
-                orderIDs.append(orderID)
+            if paymentType == "PEW":
+                description = ""
+                try:
+                    refno = makeTransaction(user, totalCost, description)
+                except Exception as e:
+                    return Response(statuscode(str(e)))
 
-            orders = Orders.objects.filter(id__in=orderIDs).values('price')
-            amount = 0
+            productsstring = " "
             for order in orders:
-                amount += order.get('price')
+                if paymentType=="CAS" or paymentType=="PEW":
+                    order.is_paid = True
+                order.save()
+                orderIDs.append(order.id)
+                productsstring += " " + (order.item.name) + ","
+
+            try:
+                message = "Your order has been placed successfully, Products : " + productsstring
+                if order.buyer.category != 'N':
+                    send_to = str(order.buyer.contact_set.first().number)
+                    sms.send_message('+91' + send_to, sms.TWILIO_NUMBER, message)
+            except:
+                print("sms couldn't be sent")
+
+            if paymentType=="PEW":
+                description = "Paid to FPO for OrderIDs: " + str(orderIDs)
+                transaction = ew_transaction.objects.get(refno=refno)
+                transaction.description = description
+                transaction.save()
 
             kart.delete()
-            return Response(statuscode('0', {'orderIDs': orderIDs, 'total_cost': amount}))
+            return Response(statuscode('0', {'orderIDs': orderIDs, 'total_cost': totalCost}))
 
     if request.method=='GET':
         user = request.user
@@ -229,6 +288,22 @@ def order(request):
 
         completed_orders_list = list(completed_orders)
         pending_orders_list = list(pending_orders)
+
+        for completed_order in completed_orders_list:
+            product = Products.objects.get(id=completed_order.get('item_id'))
+            completed_order.update({
+                                        'product_name': product.name,
+                                        'rate': product.rate,
+                                        'image': product.image.url
+                                    })
+
+        for pending_order in pending_orders_list:
+            product = Products.objects.get(id=pending_order.get('item_id'))
+            pending_order.update({
+                                        'product_name': product.name,
+                                        'rate': product.rate,
+                                        'image': product.image.url
+                                    })
 
         data = {
             'completed_orders': completed_orders,

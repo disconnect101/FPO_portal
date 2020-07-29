@@ -32,44 +32,11 @@ def makeTransaction(user, amount, description):
     try:
         ewallet.save()
         ew_t.save()
-    except:
-        raise Exception('16')
+    except Exception as e:
+        raise Exception(e)
 
     return refno
 
-
-
-
-def makeOrder(type, buyer, item, rate, quantity, price):
-    order = Orders(type=type,
-                   buyer=buyer,
-                   item=item,
-                   rate=item.rate,
-                   quantity=quantity,
-                   price=item.rate * quantity)
-
-    if type == "COD":
-        pass
-    elif type == "CAS":
-        order.is_paid = True
-    elif type == "PEW":
-        description = "Paid to FPO for productID: " + str(item.id)
-        try:
-            refno = makeTransaction(user=buyer,
-                                    amount=item.rate * quantity,
-                                    description=description)
-        except Exception as e:
-            raise Exception(str(e))
-        order.is_paid = True
-    else:
-        pass    ##UPI payment
-
-    try:
-        order.save()
-    except:
-        raise Exception('15')
-
-    return order.id
 
 
 

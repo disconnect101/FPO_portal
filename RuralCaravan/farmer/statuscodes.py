@@ -21,4 +21,5 @@ status_codes = [
     ('19', 'Crop not available'),
     ('20', 'Unauthorized Access'),
     ('21', 'arguments missing')
+    ('22', 'no Entry in farmer table')
 ]
