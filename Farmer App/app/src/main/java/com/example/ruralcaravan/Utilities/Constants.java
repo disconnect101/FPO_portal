@@ -21,4 +21,6 @@ public class Constants {
     public static final int PAYMENT_CAS = 2;
     public static final int DELIVERED_ORDERS = 0;
     public static final int PENDING_ORDERS = 1;
+    public static final int NEW_PLANS = 0;
+    public static final int SUBSCRIBED_PLANS = 1;
 }

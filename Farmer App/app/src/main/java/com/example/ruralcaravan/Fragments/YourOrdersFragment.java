@@ -42,7 +42,7 @@ public class YourOrdersFragment extends Fragment {
     private ArrayList<OrdersResponse> ordersAdapterArrayList;
     private OrdersResponse[] deliveredOrders;
     private OrdersResponse[] pendingOrders;
-    private int previousSelection;
+    private int currentSelection;
     private int jsonResponseSize;
 
     @Override
@@ -63,7 +63,7 @@ public class YourOrdersFragment extends Fragment {
         recyclerViewOrders.setAdapter(ordersAdapter);
         recyclerViewOrders.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
-        previousSelection = Constants.PENDING_ORDERS;
+        currentSelection = Constants.PENDING_ORDERS;
 
         textViewDeliveredOrders.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,18 +117,18 @@ public class YourOrdersFragment extends Fragment {
     }
 
     private void updateRecyclerView(int id) {
-        if(id == Constants.DELIVERED_ORDERS && previousSelection == Constants.PENDING_ORDERS) {
+        if(id == Constants.DELIVERED_ORDERS && currentSelection == Constants.PENDING_ORDERS) {
             ordersAdapterArrayList.clear();
             ordersAdapterArrayList.addAll(Arrays.asList(deliveredOrders));
             recyclerViewOrders.getAdapter().notifyDataSetChanged();
-            previousSelection = Constants.DELIVERED_ORDERS;
+            currentSelection = Constants.DELIVERED_ORDERS;
             textViewPendingOrders.setBackground(null);
             textViewDeliveredOrders.setBackground(getActivity().getDrawable(R.drawable.bottom_border));
-        } else if(id == Constants.PENDING_ORDERS && previousSelection == Constants.DELIVERED_ORDERS) {
+        } else if(id == Constants.PENDING_ORDERS && currentSelection == Constants.DELIVERED_ORDERS) {
             ordersAdapterArrayList.clear();
             ordersAdapterArrayList.addAll(Arrays.asList(pendingOrders));
             recyclerViewOrders.getAdapter().notifyDataSetChanged();
-            previousSelection = Constants.PENDING_ORDERS;
+            currentSelection = Constants.PENDING_ORDERS;
             textViewDeliveredOrders.setBackground(null);
             textViewPendingOrders.setBackground(getActivity().getDrawable(R.drawable.bottom_border));
         }

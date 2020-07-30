@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,8 +21,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.crowdfire.cfalertdialog.CFAlertDialog;
-import com.example.ruralcaravan.Activities.ItemDetailsActivity;
-import com.example.ruralcaravan.Activities.MainActivity;
 import com.example.ruralcaravan.Adapters.CartItemsAdapter;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.CartItemsResponse;
