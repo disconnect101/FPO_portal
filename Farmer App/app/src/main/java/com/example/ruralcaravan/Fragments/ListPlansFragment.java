@@ -1,7 +1,6 @@
 package com.example.ruralcaravan.Fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.ruralcaravan.Adapters.PlansAdapter;
+import com.example.ruralcaravan.Adapters.ListPlansAdapter;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.PlansResponse;
 import com.example.ruralcaravan.Utilities.Constants;
@@ -34,19 +33,19 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlansFragment extends Fragment {
+public class ListPlansFragment extends Fragment {
 
-    View rootView;
-    TextView textViewNewPlans;
-    TextView textViewSubscribedPlans;
-    RecyclerView recyclerViewPlans;
-    ArrayList<PlansResponse> plansResponseAdapterArrayList;
+    private View rootView;
+    private TextView textViewNewPlans;
+    private TextView textViewSubscribedPlans;
+    private RecyclerView recyclerViewPlans;
+    private ArrayList<PlansResponse> plansResponseAdapterArrayList;
     private int currentSelection;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_plans, container, false);
+        rootView = inflater.inflate(R.layout.fragment_list_plans, container, false);
         textViewNewPlans = rootView.findViewById(R.id.textViewNewPlans);
         textViewSubscribedPlans = rootView.findViewById(R.id.textViewSubscribedPlans);
 
@@ -56,8 +55,8 @@ public class PlansFragment extends Fragment {
         recyclerViewPlans.setLayoutManager(linearLayoutManagerDaily);
 
         plansResponseAdapterArrayList = new ArrayList<>();
-        PlansAdapter plansAdapter = new PlansAdapter(getActivity(), plansResponseAdapterArrayList);
-        recyclerViewPlans.setAdapter(plansAdapter);
+        ListPlansAdapter listPlansAdapter = new ListPlansAdapter(getActivity(), plansResponseAdapterArrayList);
+        recyclerViewPlans.setAdapter(listPlansAdapter);
 
         currentSelection = Constants.SUBSCRIBED_PLANS;
         fetchPlans(Constants.NEW_PLANS);
@@ -126,7 +125,9 @@ public class PlansFragment extends Fragment {
         updateHeader(id);
         plansResponseAdapterArrayList.clear();
         plansResponseAdapterArrayList.addAll(Arrays.asList(plans));
-        recyclerViewPlans.getAdapter().notifyDataSetChanged();
+        ListPlansAdapter listPlansAdapter = (ListPlansAdapter) recyclerViewPlans.getAdapter();
+        listPlansAdapter.notifyDataSetChanged();
+        listPlansAdapter.setIsPlanSubscribed(id==1);
     }
 
     private void updateHeader(int id) {

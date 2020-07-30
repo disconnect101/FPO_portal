@@ -38,6 +38,12 @@ public class PlansResponse {
     @SerializedName("subscribers")
     @Expose
     private Integer subscribers;
+    @SerializedName("facilities")
+    @Expose
+    private String facilities;
+    @SerializedName("investment_requirements")
+    @Expose
+    private String investments;
 
     public Integer getId() {
         return id;
@@ -127,4 +133,38 @@ public class PlansResponse {
         this.subscribers = subscribers;
     }
 
+    public String getFacilities() {
+        return facilities;
+    }
+
+    public void setFacilities(String facilities) {
+        this.facilities = facilities;
+    }
+
+    public String getInvestments() {
+        return investments;
+    }
+
+    public void setInvestments(String investments) {
+        this.investments = investments;
+    }
+
+    @Override
+    public String toString() {
+        return "PlansResponse{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", maxCap=" + maxCap +
+                ", currentAmount=" + currentAmount +
+                ", weigthPerLand=" + weigthPerLand +
+                ", guidance='" + guidance + '\'' +
+                ", live=" + live +
+                ", image='" + image + '\'' +
+                ", subscribers=" + subscribers +
+                ", facilities='" + facilities + '\'' +
+                ", investments='" + investments + '\'' +
+                '}';
+    }
 }

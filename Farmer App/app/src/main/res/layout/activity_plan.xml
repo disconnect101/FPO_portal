@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.PlansFragment">
+    tools:context=".Activities.PlanActivity">
 
     <LinearLayout
         android:id="@+id/linearLayoutOptions"
@@ -13,31 +13,33 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textViewNewPlans"
+            android:id="@+id/textViewPlanDetails"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/new_plans"
+            android:text="@string/plan_details"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:onClick="showPlanDetails"/>
 
         <TextView
-            android:id="@+id/textViewSubscribedPlans"
+            android:id="@+id/textViewProductsUnderPlan"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/subscribed_plans"
+            android:text="@string/products_under_plan"
             android:textAlignment="center"
             android:padding="10dp"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:onClick="showProductsUnderPlan"/>
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewPlans"
+    <FrameLayout
+        android:id="@+id/planFragmentContainer"
+        android:layout_below="@+id/linearLayoutOptions"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/linearLayoutOptions"/>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

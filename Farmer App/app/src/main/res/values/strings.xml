@@ -73,4 +73,18 @@
     <string name="press_back_again_to_exit">Press back again to exit</string>
     <string name="new_plans">New Plans</string>
     <string name="subscribed_plans">Subscribed Plans</string>
+    <string name="plan_details">Plan Details</string>
+    <string name="products_under_plan">Products Under Plan</string>
+    <string name="maximum_capacity">Maximum Capacity</string>
+    <string name="acquired_percentage">Acquired %</string>
+    <string name="no_of_subscribers">No of subscribers</string>
+    <string name="guidance">Guidance</string>
+    <string name="facilities">Facilities</string>
+    <string name="investments">Investments</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="unsubscribe">Unsubscribe</string>
+    <string name="enter_land_area">Enter land area</string>
+    <string name="are_you_sure_you_want_to">Are you sure you want to </string>
+    <string name="enter_land_area_in_bigha">Enter land area (in bigha)</string>
+    <string name="confirmation">Confirmation</string>
 </resources>

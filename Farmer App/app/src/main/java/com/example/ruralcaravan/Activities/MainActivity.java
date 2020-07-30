@@ -29,7 +29,7 @@ import com.example.ruralcaravan.Fragments.EWalletFragment;
 import com.example.ruralcaravan.Fragments.HomeFragment;
 import com.example.ruralcaravan.Fragments.MeetingsFragment;
 import com.example.ruralcaravan.Fragments.NewsFragment;
-import com.example.ruralcaravan.Fragments.PlansFragment;
+import com.example.ruralcaravan.Fragments.ListPlansFragment;
 import com.example.ruralcaravan.Fragments.WeatherFragment;
 import com.example.ruralcaravan.Fragments.YourCartFragment;
 import com.example.ruralcaravan.Fragments.YourOrdersFragment;
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 switchToNewFragment(WeatherFragment.class, menuItem);
                 break;
             case R.id.plans:
-                switchToNewFragment(PlansFragment.class, menuItem);
+                switchToNewFragment(ListPlansFragment.class, menuItem);
                 break;
             case R.id.contact:
                 contactFPO();

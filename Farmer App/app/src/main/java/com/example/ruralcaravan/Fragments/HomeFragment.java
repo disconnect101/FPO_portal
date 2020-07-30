@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 menuItemId = R.id.weather;
                 break;
             case R.id.cardViewPlans:
-                fragment = new PlansFragment();
+                fragment = new ListPlansFragment();
                 menuItemId = R.id.plans;
                 break;
             default:
