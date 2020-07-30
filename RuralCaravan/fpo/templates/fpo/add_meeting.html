@@ -1,0 +1,82 @@
+ <!--Grid column-->
+          <div class="col-lg-6 col-md-12" style="padding-top:4%">
+			<!--Card-->
+            <div class="card">
+
+              <!--Card content-->
+              <div class="card-body">
+
+                <!-- Form -->
+                <form method="POST" enctype="multipart/form-data">
+                  <!-- Heading -->
+                  {% csrf_token %}
+                  <h3 class="dark-grey-text text-center">
+                    <strong>ADD A MEETING</strong>
+                  </h3>
+                  <hr>
+
+                  <div class="md-form">
+				  <i class="far fa-user-circle prefix green-text"></i>
+
+                    <input type="text"  class="form-control" name="organiser" maxlength="200" required id="id_organiser">
+                    <label class="required" for="id_organiser">Enter Organiser</label>
+                  </div>
+                  <div class="md-form">
+				  <i class="fas fa-check-square prefix green-text"></i>
+
+                    <input type="text"  class="form-control" name="agenda" maxlength="200" required id="id_agenda">
+                    <label for="id_agenda" class="required"> Enter Agenda</label>
+                  </div>
+                  <div class="md-form">
+				  <i class="fas fa-map-marker-alt prefix green-text"></i>
+
+                    <input type="text" class="form-control" name="venue" maxlength="200" required id="id_venue">
+                    <label class="required" for="id_venue">Enter Venue</label>
+                  </div>
+                  <div class="md-form">
+				  <i class="fas fa-calendar-alt prefix green-text"></i>
+
+                    <input type="text" name="date"  class="form-control" size="10" required id="id_date" >
+                    <label class="required" for="id_date">Enter Date in this format (YYYY-MM-DD)</label>
+                  </div>
+                  <div class="md-form">
+				  <i class="far fa-clock prefix green-text"></i>
+
+                    <input type="text" name="time"  class="form-control"  size="8" required id="id_time">
+                    <label class="required" for="id_time">Enter Time in this format (HH:MM:SS)</label>
+                  </div>
+
+
+                  <div class="md-form">
+                    <i class="fas fa-pencil-alt prefix green-text"></i>
+                    <textarea   type="text"  class="md-textarea" name="description" cols="40" rows="10" required id="id_description"></textarea>
+                    <label class="required" for="id_description">Enter Description</label>
+                  </div>
+                  <div class="form-row field-photo">
+
+
+
+
+              </div>
+
+                  <div class="text-center">
+                    <button class="btn btn-green" type="submit" value="Submit">ADD</button>
+
+                  </div>
+
+                  <!-- {{ form }} -->
+                  <!-- <input type="submit" value="Submit">  -->
+                </form>
+
+                <!-- Form -->
+
+              </div>
+
+            </div>
+
+          </div>
+          <!--/Grid column-->
+
+
+        </div>
+        <!--/Grid row-->

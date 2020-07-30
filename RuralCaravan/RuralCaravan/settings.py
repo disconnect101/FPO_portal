@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     #MyApps
     'farmer.apps.FarmerConfig',
     'fpo.apps.FpoConfig',
+	'members.apps.MembersConfig',
 
     #DjangoApps
     'django.contrib.admin',
@@ -44,7 +45,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework.authtoken',
     'ckeditor',
+    'ckeditor_uploader',
+    'crispy_forms',
 ]
+
+CKEDITOR_UPLOAD_PATH="images/"
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,6 +81,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'RuralCaravan.wsgi.application'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 AUTH_USER_MODEL = 'farmer.UserProfile'
 
@@ -142,3 +149,14 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 MEDIA_URL = '/media/'
+
+CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
+
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+CKEDITOR_IMAGE_BACKEND = "pillow"
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': None,
+    },
+}
