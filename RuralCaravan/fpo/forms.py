@@ -99,3 +99,7 @@ class OrdersForm(forms.ModelForm):
 
         # specify fields to be used
         fields = '__all__'
+
+class plan_add_productForm(forms.Form):
+    # create meta class
+    ID = forms.IntegerField()              

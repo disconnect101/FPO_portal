@@ -42,6 +42,11 @@ urlpatterns = [
     path('plans/delete/<id>', views.plans_delete, name = 'plans-delete'),
     path('plans/toggle/<id>', views.plans_toggle, name = 'plans-toggle'),
     path('plans/detail/<id>', views.plans_detail, name = 'plans-detail'),
+    
+    path('plans/api/data_village_count', views.data_village_count, name = 'plans-data-village-count'),
+    path('plans/api/data_village_quantity', views.data_village_quantity, name = 'plans-data-village-quantity'),
+    path('plans/detail/<id1>/delete/<id2>', views.plan_del_product, name = 'plan_del_product'),
+    path('plans/detail/<id>/add/', views.plan_add_product, name = 'plan_add_product'),
 
     path('products/', views.products_view, name='products'),
     path('products/update/<id>', views.products_update, name='products-update'),

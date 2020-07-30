@@ -769,6 +769,109 @@ def plans_update(request, id):
   
     return render(request, "fpo/update_plans.html", context)
 
+# api data for plans............................................................................. 
+def data_village_count(request, *args, **kwargs):
+    
+    data={}
+    
+    farmers = FarmerCropMap.objects.all()
+    for farmer in farmers:
+        obj = get_object_or_404(Farmer, user=farmer.farmer)#, category='F' and or 'P' or 'N')
+        print(obj.village)
+        if obj.village in data:
+            data[obj.village]+=1
+        else:
+            data[obj.village]=1
+    
+    return JsonResponse(data)
+def data_village_quantity(request, *args, **kwargs):
+    
+    data={}
+    
+    farmers = FarmerCropMap.objects.all()
+    for farmer in farmers:
+        obj = get_object_or_404(Farmer, user=farmer.farmer)#, category='F' and or 'P' or 'N')
+        print(obj.village)
+        crop1 = farmer.crop
+        obj1 = get_object_or_404(Crops, id=crop1.id)
+        print(obj1.weigth_per_land)
+        weight = obj1.weigth_per_land
+        # print(farmer.crop.weight_per_land)
+        if obj.village in data:
+            data[obj.village]+=(farmer.landarea)*weight
+        else:
+            data[obj.village]=(farmer.landarea)*weight
+    
+    return JsonResponse(data)    
+
+#..........................................................
+#add products in a plan 
+
+def plan_del_product(request, id1, id2):
+    # dictionary for initial data with
+    # field names as keys
+    context = {}
+
+    # add the dictionary during initialization
+    # user
+    # context["leader"] = Leader2.objects.get(user_id = id).all()
+    obj = get_object_or_404(Crops, id=id1)
+    sub = get_object_or_404(obj.products, id=id2)
+    # sub = Leader.objects.filter(user_id = id1, farmers_id = id2)
+
+    obj.products.remove(sub)
+    if (obj.products.count() >= 0):
+        print(obj.products.all())
+    return redirect('plans-detail',id=id1)
+
+    
+    return render(request, "fpo/plans.html", context)
+
+def plan_add_product(request, id):
+    # dictionary for initial data with
+    # field names as keys
+    context = {}
+
+    form = plan_add_productForm(request.POST or None, files=request.FILES)
+    if form.is_valid():
+        # form.save()
+        context["data"] = form
+        context["form"] = form
+
+        ID = form.cleaned_data['ID']
+        # print(ID)
+        # q1 = Q(category='F')
+        # q2 = Q(category='P')
+        # q3 = Q(category='N')
+        # q4 = Q(ID=ID)
+        # obj = UserProfile.objects.filter((q1 | q2 | q3) & q4)   
+        obj = Products.objects.filter( id=ID)
+        print(obj.count())
+
+        
+        if obj.count() < 1:
+            return redirect('/fpo/plans/detail/'+id)
+        
+        # print(obj[0].username)
+    
+        
+        obj2 = get_object_or_404(Products, id=obj.first().id)   
+        print(obj2)
+        sub = get_object_or_404(Crops, id=id)
+        sub.products.add(obj2)
+        sub.save()
+        if (sub.products.count() > 0):
+            for far in sub.products.all():
+                print(far)
+            # print(sub.farmers.all())
+            # return redirect('detail_leader',id=id)
+        return redirect('/fpo/plans/detail/'+id)
+
+    context['form'] = form
+    context['crops'] = Crops.objects.all()
+    return render(request, "fpo/add.html", context)  # change according to tempalate
+
+#.............................................................................................
 
 @login_required
 def products_view(request):
