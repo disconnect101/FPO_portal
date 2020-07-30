@@ -1,0 +1,107 @@
+package com.example.ruralcaravan.Fragments;
+
+import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.ruralcaravan.Adapters.MeetingsAdapter;
+import com.example.ruralcaravan.R;
+import com.example.ruralcaravan.ResponseClasses.MeetingsResponse;
+import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
+import com.example.ruralcaravan.Utilities.SharedPreferenceUtils;
+import com.example.ruralcaravan.Utilities.VolleySingleton;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
+
+public class MeetingsFragment extends Fragment {
+
+    private RecyclerView meetingsRecyclerView;
+    private ArrayList<MeetingsResponse> meetingsAdapterArrayList;
+    private ACProgressFlower dialog;
+    private View rootView;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        rootView = inflater.inflate(R.layout.fragment_meetings, container, false);
+        dialog = new ACProgressFlower.Builder(getActivity())
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+        rootView.setVisibility(View.INVISIBLE);
+        meetingsRecyclerView = rootView.findViewById(R.id.recyclerViewMeetings);
+        meetingsRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        meetingsRecyclerView.setLayoutManager(linearLayoutManager);
+        meetingsAdapterArrayList = new ArrayList<>();
+        MeetingsAdapter meetingsAdapter = new MeetingsAdapter(getActivity(), meetingsAdapterArrayList);
+        meetingsRecyclerView.setAdapter(meetingsAdapter);
+
+        String meetingsUrl = getResources().getString(R.string.base_end_point_ip) + "meetings/";
+
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+                        Gson gson = gsonBuilder.create();
+                        MeetingsResponse[] meetings = gson.fromJson(response.getJSONArray("data").toString(), MeetingsResponse[].class);
+                        handleMeetingsResponse(meetings);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error){
+            }
+        };
+        JsonObjectRequest meetingsRequest = new JsonObjectRequest(Request.Method.GET, meetingsUrl,null, responseListener, errorListener) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String,String> params = new HashMap<>();
+                params.put("Authorization", "Token " + SharedPreferenceUtils.getToken(getActivity()));
+                return params;
+            }
+        };
+        VolleySingleton.getInstance(getActivity()).addToRequestQueue(meetingsRequest);
+        return rootView;
+    }
+
+    private void handleMeetingsResponse(MeetingsResponse[] meetings) {
+        meetingsAdapterArrayList.clear();
+        meetingsAdapterArrayList.addAll(Arrays.asList(meetings));
+        meetingsRecyclerView.getAdapter().notifyDataSetChanged();
+        rootView.setVisibility(View.VISIBLE);
+        dialog.dismiss();
+    }
+
+}
