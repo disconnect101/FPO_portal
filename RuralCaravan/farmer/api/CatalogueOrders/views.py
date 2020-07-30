@@ -206,7 +206,7 @@ def order(request):
                     send_to = str(order.buyer.contact_set.first().number)
                     sms.send_message('+91' + send_to, sms.TWILIO_NUMBER, message)
             except Exception as e:
-                return Response(statuscode(str(e)))
+                return Response(statuscode('0'))
 
             return Response({
                 'statuscode': '0',
