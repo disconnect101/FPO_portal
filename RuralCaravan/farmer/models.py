@@ -199,6 +199,16 @@ class Meetings(models.Model):
     def __str__(self):
         return self.agenda
 
+@receiver(post_save, sender='farmer.Meetings')
+def send_sms_notification(sender, instance=None, created=False, **kwargs):
+    if created:
+        agenda = instance.agenda
+        organiser = instance.organiser
+        date = instance.date.strftime("%d/%m/%Y")
+        message = "A meeting on \"" + agenda + "\" by " + organiser + " is scheduled on " + date
+        contacts = Contact.objects.filter(verification_status=True)
+        for contact in contacts:
+            sms.send_message("+91"+contact.number, sms.TWILIO_NUMBER, message)
 
 
 class Orders(models.Model):
@@ -231,6 +241,8 @@ class Produce(models.Model):
     owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
     income = models.FloatField(default=0)
 
+    def __str__(self):
+        return self.owner + " " + self.crop.name
 
 
 class Kart(models.Model):
@@ -280,12 +292,12 @@ class FPOLedger(models.Model):
 
 
 
-class Produce_FPOLedger_Map(models.Model):
-    produce = models.ForeignKey(Produce, on_delete=models.PROTECT)
-    fpoledger = models.ForeignKey(FPOLedger, on_delete=models.PROTECT)
-    money_received = models.FloatField()      #Rupees
-    crop_sold = models.FloatField()           #Weight of crop sold
-    refno = models.CharField(max_length=15)
+# class Produce_FPOLedger_Map(models.Model):
+#     produce = models.ForeignKey(Produce, on_delete=models.PROTECT)
+#     fpoledger = models.ForeignKey(FPOLedger, on_delete=models.PROTECT)
+#     money_received = models.FloatField()      #Rupees
+#     crop_sold = models.FloatField()           #Weight of crop sold
+#     refno = models.CharField(max_length=15)
 
 
 
