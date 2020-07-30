@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ruralcaravan.Fragments.PlanDetailsFragment;
+import com.example.ruralcaravan.Fragments.ProductsUnderPlan;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.ItemDetailedResponse;
 import com.example.ruralcaravan.ResponseClasses.PlansResponse;
@@ -162,7 +163,7 @@ public class PlanActivity extends AppCompatActivity {
         if(firstTabSelected) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.planFragmentContainer, new PlanDetailsFragment())
+                    .replace(R.id.planFragmentContainer, new ProductsUnderPlan())
                     .commit();
             firstTabSelected = false;
             textViewPlanDetails.setBackground(null);
