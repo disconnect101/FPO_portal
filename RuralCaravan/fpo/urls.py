@@ -22,7 +22,9 @@ urlpatterns = [
 	path('govtschemes/<int:id>', views.govtschemes_single, name='govtschemes_single'),
     path('govtschemes/<int:id>/add/', views.govtschemes_single_add, name='govtschemes_single_add'),
 	
-	#path('statistics/', statistics.statistics, name='fpo_statistics'),
+	path('statistics/', views.fpo_statistics, name='fpo_statistics'),
+
+    path('send_message/', views.send_message, name='send_message'),
 
     path('redeem/', views.redeem, name="redeem"),
     path('populate_farmers/', views.populate_farmers, name='populate_farmers'),
