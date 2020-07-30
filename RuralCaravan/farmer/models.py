@@ -1,12 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.conf import settings
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.utils import timezone
 from datetime import datetime
 from ckeditor.fields import RichTextField
+from farmer.SMSservice import sms
 
 
 class MyUserProfileManager(BaseUserManager):   ## not a Model
@@ -73,10 +74,30 @@ class UserProfile(AbstractBaseUser):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+        Ewallet.objects.create(user=instance)
 
 
 
 
+class Products(models.Model):
+    name = models.CharField(max_length=100)
+
+    CATEGORY = (
+        ('SED', 'Seeds'),
+        ('FER', 'Fertilizer'),
+        ('PES', 'Pesticide'),
+        ('EQP', 'Equipment'),
+        ('OTH', 'Others'),
+    )
+    category = models.CharField(max_length=3, choices=CATEGORY)
+    rate = models.FloatField()
+    description = RichTextField(null=True, blank=True)
+    image = models.ImageField(upload_to='images/products_images/', null=True, blank=True)
+    available = models.BooleanField(default=True)
+
+    def __str__(self):
+        ID = str(self.id)
+        return ID + " " + self.name
 
 class Crops(models.Model):
     code = models.CharField(max_length=6)
@@ -87,6 +108,14 @@ class Crops(models.Model):
     weigth_per_land = models.FloatField()
     guidance = RichTextField(null=True, blank=True)
     live = models.BooleanField()
+    image = models.ImageField(upload_to='images/crop_images', null=True, blank=True)
+    products = models.ManyToManyField(Products, null=True, blank=True)
+    subscribers = models.IntegerField(default=0)
+    investment_requirements = models.TextField(null=True, blank=True, default=None)
+    facilities = models.TextField(null=True, blank=True, default=None)
+
+    def __str__(self):
+        return self.name
 
 
 class Farmer(models.Model):
@@ -100,14 +129,22 @@ class Farmer(models.Model):
     pin = models.CharField(max_length=6, null=True, blank=True)
     photo = models.ImageField(upload_to='images/profile_photos/', null=True, blank=True)
 
+    ##Extra changes by Aniket
+    govt_schemes = models.ManyToManyField('Govt', blank=True)
+    engagement = models.FloatField(default=0.0)
+
     def __str__(self):
         return self.user.username + '-' +  self.first_name
 
 
 class FarmerCropMap(models.Model):
-    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)
+    farmer = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     crop = models.ForeignKey(Crops, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+    landarea = models.FloatField(default=0)
+
+    class Meta:
+        unique_together = (("farmer", "crop"),)
 
 
 class Leader(models.Model):
@@ -121,7 +158,7 @@ class Leader(models.Model):
     pin = models.IntegerField()
     photo = models.ImageField(upload_to='images/profile_photos/', null=True, blank=True)
     profession = models.CharField(max_length=100, null=True, blank=True)
-    farmers = models.ManyToManyField(Farmer)
+    farmers = models.ManyToManyField(UserProfile, related_name='downlines', null=True, blank=True)
 
     def __str__(self):
         return self.user.username + '-' + self.first_name
@@ -159,28 +196,19 @@ class Meetings(models.Model):
     description = RichTextField(null=True, blank=True)
     photo = models.ImageField(upload_to='images/meeting_photos/', null=True, blank=True)
 
+    def __str__(self):
+        return self.agenda
 
-
-
-
-
-
-class Products(models.Model):
-    name = models.CharField(max_length=100)
-    associated_crop = models.ForeignKey(Crops, on_delete=models.SET_DEFAULT, default=-1)
-
-    CATEGORY = (
-        ('SED', 'Seeds'),
-        ('FER', 'Fertilizer'),
-        ('PES', 'Pesticide'),
-        ('EQP', 'Equipment'),
-        ('OTH', 'Others'),
-    )
-    category = models.CharField(max_length=3, choices=CATEGORY)
-    rate = models.FloatField()
-    description = RichTextField(null=True, blank=True)
-    image = models.ImageField(upload_to='images/products_images/', null=True, blank=True)
-
+@receiver(post_save, sender='farmer.Meetings')
+def send_sms_notification(sender, instance=None, created=False, **kwargs):
+    if created:
+        agenda = instance.agenda
+        organiser = instance.organiser
+        date = instance.date.strftime("%d/%m/%Y")
+        message = "A meeting on \"" + agenda + "\" by " + organiser + " is scheduled on " + date
+        contacts = Contact.objects.filter(verification_status=True)
+        for contact in contacts:
+            sms.send_message("+91"+contact.number, sms.TWILIO_NUMBER, message)
 
 
 class Orders(models.Model):
@@ -197,8 +225,11 @@ class Orders(models.Model):
     rate = models.FloatField()
     quantity = models.IntegerField()
     is_paid = models.BooleanField(default=False)
-    is_delivered = models.BooleanField()
+    is_delivered = models.BooleanField(default=False)
+    date = models.DateField(default=timezone.now)
 
+    def __str__(self):
+        return self.buyer.username + " - " + self.item.name
 
 
 class Produce(models.Model):
@@ -208,26 +239,47 @@ class Produce(models.Model):
     land = models.ForeignKey(Land, models.SET_NULL, null=True, blank=True)
     quality = models.BooleanField()
     owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
+    income = models.FloatField(default=0)
 
+    def __str__(self):
+        return self.owner + " " + self.crop.name
 
 
 class Kart(models.Model):
-    owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     item = models.ForeignKey(Products, on_delete=models.SET_DEFAULT, default=-1)
     quantity = models.IntegerField()
-    rate = models.FloatField()
-    price = models.FloatField()
 
+    def __str__(self):
+        return self.user.username + " " + self.item.name
 
+class Ewallet(models.Model):
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+    amount = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.user.username
 
 class ew_transaction(models.Model):
     refno = models.CharField(max_length=20)
     user = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
     amount = models.FloatField()
-    date = models.DateTimeField(auto_now_add=True)
-    currrent_amount = models.FloatField()
+    date = models.DateTimeField(default=timezone.now)
+    currrent_amount = models.FloatField(default=0)
     description = models.CharField(max_length=200)
 
+    def __str__(self):
+        return self.refno
+
+@receiver(post_save, sender='farmer.ew_transaction')
+def send_sms_conf(sender, instance=None, created=False, **kwargs):
+    if created:
+        if instance.amount>0:
+            message = "Your E-wallet has been credited with Rs." + str(instance.amount)
+        else:
+            message = "Your E-wallet has been debited for Rs." + str(instance.amount)
+        send_to = str(instance.user.contact_set.first().number)
+        sms.send_message( '+91'+send_to, sms.TWILIO_NUMBER, message)
 
 class FPOLedger(models.Model):
     crop = models.ForeignKey(Crops, on_delete=models.PROTECT)
@@ -240,23 +292,44 @@ class FPOLedger(models.Model):
 
 
 
-class Produce_FPOLedger_Map(models.Model):
-    produce = models.ForeignKey(Produce, on_delete=models.PROTECT)
-    fpoledger = models.ForeignKey(FPOLedger, on_delete=models.PROTECT)
-    money_received = models.FloatField()      #Rupees
-    crop_sold = models.FloatField()           #Weight of crop sold
-    refno = models.CharField(max_length=15)
+# class Produce_FPOLedger_Map(models.Model):
+#     produce = models.ForeignKey(Produce, on_delete=models.PROTECT)
+#     fpoledger = models.ForeignKey(FPOLedger, on_delete=models.PROTECT)
+#     money_received = models.FloatField()      #Rupees
+#     crop_sold = models.FloatField()           #Weight of crop sold
+#     refno = models.CharField(max_length=15)
 
 
 
 class Contact(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     number = models.CharField(max_length=13, unique=True)
-    otp = models.CharField(max_length=6)
+    otp = models.CharField(max_length=6, default='0')
     verification_status = models.BooleanField(default=False)
     datetime = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.number
 
+class Govt(models.Model):
+    name = models.CharField(max_length = 200)
+    description = models.TextField()
 
+
+#Extra Changes by Aniket
+class MeetingToken(models.Model):
+    # This is a special token that we need to create in order to track the attendance.
+    token_number = models.CharField(max_length=250)
+    # Has RSVPed. This tracks if the information about the event has been received by the farmer and he has agreed to come to the event.
+    has_rsvped = models.BooleanField(default=False)
+    # Did attend maintains the attendance
+    did_attend = models.BooleanField(default=False)
+    # Is redeemed will check if the token has been redeemed for some incentive
+    # (the incentive is not decided yet)
+    is_redeemed = models.BooleanField(default=False)
+    # The creation of the token
+    created_at = models.DateTimeField(auto_now_add=True)
+    # The event for which the token was created
+    meeting = models.ForeignKey(Meetings, on_delete=models.CASCADE)
+    # The farmer for which the token was created
+    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)

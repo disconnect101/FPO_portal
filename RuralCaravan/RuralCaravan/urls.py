@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from RuralCaravan import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -24,6 +24,8 @@ urlpatterns = [
     path('fpo/', include('fpo.urls')),
     path('farmer/', include('farmer.urls')),
     path('farmer/api/', include('farmer.api.urls')),
+    path('members/',include('members.urls')),
+    re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
     path('', views.home),
 ]
 

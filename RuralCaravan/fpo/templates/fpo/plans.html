@@ -1,0 +1,432 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Plans</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet">
+    <!--  custom styles  -->
+    <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
+   <link href="{% static 'css/addons/datatables.min.css'%}" rel="stylesheet">
+     <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    <style type="text/css">
+
+      html,
+      body,
+      header,
+      .carousel {
+        height: 60vh;
+      }
+
+      @media (max-width: 740px) {
+        html,
+        body,
+        header,
+        .carousel {
+          height: 100vh;
+        }
+      }
+
+      @media (min-width: 800px) and (max-width: 850px) {
+        html,
+        body,
+        header,
+        .carousel {
+          height: 100vh;
+        }
+      }
+
+      @media (min-width: 800px) and (max-width: 850px) {
+              .navbar:not(.top-nav-collapse) {
+                  background:#295e10!important;
+              }
+          }
+  input[type="checkbox"][readonly] {
+  pointer-events: none;
+}
+
+    </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+
+      <!-- Brand -->
+      <a class="navbar-brand" href="{% url 'home' %}" target="_blank">
+        <strong>FPO PORTAL</strong>
+      </a>
+
+      <!-- Collapse -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <!-- Left -->
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home' %}">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'plans' %}" >Plans</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
+          </li>
+        </ul>
+
+        <!-- Right -->
+        <ul class="navbar-nav nav-flex-icons">
+          <li class="nav-item">
+            <a href="{% url 'orders' %}" class="nav-link" >
+             <i class="fas fa-shopping-cart"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'products' %}" class="nav-link" >
+             <i class="fas fa-shopping-basket"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="statistics.html" class="nav-link" >
+             <i class="fas fa-chart-bar"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="members.html" class="nav-link border border-light rounded"
+              target="_blank">
+              <i class="fas fa-user"></i>Members
+            </a>
+          </li>
+		   <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}" >Logout</a>
+          </li>
+        </ul>
+		
+		   
+      </div>
+
+    </div>
+  </nav>
+  <!-- Navbar -->
+
+ 
+
+  <!--Main layout-->
+  <main style="padding-top:10%">
+    <div class="container" >
+
+     
+        <!--Section: Main features & Quick Start-->
+      <section style="padding-bottom:5%;margin-top:2em;">
+
+
+        <!--Grid row-->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="btn btn-green" id="home-tab" data-toggle="tab" href="#active" role="tab" aria-controls="active"
+              aria-selected="true">ACTIVE PLANS</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-red" id="profile-tab" data-toggle="tab" href="#inactive" role="tab" aria-controls="inactive"
+              aria-selected="false">INACTIVE PLANS</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-blue" id="contact-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add"
+              aria-selected="false">ADD NEW PLAN</a>
+          </li>
+      </ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="home-tab" >
+     <table id="dtBasicExample1" class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
+            <thead class="green lighten-4 " >
+              <tr>
+                <th class="th-sm">PLAN CODE
+
+                </th>
+                <th class="th-sm">CROP NAME
+
+                </th>
+                <th class="th-sm">CROP TYPE
+
+                </th>
+
+
+                 <th class="th-sm">EDIT PLAN
+
+                </th>
+                  <th class="th-sm">VIEW DETAILS
+
+                </th>
+                <th class="th-sm">MAKE IT INACTIVE
+
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+             {% block contentactive %}
+              {% for plans  in crop %}
+                {% if plans.live %}
+              <tr>
+
+                <td>{{plans.code}}</td>
+                <td>{{plans.name}}</td>
+                <td>{{plans.type}}</td>
+
+                <td><a href="update/{{ plans.id }}"><p style="text-align:center"><i class="fas fa-edit blue-text"></i></p></a></td>
+                  <td><a href="detail/{{ plans.id }}"><p style="text-align:center"><i class="fas fa-eye purple-text"></i></p></a></td>
+                <td><a href="toggle/{{ plans.id }}" onclick="return confirm('Are you sure you want to make this plan inactive?');"><p style="text-align:center"><i class="fas fa-ban red-text"></i></p></a></td>
+                {% endif %}
+                {% endfor %}
+      {% endblock contentactive %}
+              </tr>
+            </tbody></table>
+  </div>
+  <div class="tab-pane fade" id="inactive" role="tabpanel" aria-labelledby="profile-tab">
+     <table id="dtBasicExample2" class="table table-responsive-sm table-striped table-bordered " cellspacing="0" width="100%" style="text-align:center">
+            <thead class="red lighten-4" >
+              <tr>
+
+                <th class="th-sm">PLAN CODE
+
+                </th>
+                <th class="th-sm">CROP NAME
+
+                </th>
+                <th class="th-sm">TYPE
+
+                </th>
+
+                 <th class="th-sm">EDIT PLAN
+
+                </th>
+                   <th class="th-sm">VIEW DETAILS
+
+                </th>
+                <th class="th-sm">MAKE IT ACTIVE
+
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+             {% block contentinactive %}
+              {% for plans  in crop %}
+                {% if not plans.live %}
+              <tr>
+
+                <td>{{plans.code}}</td>
+                <td>{{plans.name}}</td>
+                <td>{{plans.type}}</td>
+                 <td><a href="update/{{ plans.id }}"><p style="text-align:center"><i class="fas fa-edit blue-text"></i></p></a></td>
+                   <td><a href="detail/{{ plans.id }}"><p style="text-align:center"><i class="fas fa-eye purple-text"></i> </p></a></td>
+                 <td><a href="toggle/{{ plans.id }}" onclick="return confirm('Are you sure you want to make this plan active?');"><p style="text-align:center"><i class="fas fa-check green-text"></i></p></a></td>
+                 {% endif %}
+                {% endfor %}
+      {% endblock contentinactive %}
+              </tr>
+            </tbody></table>
+  </div>
+  <div class="tab-pane fade" id="add" role="tabpanel" aria-labelledby="contact-tab">
+    <div class="col-lg-12 col-md-12">
+			<!--Card-->
+            <div class="card">
+
+              <!--Card content-->
+              <div class="card-body">
+
+                <!-- Form -->
+               <div class="form-group">
+                   <form method="POST" enctype="multipart/form-data">
+                       {% csrf_token %}
+                       {{form.media}}
+                        <div class="md-form">
+				  <i class="fas fa-leaf prefix green-text"></i>
+
+                    <input type="text"  class="form-control" name="code" maxlength="6" required id="id_code">
+                    <label class="required" for="id_code">Enter Crop Code</label>
+                  </div>
+                  <div class="md-form">
+				  <i class="fas fa-spa prefix green-text"></i>
+
+                    <input type="text"  class="form-control" name="name" maxlength="100" required id="id_name">
+                    <label for="id_name" class="required"> Enter Crop Name</label>
+                  </div>
+                  <div class="md-form">
+				  <i class="fab fa-bandcamp prefix green-text"></i>
+
+                    <input type="text" class="form-control" name="type" maxlength="100" required id="id_type">
+                    <label class="required" for="id_type">Enter Crop Type</label>
+                  </div>
+                  <div class="md-form">
+				  <i class="fas fa-warehouse prefix green-text"></i>
+
+                    <input  type="number" name="max_cap" step="any" required id="id_max_cap"  class="form-control"  >
+                    <label class="required" for="id_max_cap">Enter Maximum Capacity </label>
+                  </div>
+
+
+                  <div class="md-form">
+				  <i class="fas fa-weight-hanging prefix green-text"></i>
+
+                    <input type="number" name="weigth_per_land" step="any" required id="id_weigth_per_land"  class="form-control"  >
+                    <label class="required" for="id_weigth_per_land">Enter Weight per land</label>
+                  </div>
+
+                  <div class="md-form">
+                      <div>
+                      <p><strong>Enter Guidelines:</strong></p>
+                      </div>
+
+                    <textarea   type="text"  class="md-textarea" name="guidance" cols="40" rows="10" required id="id_guidance"></textarea>
+
+
+
+                </div>
+                    <div>
+
+
+                <i class="fas fa-warehouse prefix green-text"></i>
+                    <label class="required" for="id_current_amount">Current amount:</label>
+                          <input type="number" name="current_amount"  value="0" required id="id_current_amount" readonly >
+                        <input type="checkbox" name="live" id="id_live" checked readonly>
+                          <label  for="id_live">Add as an active plan</label>
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                         <div class="text-center">
+                            <button class="btn btn-green" type="submit" value="Submit">ADD</button>
+
+                          </div>
+                   </form>
+               </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                <!-- Form -->
+
+              </div>
+
+            </div>
+
+          </div>
+          <!--/Grid column-->
+
+  </div>
+</div>
+
+</div>
+
+
+
+      </section>
+
+    </div>
+  </main>
+  <!--Main layout-->
+
+  <!--Footer-->
+  <footer class="page-footer text-center font-small mt-4 wow fadeIn" >
+
+   
+
+    <!--Copyright-->
+    <div class="footer-copyright py-3">
+      © 2020 Copyright:
+  Rural Caravan 
+    </div>
+    <!--/.Copyright-->
+
+  </footer>
+  <!--/.Footer-->
+
+    <!-- SCRIPTS -->
+     <!-- JQuery -->
+     <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+     <!-- Bootstrap tooltips -->
+     <script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+     <!-- Bootstrap core JavaScript -->
+     <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+     <!-- MDB core JavaScript -->
+     <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/addons/datatables.min.js'%}"></script>
+<script>
+$(document).ready(function () {
+ $('#dtBasicExample1').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [0,2,3,4,5]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
+});
+</script>
+  <script>
+$(document).ready(function () {
+$('#dtBasicExample2').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [0,2,3,4,5]
+  }]
+});
+
+  $('.dataTables_length').addClass('bs-select');
+});
+</script>
+
+      <!-- Initializations -->
+  <script type="text/javascript">
+    // Animations initialization
+    new WOW().init();
+  </script>
+<script>
+        CKEDITOR.replace('guidance');
+
+ </script>
+</body>
+
+</html>

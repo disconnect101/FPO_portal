@@ -1,0 +1,463 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Display Leader Profile</title>
+
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+<!-- Bootstrap core CSS -->
+ <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+     <!-- Material Design Bootstrap -->
+     <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet">
+     <!--  custom styles  -->
+     <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<style>
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #547e40;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ccc;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: blueviolet;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+body{margin-top:20px;}
+
+        .align-center, .center {
+            text-align: center!important;
+        }
+
+        .profile-user-info {
+            display: table;
+            width: 98%;
+            width: calc(100% - 24px);
+            margin: 0 auto
+        }
+
+        .profile-info-row {
+            display: table-row
+        }
+
+        .profile-info-name,
+        .profile-info-value {
+            display: table-cell;
+            border-top: 1px dotted #D5E4F1
+        }
+
+        .profile-info-name {
+            text-align: left;
+            padding: 6px 10px 6px 4px;
+            font-weight: 400;
+            color: #667E99;
+            background-color: transparent;
+            width: 130px;
+            vertical-align: middle ;
+        }
+
+        .profile-info-value {
+            padding: 6px 4px 6px 6px
+        }
+
+        .profile-info-value>span+span:before {
+            display: inline;
+            content: ",";
+            margin-right: 3px;
+            color: #666;
+            border-bottom: 1px solid #FFF
+        }
+
+        .profile-info-value>span+span.editable-container:before {
+            display: none
+        }
+
+        .profile-info-row:first-child .profile-info-name,
+        .profile-info-row:first-child .profile-info-value {
+            border-top: none
+        }
+
+        .profile-user-info-striped {
+            border: 1px solid #DCEBF7
+        }
+
+        .profile-user-info-striped .profile-info-name {
+            color: #336199;
+            background-color: #EDF3F4;
+            border-top: 1px solid #F7FBFF
+        }
+
+        .profile-user-info-striped .profile-info-value {
+            border-top: 1px dotted #DCEBF7;
+            padding-left: 12px
+        }
+
+        .profile-picture {
+            border: 1px solid #CCC;
+            background-color: #FFF;
+            padding: 4px;
+            display: inline-block;
+            max-width: 100%;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            box-shadow: 1px 1px 1px rgba(0, 0, 0, .15)
+        }
+
+
+        @media (min-width: 800px) and (max-width: 850px) {
+        html,
+        body,
+        header,
+         {
+          height: 100vh;
+        }
+      }
+
+      @media (min-width: 800px) and (max-width: 850px) {
+              .navbar:not(.top-nav-collapse) {
+                  background:#295e10!important;
+              }
+          }
+footer {
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   height:50px;
+}
+body {font-family: Arial;}
+th {
+  background-color: #547e40;
+  color: white;
+}
+th,td{
+    padding:0.3%;
+    padding-left:1%
+}
+</style>
+</head>
+<body>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+        <div class="container">
+
+          <!-- Brand -->
+          <a class="navbar-brand" href="home.html">
+            <strong>FPO PORTAL</strong>
+          </a>
+
+          <!-- Collapse -->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- Links -->
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <!-- Left -->
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}">Home
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'plans' %}">Plans</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
+              </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'produce' %}" >Production</a>
+               </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'FPOLedger' %}" >Ledger</a>
+               </li>
+            </ul>
+
+            <!-- Right -->
+            <ul class="navbar-nav nav-flex-icons">
+                 <li class="nav-item">
+            <a href="{% url 'transaction'%}" class="nav-link" >
+             <i class="fas fa-rupee-sign"></i>
+            </a>
+          </li>
+              <li class="nav-item">
+                <a href="{% url 'orders' %}" class="nav-link" >
+                 <i class="fas fa-shopping-cart"></i>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="statistics.html" class="nav-link" >
+                 <i class="fas fa-chart-bar"></i>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'members' %}" class="nav-link border border-light rounded"
+                 >
+                  <i class="fas fa-user"></i>Members
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'govtschemes' %}" >Logout</a>
+              </li>
+
+
+            </ul>
+
+          </div>
+
+        </div>
+      </nav>
+<main style="padding-top: 5em;min-height: 90%;">
+<h3 style="padding-left: 2%;">Viewing {{data.first_name}}{{' '}}{{data.last_name}}'s Profile:</h3>
+
+
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'personal_details')" id="defaultOpen" style="padding-left: 2%;color:white">Personal Details</button>
+  <button class="tablinks" onclick="openCity(event, 'farmer_list')" style="color:white">Farmer List</button>
+  <button class="tablinks" onclick="openCity(event, 'incentives')" style="color:white;">Incentives</button>
+</div>
+
+<div id="personal_details" class="tabcontent">
+    <div id="user-profile-2" class="user-profile" style="margin-top:1%">
+
+
+                <div>
+                    <div id="home">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-3 center" style="margin-top:10px;">
+                                <span class="profile-picture">
+                                    {% if data.photo %}
+                                    <img class="editable img-responsive" alt="Leader Image" id="avatar2" src="{{data.photo.url}}" width="200em" height="230em">
+                                    {% else %}
+                                    <img class="editable img-responsive" alt="No Image Available" id="avatar2" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" width="200em" height="230em">
+                                    {% endif %}
+                                </span>
+
+
+                                <div class="space space-4"></div>
+
+
+                            </div><!-- /.col -->
+
+                            <div class="col-xs-12 col-sm-9" style="margin-top:5px;">
+                                <h4 style="color: blue;margin-left: 15px;">
+                                    <span class="middle">{{data.first_name}}{{' '}}{{data.last_name}}</span>
+
+
+                                </h4>
+
+                                <div class="profile-user-info">
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">ID </div>
+
+                                        <div class="profile-info-value">
+                                            <span>{{data.id}}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name"> Aadhar Number </div>
+
+                                        <div class="profile-info-value">
+
+                                            <span>{{data.aadhar}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name"> Contact number </div>
+
+                                        <div class="profile-info-value">
+
+                                            <span>{{data.contact}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">Profession</div>
+
+                                        <div class="profile-info-value">
+                                            <span>{{data.profession}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">Village</div>
+
+                                        <div class="profile-info-value">
+                                            <span>{{data.village}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">District</div>
+
+                                        <div class="profile-info-value">
+                                            <span>{{data.district}}</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+     </div>
+</div>
+</div>
+<div id="farmer_list" class="tabcontent">
+    <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
+         <h4>Add A Farmer Under {{ data.first_name }}{{' '}}{{ data.last_name}}</h4>
+        <!----action="{% url 'members'%}view_leader/{{data.id}}/add/--->
+         <form method="POST" enctype="multipart/form-data" action="{% url 'members'%}view_leader/{{data.id}}/add/">{% csrf_token %}
+             <!-----{{form}}-->
+            <div>
+                    <i class="far fa-user-circle prefix green-text"></i>
+                    <label for="username">Enter User Name of Farmer :</label>
+                    <input type="text"  name="username" maxlength="50" required id="username">
+
+                  </div>
+             <button type="submit" value="Submit" class="btn btn-primary">ADD</button>
+         </form>
+        <hr>
+        <h4>Existing Farmers Under {{ data.first_name }}{{' '}}{{ data.last_name}}</h4>
+        <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
+    <table
+        class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+        <thead>
+
+            <th>ID</th>
+            <th>Name</th>
+            <th>Village</th>
+            <th>Contact</th>
+            <th>Delete</th>
+         </thead>
+<tbody>
+     {% for farmer in data.farmers.all %}
+
+    <tr>
+
+        <td>{{farmer.id}}</td>
+        <td><a href="{% url 'members' %}view_farmer/{{farmer.id}}">{{ farmer.first_name }}{{' '}}{{ farmer.last_name}}</a></td>
+        <td>{{farmer.village}}</td>
+        <td>{{farmer.contact}}</td>
+        <td><p data-placement="top" data-toggle="tooltip" title="Delete"><a href="delete/{{farmer.id}}"><i class="fas fa-trash-alt"></i></a></p></td>
+    </tr>
+    {% endfor %}
+</tbody>
+
+    </table>
+        </div>
+    </div>
+</div>
+<div id="incentives" class="tabcontent">
+    <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
+         <h4>View Monetary Appreciation of the leader here</h4>
+        <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
+    <table
+        class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+        <thead>
+
+            <th>S no.</th>
+            <th>Description</th>
+            <th>Amount credited</th>
+         </thead>
+<tbody>
+    <tr>
+
+        <td>1</td>
+        <td>Added 10 new farmers</td>
+        <td>1000</td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Added 10 new farmers</td>
+        <td>1000</td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Added 10 new farmers</td>
+        <td>1000</td>
+
+    </tr>
+</tbody>
+
+    </table>
+        </div>
+    </div>
+</div>
+</main>
+<footer class="page-footer text-center font-small mt-4 wow fadeIn" >
+
+
+
+    <!--Copyright-->
+    <div class="footer-copyright py-3">
+      © 2020 Copyright:
+  Rural Caravan
+    </div>
+    <!--/.Copyright-->
+
+  </footer>
+  <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<script>
+     $(document).ready(function() {
+        $('table.display').DataTable({
+          "aLengthMenu": [[3, 5, 10, 25, -1], [3, 5, 10, 25, "All"]],
+            "iDisplayLength": 5
+
+           }
+
+        );
+    } );
+function openCity(evt, Name) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(Name).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+document.getElementById("defaultOpen").click();
+</script>
+
+</body>
+</html>

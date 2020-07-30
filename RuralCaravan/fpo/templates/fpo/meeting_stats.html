@@ -1,0 +1,504 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Meetings</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet">
+    <!--  custom styles  -->
+    <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
+    <!-- Charts Js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css" crossorigin="anonymous"></link>
+    <style type="text/css">
+
+      html,
+      body,
+      header,
+      .carousel {
+        height: 60vh;
+      }
+
+      @media (max-width: 740px) {
+        html,
+        body,
+        header,
+        .carousel {
+          height: 100vh;
+        }
+      }
+
+      @media (min-width: 800px) and (max-width: 850px) {
+        html,
+        body,
+        header,
+        .carousel {
+          height: 100vh;
+        }
+      }
+
+      @media (min-width: 800px) and (max-width: 850px) {
+              .navbar:not(.top-nav-collapse) {
+                  background:#295e10!important;
+              }
+          }
+
+      input.marker {
+        background-color: #4caf50;
+        width: 20px;
+        height: 20px;
+      }
+
+      #pushButton {
+        background-color: white;
+        border: 1px solid rgba(78, 205, 196, 1);
+        color: rgba(78, 205, 196, 1);
+        border-radius: 0.2rem;
+        font-size: 1.4rem;
+        padding: 0.2rem 1rem;
+        transition: all 0.5s;
+      }
+
+      #pushButton:hover {
+        background-color: rgba(78, 205, 196, 1);
+        border: 1px solid white;
+        color: white;
+      }
+
+      #pushButton:focus, #pushButton:active, #pushButton:selected {
+        border: 1px solid #d62828;
+      }
+
+      input.selectAll {
+        width: 16px;
+        height: 16px;
+      }
+
+    .card:hover {
+        cursor: pointer;
+    }
+
+    </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+
+      <!-- Brand -->
+      <a class="navbar-brand" href="{% url 'home' %}" target="_blank">
+        <strong>FPO PORTAL</strong>
+      </a>
+
+      <!-- Collapse -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <!-- Left -->
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home' %}">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="{% url 'plans' %}" >Plans</a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
+          </li>
+        </ul>
+
+        <!-- Right -->
+        <ul class="navbar-nav nav-flex-icons">
+          <li class="nav-item">
+            <a href="orders.html" class="nav-link" >
+             <i class="fas fa-shopping-cart"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="statistics.html" class="nav-link" >
+             <i class="fas fa-chart-bar"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'members' %}" class="nav-link border border-light rounded"
+              target="_blank">
+              <i class="fas fa-user"></i>Members
+            </a>
+          </li>
+		   <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}" >Logout</a>
+          </li>
+        </ul>
+
+
+      </div>
+
+    </div>
+  </nav>
+  <!-- Navbar -->
+
+
+
+  <!--Main layout-->
+<main style="padding-top:10%">
+    <div class="container" >
+        <div class="row">
+            <div class="col-md-12 col-lg-8">
+                <p style="text-align: left; opacity: 0.2" class="mb-0"><strong>ORGANISED BY</strong></p>
+                <h1 style="text-align: left;" class="green-text mt-0 mb-3">{{data.organiser}}</h1>
+                <hr style="margin: 0; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
+                <br>
+                <p style="text-align: right; text-transform: uppercase; font-size: 1.2rem; color: red;" ><strong style="color: darkgreen; border: 1px solid darkgreen; padding: 0.2rem 0.8rem; border-radius: 0.2rem;">Completed</strong></p>
+                <h4 style="text-align: left;"><strong class="green-text">Agenda:</strong> {{data.agenda}}</h4>
+                <br>
+                <p>
+                    <span style="font-size: 1.3rem;" class="green-text"><strong>Details:</strong></span> {{data.description}}
+                </p>    
+                <h5 style="text-align: left;"><strong class="green-text">Time:</strong> {{data.time}}</h5>
+                <h5 style="text-align: left;"><strong class="green-text">Venue:</strong> {{data.venue}}</h5>
+            </div>
+            <div class="col-md-12 col-lg-4">
+                <h1 style="text-align: center;" class="green-text">Overall Numbers</h1>
+                <div class="row mt-4">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <div class="card" style="background-color: #4caf50;">
+                        <div class="card-body">
+                            <h2 class="text-center mb-0" style="color: white;">{{present}}</h2>
+                            <p class="text-center mb-0"><strong style="color: white;">ATTENDED</strong></p>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <div class="card" style="background-color: #4caf50;">
+                        <div class="card-body">
+                            <h2 class="text-center mb-0" style="color: white;">{{rsvp}}</h2>
+                            <p class="text-center mb-0"><strong style="color: white;">RESPONDED</strong></p>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <div class="card" style="background-color: #4caf50;">
+                        <div class="card-body">
+                            <h2 class="text-center mb-0" style="color: white;">120</h2>
+                            <p class="text-center mb-0"><strong style="color: white;">MINUTES</strong></p>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr style="margin: 4rem;">
+    </div>
+    <div style="width: 80%; margin: 2rem auto;">
+    <div style="text-align: center;">
+        <i class="fas fa-chart-pie fa-4x green-text mb-3" style="opacity: 0.2"></i>
+    </div>
+        <h1 style="text-align: center; margin-bottom: 1.6rem; color: #4caf50">Statistics</h1>
+        <hr style="margin: 2rem auto; width: 6rem; border: 2px solid lightgray; border-radius: 20rem;">
+        <div class="row mt-2 mb-4">
+            <div class="col-lg-6 col-12 mt-4">
+                <h1 style="text-align: center;" class="green-text">Engagement By Leaders</h1>
+                <canvas id="myChart4" width="100" height="100"></canvas>
+            </div>
+            <div class="col-lg-6 col-md-12 mt-4">
+                <h1 style="text-align: center;" class="green-text">Engagement By Villages</h1>
+                <canvas id="myChart3" width="100" height="100"></canvas>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-4 col-md-12 mt-4">
+                <h1 style="text-align: center;" class="green-text mb-4">Reach</h1>
+                <canvas id="myChart1" width="100" height="100"></canvas>
+            </div>
+            <div class="col-lg-4 col-md-12 mt-4">
+                <h1 style="text-align: center;" class="green-text mb-4">Reach vs Footfall</h1>
+                <canvas id="myChart" width="100" height="100"></canvas>
+            </div>
+            <div class="col-lg-4 col-md-12 mt-4">
+                <h1 style="text-align: center;" class="green-text mb-4">Final Turn Out</h1>
+                <canvas id="myChart2" width="100" height="100"></canvas>
+            </div>
+        </div>
+        {% comment %} <div class="row mt-2 mb-4">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6 col-md-12 mt-4">
+                <h1 style="text-align: center;" class="green-text">Engagement By Villages</h1>
+                <canvas id="myChart3" width="100" height="100"></canvas>
+            </div>
+            <div class="col-lg-2"></div>
+        </div> {% endcomment %}
+    </div>
+</main>
+  <!--Main layout-->
+
+  <!--Footer-->
+  <footer class="page-footer text-center font-small mt-4 wow fadeIn" >
+
+
+
+    <!--Copyright-->
+    <div class="footer-copyright py-3">
+      © 2020 Copyright:
+  Rural Caravan
+    </div>
+    <!--/.Copyright-->
+
+  </footer>
+  <!--/.Footer-->
+
+    <!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+      <!-- Initializations -->
+  <script type="text/javascript">
+    // Animations initialization
+    new WOW().init();
+
+    var rsvp = {{rsvp}};
+    var no_rsvp = {{no_rsvp}};
+
+    // Chart js first graph initialisation
+    var ctx1 = document.getElementById('myChart1').getContext('2d');
+    var myChart1 = new Chart(ctx1, {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [rsvp, no_rsvp],
+                backgroundColor: [
+                //'rgba(54, 162, 235, 0.6)',
+                //'rgba(255, 206, 86, 0.6)',
+                'rgba(78, 205, 196, 1)',
+                'rgba(255, 107, 107, 1)',
+            ]
+            }],
+            labels: ['RSVP', 'No Response']
+        },
+        options: {}
+    });
+
+    var present = {{present}};
+    var absent = {{absent}};
+
+    // Chart js second graph initialisation
+    var ctx2 = document.getElementById('myChart2').getContext('2d');
+    var myChart2 = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [present, absent],
+                backgroundColor: [
+                //'rgba(54, 162, 235, 0.6)',
+                //'rgba(255, 206, 86, 0.6)',
+                'rgba(78, 205, 196, 1)',
+                'rgba(255, 107, 107, 1)',
+            ]
+            }],
+            labels: ['Present', 'Absent']
+        },
+        options: {}
+    });
+
+
+
+    var rsvp_percentage = (rsvp/(rsvp+no_rsvp))*100;
+    var present_percentage = (present/(present+absent))*100;
+    // Chart js bar graph initialisation
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+        labels: ['Reach', 'Footfall'],
+        datasets: [{
+            label: 'Percentage of Total Farmers',
+            data: [rsvp_percentage.toFixed(2), present_percentage.toFixed(2)],
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+        options: {
+             scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    suggestedMax: 100
+                }
+            }]
+        }
+        }
+    });
+
+    // Engagement By Villages
+    const engagement_by_village = {{ villages|safe }};
+    var backgroundColorEngagement = [];
+    var borderColorEngagement = [];
+    for(let i = 0; i < engagement_by_village.engagements.length; i++){
+        let eng = engagement_by_village.engagements[i];
+        if(eng > 50) {
+            backgroundColorEngagement.push('rgba(75, 192, 192, 0.2)');
+            borderColorEngagement.push('rgba(75, 192, 192, 1)');
+        } else if (eng < 35) {
+            backgroundColorEngagement.push('rgba(255, 99, 132, 0.2)');
+            borderColorEngagement.push('rgba(255, 99, 132, 1)');
+        } else {
+            backgroundColorEngagement.push('rgba(255, 206, 86, 0.2)');
+            borderColorEngagement.push('rgba(255, 206, 86, 1)');
+        }
+    }
+
+    var backgroundColorRSVP = [];
+    var borderColorRSVP = [];
+    for(let i = 0; i < engagement_by_village.rsvp.length; i++){
+        let eng = engagement_by_village.rsvp[i];
+        if(eng > 50) {
+            backgroundColorRSVP.push('rgba(75, 192, 192, 0.2)');
+            borderColorRSVP.push('rgba(75, 192, 192, 1)');
+        } else if (eng < 35) {
+            backgroundColorRSVP.push('rgba(255, 99, 132, 0.2)');
+            borderColorRSVP.push('rgba(255, 99, 132, 1)');
+        } else {
+            backgroundColorRSVP.push('rgba(255, 206, 86, 0.2)');
+            borderColorRSVP.push('rgba(255, 206, 86, 1)');
+        }
+    }
+    
+    var ctx3 = document.getElementById('myChart3').getContext('2d');
+    var myChart3 = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+        labels: engagement_by_village.names,
+        datasets: [{
+            label: 'Percentage Engagement of Farmers',
+            data: engagement_by_village.engagements,
+            backgroundColor: backgroundColorEngagement,
+            borderColor: borderColorEngagement,
+            borderWidth: 1
+        },{
+            label: 'Percentage Reach to Farmers',
+            data: engagement_by_village.rsvp,
+            backgroundColor: backgroundColorRSVP,
+            borderColor: borderColorRSVP,
+            borderWidth: 1
+        }]
+    },
+        options: {
+             scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    suggestedMax: 100
+                }
+            }]
+        }
+        }
+    });
+    
+    // Engagement By Leaders
+    const engagement_by_leaders = {{ leaders|safe }};
+    var backgroundColorEngagement = [];
+    var borderColorEngagement = [];
+    for(let i = 0; i < engagement_by_leaders.engagements.length; i++){
+        let eng = engagement_by_leaders.engagements[i];
+        if(eng > 50) {
+            backgroundColorEngagement.push('rgba(75, 192, 192, 0.2)');
+            borderColorEngagement.push('rgba(75, 192, 192, 1)');
+        } else if (eng < 35) {
+            backgroundColorEngagement.push('rgba(255, 99, 132, 0.2)');
+            borderColorEngagement.push('rgba(255, 99, 132, 1)');
+        } else {
+            backgroundColorEngagement.push('rgba(255, 206, 86, 0.2)');
+            borderColorEngagement.push('rgba(255, 206, 86, 1)');
+        }
+    }
+
+    var backgroundColorRSVP = [];
+    var borderColorRSVP = [];
+    for(let i = 0; i < engagement_by_leaders.rsvp.length; i++){
+        let eng = engagement_by_leaders.rsvp[i];
+        if(eng > 50) {
+            backgroundColorRSVP.push('rgba(75, 192, 192, 0.2)');
+            borderColorRSVP.push('rgba(75, 192, 192, 1)');
+        } else if (eng < 35) {
+            backgroundColorRSVP.push('rgba(255, 99, 132, 0.2)');
+            borderColorRSVP.push('rgba(255, 99, 132, 1)');
+        } else {
+            backgroundColorRSVP.push('rgba(255, 206, 86, 0.2)');
+            borderColorRSVP.push('rgba(255, 206, 86, 1)');
+        }
+    }
+    
+    var ctx4 = document.getElementById('myChart4').getContext('2d');
+    var myChart4 = new Chart(ctx4, {
+        type: 'bar',
+        data: {
+        labels: engagement_by_leaders.names,
+        datasets: [{
+            label: 'Percentage Engagement of Farmers',
+            data: engagement_by_leaders.engagements,
+            backgroundColor: backgroundColorEngagement,
+            borderColor: borderColorEngagement,
+            borderWidth: 1
+        }, {
+            label: 'Percentage Reach to Farmers',
+            data: engagement_by_leaders.rsvp,
+            backgroundColor: backgroundColorRSVP,
+            borderColor: borderColorRSVP,
+            borderWidth: 1
+        }]
+    },
+        options: {
+             scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    suggestedMax: 100
+                }
+            }]
+        }
+        }
+    });
+    
+
+  </script>
+</body>
+
+</html>

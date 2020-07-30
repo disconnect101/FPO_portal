@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from farmer.models import UserProfile, Farmer
+from farmer.models import UserProfile, Farmer, Products, Kart, Meetings, Crops
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -28,7 +28,7 @@ class FarmerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Farmer
-        fields = ['first_name', 'last_name', 'village', 'district', 'contact']
+        fields = ['first_name', 'last_name', 'village', 'district']
 
     def save(self, user):
         farmer = Farmer(
@@ -37,8 +37,35 @@ class FarmerSerializer(serializers.ModelSerializer):
             last_name=self.validated_data['last_name'],
             district=self.validated_data['district'],
             village=self.validated_data['village'],
-            contact=self.validated_data['contact'],
         )
 
         farmer.save()
+
+
+class ProductSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Products
+        fields = ['id', 'name', 'category', 'rate', 'description', 'image']
+
+
+class KartSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Kart
+        fields = ['id', 'user', 'item', 'quantity']
+
+
+class MeetingsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Meetings
+        fields = ['organiser', 'agenda', 'venue', 'date', 'time', 'description', 'photo']
+
+
+class CropSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Crops
+        fields = [ 'id', 'code', 'name', 'type', 'max_cap', 'current_amount', 'weigth_per_land', 'guidance', 'live', 'image', 'subscribers' ]
 
