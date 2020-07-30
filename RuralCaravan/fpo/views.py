@@ -654,17 +654,27 @@ def govtschemes_single(request, id):
     villages = Farmer.objects.values('village').annotate(total=Count('village'))
     villages_total = {x['village']:x['total'] for x in villages}
 
-    farmers = Farmer.objects.filter(~Q(govt_schemes=scheme))
+    #Condition: filter(~Q(govt_schemes=scheme))
+    farmers = Farmer.objects.all()
     context['data'] = scheme
 
     farmers_by_scheme = []
     
     for farmer in farmers:
+        communication_type = farmer.user.category
+        if communication_type == 'F':
+            communication_type = Phone_Type[0]
+        elif communication_type == 'P':
+            communication_type = Phone_Type[1]
+        else:
+            communication_type = Phone_Type[2]
+
         farmers_by_scheme.append({
             "id": farmer.id,
             "farmer": f'{farmer.first_name} {farmer.last_name}',
             "locality": farmer.village,
-            "smartphone_type": random.choice(Phone_Type)
+            "smartphone_type": communication_type,
+            "schemes": farmer.govt_schemes.all()
         })
     
     farmers_by_locality = []
@@ -673,16 +683,20 @@ def govtschemes_single(request, id):
         for locality in farmers_by_locality:
             if locality['locality_name'] == farmer['locality']:
                 locality['farmers'].append(farmer)
-                locality['engagement'] = 100 - round(len(locality['farmers'])/villages_total[farmer['locality']], 2)*100
+                print('Sum')
+                print(sum(scheme in x['schemes'] for x in locality['farmers']))
+                print()
+                locality['engagement'] = round(sum(scheme in x['schemes'] for x in locality['farmers'])/villages_total[farmer['locality']], 2)*100
                 locality['farmers'] = sorted(locality['farmers'], key=lambda x: x['farmer'])
                 placed = True
         if not placed:
             farmers_by_locality.append({
                 "locality_id": random.randint(10000, 99999), 
                 "locality_name": farmer['locality'], 
-                "engagement": 100 - (round(1/villages_total[farmer['locality']], 2))*100,
+                "engagement": (round([1 if scheme in farmer['schemes'] else 0][0]/villages_total[farmer['locality']], 2))*100,
                 "farmers": [farmer],
             })
+
     temp_farmers_by_locality = []
     special_attention_villages = []
     for locality in farmers_by_locality:
@@ -694,8 +708,14 @@ def govtschemes_single(request, id):
     farmers_by_locality = temp_farmers_by_locality
     special_attention_villages = sorted(special_attention_villages, key=lambda x: len(x['farmers']), reverse=True)
 
-    context['specials'] = special_attention_villages
-    context['villages'] = farmers_by_locality
+    special_attention_villages = sorted(special_attention_villages, key=lambda x: x['locality_name'])
+    farmers_by_locality = sorted(farmers_by_locality, key=lambda x: x['locality_name'])
+
+    for locality in farmers_by_locality:
+        locality['farmers'] = list(filter(lambda x: scheme not in x['schemes'], locality['farmers']))
+
+    for locality in special_attention_villages:
+        locality['farmers'] = list(filter(lambda x: scheme not in x['schemes'], locality['farmers']))
 
     village_data = [(x['locality_name'], x['engagement']) for x in farmers_by_locality] + [(x['locality_name'], x['engagement']) for x in special_attention_villages]
     
@@ -709,6 +729,16 @@ def govtschemes_single(request, id):
     context['village_names'] = village_names
     context['village_total'] = village_total
     context['village_population'] = villages_total
+
+
+    special_attention_villages = list(filter(lambda x: len(x['farmers'])>0, special_attention_villages))
+    farmers_by_locality = list(filter(lambda x: len(x['farmers'])>0, farmers_by_locality))
+
+
+    context['specials'] = special_attention_villages
+    context['villages'] = farmers_by_locality
+
+
     return render(request, 'fpo/govt_scheme.html', context)
 
 
