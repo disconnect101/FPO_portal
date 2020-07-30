@@ -18,7 +18,7 @@
 <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
 <style>
-body {font-family: Arial;}
+/*body {font-family: Arial;}*/
 
 /* Style the tab */
 .tab {
@@ -158,7 +158,7 @@ footer {
    width: 100%;
    height:50px;
 }
-body {font-family: Arial;}
+/*body {font-family: Arial;}*/
 th {
   background-color: #547e40;
   color: white;
@@ -174,7 +174,7 @@ th,td{
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}" >
+      <a class="navbar-brand" href="{% url 'home' %}">
         <strong>FPO PORTAL</strong>
       </a>
 
@@ -189,30 +189,35 @@ th,td{
 
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="{% url 'home' %}">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item  active">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'plans' %}" >Plans</a>
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
           </li>
-            <li class="nav-item">
+             <li class="nav-item">
             <a class="nav-link" href="{% url 'produce' %}" >Production</a>
           </li>
             <li class="nav-item">
-            <a class="nav-link" href="{% url 'FPOLedger' %}" >Ledger</a>
-          </li>
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item">
+            <a href="{% url 'add_user' %}" class="nav-link" >
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
              <li class="nav-item">
             <a href="{% url 'transaction'%}" class="nav-link" >
              <i class="fas fa-rupee-sign"></i>
@@ -223,28 +228,35 @@ th,td{
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
+             <li class="nav-item">
+            <a href="{% url 'products' %}" class="nav-link" >
+             <i class="fas fa-shopping-basket"></i>
+            </a>
+          </li>
           <li class="nav-item">
-            <a href="" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" >
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'members' %}" class="nav-link border border-light rounded">
+            <a href="{% url 'members' %}" class="nav-link border border-light rounded"
+             >
               <i class="fas fa-user"></i>Members
             </a>
           </li>
-		   <li class="nav-item">
+		  <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
-        </ul>
 
+
+        </ul>
 
       </div>
 
     </div>
   </nav>
   <!-- Navbar -->
-      <main style="padding-top:5em;min-height: 90%;">
+      <main style="padding-top:5em;min-height: 90%;font-family:Arial">
 <h3 style="padding-left: 2%;">Viewing {{data.first_name}}{{' '}}{{data.last_name}}'s Profile:</h3>
 
 <div class="tab">
@@ -453,13 +465,14 @@ th,td{
             <h4 style="color: blue;margin-left: 15px;">
                 <span class="middle">Land Details</span>
             </h4>
-
+            {% for entry in landdetails %}
+                {% if entry.owner == data.user %}
             <div class="profile-user-info">
                 <div class="profile-info-row">
                     <div class="profile-info-name">Soil Type</div>
 
                     <div class="profile-info-value">
-                        <span>{{land_details.soil}}</span>
+                        <span>{{entry.soil}}</span>
                     </div>
                 </div>
 
@@ -468,7 +481,7 @@ th,td{
 
                     <div class="profile-info-value">
 
-                        <span>{{land_details.area}}</span>
+                        <span>{{entry.area}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">
@@ -476,24 +489,29 @@ th,td{
 
                     <div class="profile-info-value">
 
-                        <span>{{land_details.address}}</span>
+                        <span>{{entry.address}}</span>
                     </div>
                 </div>
 
             </div>
-
+            {% endif %}
+            {% endfor %}
 
         </div>
     </div><!-- /.col -->
+    <br>
+    <span><a href="{% url 'members'%}view_farmer/{{data.id}}/land" class="btn btn-primary">Add/Edit Land Details</a></span>
 </div>
 <div id="bank_details" class="tabcontent">
+
     <div class="row" style="margin-top:1%">
 
         <div class="col-xs-12 col-sm-9">
             <h4 style="color: blue;margin-left: 15px;">
                 <span class="middle">Bank Details</span>
             </h4>
-
+            {% for entry in bankdetails %}
+            {% if entry.user == data.user %}
             <div class="profile-user-info">
 
                 <div class="profile-info-row">
@@ -501,7 +519,7 @@ th,td{
 
                     <div class="profile-info-value">
 
-                        <span>{{bank_details.acc_no}}</span>
+                        <span>{{entry.acc_no}}</span>
                     </div>
                 </div>
                 <div class="profile-info-row">
@@ -509,13 +527,20 @@ th,td{
 
                     <div class="profile-info-value">
 
-                        <span>{{bank_details.ifsc}}</span>
+                        <span>{{entry.ifsc}}</span>
                     </div>
                 </div>
-
-
+            </div>
+                {% endif %}
+                {% endfor %}
         </div>
     </div><!-- /.col -->
+         <br>
+    <span><a href="{% url 'members'%}view_farmer/{{data.id}}/bank" class="btn btn-primary">Add/Edit Bank Details</a>
+   </span>
+    </div>
+
+
 </div>
 </main>
 <footer class="page-footer text-center font-small mt-4 wow fadeIn" >
@@ -530,7 +555,14 @@ th,td{
     <!--/.Copyright-->
 
   </footer>
+    <script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+    <!-- Bootstrap core JavaScript -->
+ <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript">
+    // Animations initialization
+    new WOW().init();
+  </script>
 <script>
     $(document).ready(function() {
         $('table.display').DataTable({

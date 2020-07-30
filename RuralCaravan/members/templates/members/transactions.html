@@ -6,7 +6,7 @@
     <title>FPO Transactions</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js" language="JavaScript"></script>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
@@ -80,7 +80,7 @@ footer {
    width: 100%;
    height:50px;
 }
-body {font-family: Arial;}
+/*body {font-family: Arial;}*/
 th {
   background-color: #547e40;
   color: white;
@@ -121,7 +121,7 @@ th,td{
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'meetings' %}">Plans</a>
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
@@ -137,6 +137,11 @@ th,td{
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
             <li class="nav-item">
+            <a href="{% url 'add_user' %}" class="nav-link" >
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
+             <li class="nav-item">
             <a href="{% url 'transaction'%}" class="nav-link" >
              <i class="fas fa-rupee-sign"></i>
             </a>
@@ -146,8 +151,13 @@ th,td{
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
+             <li class="nav-item">
+            <a href="{% url 'products' %}" class="nav-link" >
+             <i class="fas fa-shopping-basket"></i>
+            </a>
+          </li>
           <li class="nav-item">
-            <a href="" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" >
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
@@ -158,7 +168,7 @@ th,td{
             </a>
           </li>
 		  <li class="nav-item">
-            <a class="nav-link" href="govtschemes.html" >Logout</a>
+            <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
 
 
@@ -225,6 +235,18 @@ th,td{
     // Animations initialization
     new WOW().init();
   </script>
+ <script language="JavaScript">
+         $(document).ready(function () {
+ $("#tbldisplay td:nth-child(3)").each(function () {
+                if (parseInt($(this).text(), 10) < 0) {
+                    $(this).parent("tr").css("background-color", "orange");
+                }
+                else{
+                    $(this).parent("tr").css("background-color", "Lightgreen");
+                }
+            });
+});
+</script>
   <script>
     $(document).on('click', '.confirm-delete', function(){
     return confirm('Are you sure you want to delete this?');

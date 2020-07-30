@@ -1,14 +1,16 @@
-from django import forms 
+from django import forms
+from twilio.rest.verify.v2 import form
+
 from farmer.models import *
 from django.contrib.auth.forms import UserCreationForm
 # from django.contrib.auth.models import 
+
 
 def if_phone(x):
     if x.isnumeric and x.len()==10:
         return True 
     else:
         return False
-
 
 
 class FarmerForm(forms.ModelForm):
@@ -125,6 +127,26 @@ class OrdersForm(forms.ModelForm):
     class Meta:
         # specify model to be used
         model = Orders
+
+        # specify fields to be used
+        fields = '__all__'
+
+
+class LandForm(forms.ModelForm):
+    # create meta class
+    class Meta:
+        # specify model to be used
+        model = Land
+
+        # specify fields to be used
+        fields = '__all__'
+
+
+class BankForm(forms.ModelForm):
+    # create meta class
+    class Meta:
+        # specify model to be used
+        model = BankDetails
 
         # specify fields to be used
         fields = '__all__'

@@ -77,7 +77,7 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}" target="_blank">
+      <a class="navbar-brand" href="{% url 'home' %}">
         <strong>FPO PORTAL</strong>
       </a>
 
@@ -106,6 +106,12 @@
           <li class="nav-item active">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
           </li>
+             <li class="nav-item">
+            <a class="nav-link" href="{% url 'produce' %}" >Production</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
@@ -122,7 +128,7 @@
           </li>
           <li class="nav-item">
             <a href="{% url 'members' %}" class="nav-link border border-light rounded"
-              target="_blank">
+              >
               <i class="fas fa-user"></i>Members
             </a>
           </li>
