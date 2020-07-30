@@ -198,7 +198,7 @@
         <hr style="margin: 0; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
         {% for village in specials %}
         <div class="row">
-            <button class="btn btn-outline-success mb-4 mt-4" style="border-color:{% if village.engagement > 50 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important; color:{% if village.engagement > 50 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important" type="button" data-toggle="collapse" data-target="#village{{village.locality_id}}" aria-expanded="false" aria-controls="village{{village.locality_id}}">
+            <button class="btn btn-outline-success mb-4 mt-4" style="border-color:{% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important; color:{% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important" type="button" data-toggle="collapse" data-target="#village{{village.locality_id}}" aria-expanded="false" aria-controls="village{{village.locality_id}}">
                 <h4><i class="fas fa-map-marker-alt"></i> {{village.locality_name}}</h4>
             </button>
         </div>
@@ -209,7 +209,7 @@
                   <input type="checkbox" class="selectAll">
                 </div>
                 <div class="mt-2">
-                  <span style="font-size: 1.2rem; border: 1px solid {% if village.engagement > 50 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important; padding: 0.2rem 0.8rem; border-radius: 0.2rem; color:{% if village.engagement > 50 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important"><strong>Past Engagement {{village.engagement}}%</strong></span>
+                  <span style="font-size: 1.2rem; border: 1px solid {% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important; padding: 0.2rem 0.8rem; border-radius: 0.2rem; color:{% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important"><strong>Past Engagement {{village.engagement}}%</strong></span>
                 </div>
                 <div class="row mt-4">
                 {% for token in village.farmers %}
@@ -285,11 +285,12 @@
             </div>
         {% endfor %}
         {% endif %}
+        {% if villages %}
         <h1 class="green-text mt-4">Villages</h1>
         <hr style="margin: 0; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
         {% for village in villages %}
         <div class="row">
-            <button class="btn btn-outline-success mb-4 mt-4" style="border-color:{% if village.engagement > 50 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important; color:{% if village.engagement > 50 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important" type="button" data-toggle="collapse" data-target="#village{{village.locality_id}}" aria-expanded="false" aria-controls="village{{village.locality_id}}">
+            <button class="btn btn-outline-success mb-4 mt-4" style="border-color:{% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important; color:{% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important" type="button" data-toggle="collapse" data-target="#village{{village.locality_id}}" aria-expanded="false" aria-controls="village{{village.locality_id}}">
                 <h4><i class="fas fa-map-marker-alt"></i> {{village.locality_name}}</h4>
             </button>
         </div>
@@ -300,7 +301,7 @@
                   <input type="checkbox" class="selectAll">
                 </div>
                 <div class="mt-2">
-                  <span style="font-size: 1.2rem; border: 1px solid {% if village.engagement > 50 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important; padding: 0.2rem 0.8rem; border-radius: 0.2rem; color:{% if village.engagement > 50 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important"><strong>Past Engagement {{village.engagement}}%</strong></span>
+                  <span style="font-size: 1.2rem; border: 1px solid {% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important; padding: 0.2rem 0.8rem; border-radius: 0.2rem; color:{% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important"><strong>Past Engagement {{village.engagement}}%</strong></span>
                 </div>
                 <div class="row mt-4">
                 {% for token in village.farmers %}
@@ -329,6 +330,7 @@
             </div>
             </div>
         {% endfor %}
+        {% endif %}
     </div>
 </main>
   <!--Main layout-->
@@ -372,11 +374,13 @@
             datasets: [{
                 data: [reached, no_response],
                 backgroundColor: [
-                'rgba(255, 107, 107, 1)',
-                //'rgba(54, 162, 235, 0.6)',
-                //'rgba(255, 206, 86, 0.6)',
+                'rgba(78, 205, 196, 0.4)',
+                'rgba(255, 107, 107, 0.4)',
+                ],
+                borderColor:[
                 'rgba(78, 205, 196, 1)',
-            ]
+                'rgba(255, 107, 107, 1)',
+                ]
             }],
             labels: ['Reach', 'No Response']
         },

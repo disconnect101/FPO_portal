@@ -10,7 +10,6 @@ from .forms import *
 #from .models import *
 from farmer.models import *
 # Changes
-from .generate_data import get_data
 import random
 import datetime
 import faker 
@@ -18,7 +17,8 @@ import json
 f = faker.Faker()
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count, Q
-
+from .sms import send_message as Send_Text_Message
+from .get_production_prediction import predict_production
 
 # Create your views here.
 
@@ -203,6 +203,14 @@ def mark_attendance(request):
             token = MeetingToken.objects.get(id=token_id)
             token.did_attend = True
             token.save()
+        farmers = MeetingToken.objects.values('farmer').annotate(total=Count('farmer'))
+        for farmer in farmers:
+            farmer_id = farmer['farmer']
+            farmer_object = Farmer.objects.get(id=farmer_id)
+            attended_meetings = MeetingToken.objects.filter(farmer=farmer_object, did_attend=True)
+            engagement_score = 0 if farmer['total'] == 0 else round(len(attended_meetings)/farmer['total'],2)*100
+            farmer_object.engagement = engagement_score
+            farmer_object.save()
         return JsonResponse({"message": "The tokens have been marked as attended"})
 
 # This method will mark all the tokens as attended
@@ -247,12 +255,19 @@ def detail_meetings(request, id):
 
     meeting_tokens = MeetingToken.objects.all().filter(meeting=context['data'])
     Phone_Type = ['Smartphone', 'Featurephone', 'NoSmartphone']
-
-    
+        
     tokens = []
     
     for t in meeting_tokens:
-        leader = Leader.objects.filter(farmers=t.farmer)
+        leader = Leader.objects.filter(farmers=t.farmer.user)
+
+        communication_type = t.farmer.user.category
+        if communication_type == 'F':
+            communication_type = Phone_Type[0]
+        elif communication_type == 'P':
+            communication_type = Phone_Type[1]
+        else:
+            communication_type = Phone_Type[2]
         
         if leader:
             leader_name = f'{leader[0].first_name} {leader[0].last_name}'
@@ -267,10 +282,26 @@ def detail_meetings(request, id):
             "did_attend": t.did_attend,
             "leader": leader_name,
             "has_leader": has_leader,
+            "engagement": t.farmer.engagement,
             "locality": t.farmer.village,
-            "smartphone_type": random.choice(Phone_Type)
+            "smartphone_type": communication_type
         })
     
+    leader_engagement = {}
+    village_engagement = {}
+
+    for token in tokens:
+        if token['has_leader']:
+            if token['leader'] in leader_engagement.keys():
+                leader_engagement[token['leader']].append(token['engagement'])
+            else:
+                leader_engagement[token['leader']] = [token['engagement']]
+        else:
+            if token['locality'] in village_engagement.keys():
+                village_engagement[token['locality']].append(token['engagement'])
+            else:
+                village_engagement[token['locality']] = [token['engagement']]
+
     TOTAL_TOKENS = len(tokens)
     
 
@@ -286,16 +317,18 @@ def detail_meetings(request, id):
                     leader['farmers'] = sorted(leader['farmers'], key=lambda x: x['farmer'])
                     placed = True
             if not placed:
+                engagement_score = round(sum(leader_engagement[token['leader']])/len(leader_engagement[token['leader']]), 2)
                 farmers_by_leaders.append({
                     "leader_id": random.randint(10000, 99999), 
                     "leader_name": token['leader'], 
-                    "engagement": int(round(random.uniform(0,1), 2)*100),
+                    "engagement": engagement_score,
                     "farmers": [token],
                 })
                 
         else:
             normal_farmers.append(token)
-
+    
+    
     farmers_by_locality = []
     for farmer in normal_farmers:
         placed = False
@@ -305,13 +338,13 @@ def detail_meetings(request, id):
                 locality['farmers'] = sorted(locality['farmers'], key=lambda x: x['farmer'])
                 placed = True
         if not placed:
+            engagement_score = round(sum(village_engagement[farmer['locality']])/len(village_engagement[farmer['locality']]), 2)
             farmers_by_locality.append({
                 "locality_id": random.randint(10000, 99999), 
                 "locality_name": farmer['locality'], 
-                "engagement": int(round(random.uniform(0,1), 2)*100),
+                "engagement": engagement_score,
                 "farmers": [farmer],
             })
-
 
     # There are three cases for the event: Before, Active and After
     # Before the event we show the RSVP
@@ -320,7 +353,7 @@ def detail_meetings(request, id):
 
     today_date = datetime.datetime.now().date()
     meeting_date = context['data'].date
-    print(today_date, meeting_date)
+    
 
     if(today_date > meeting_date):
         # This if form rendering the page of an event that is done
@@ -332,15 +365,19 @@ def detail_meetings(request, id):
 
         context['villages'] = {
             "names": [x['locality_name'] for x in farmers_by_locality],
-            "engagements": [(sum(y['did_attend'] for y in  x['farmers'])//len(x['farmers']))*100 for x in farmers_by_locality],
-            "rsvp": [(sum(y['has_rsvped'] for y in  x['farmers'])//len(x['farmers']))*100 for x in farmers_by_locality]
+            "engagements": [round((sum(y['did_attend'] for y in  x['farmers'])/len(x['farmers'])), 2)*100 for x in farmers_by_locality],
+            "rsvp": [round((sum(y['has_rsvped'] for y in  x['farmers'])/len(x['farmers'])), 2)*100 for x in farmers_by_locality]
         }
 
         context['leaders'] = {
             "names": [x['leader_name'] for x in farmers_by_leaders],
-            "engagements": [(sum(y['did_attend'] for y in  x['farmers'])//len(x['farmers']))*100 for x in farmers_by_leaders],
-            "rsvp": [(sum(y['has_rsvped'] for y in  x['farmers'])//len(x['farmers']))*100 for x in farmers_by_leaders]
+            "engagements": [round((sum(y['did_attend'] for y in  x['farmers'])/len(x['farmers'])), 2)*100 for x in farmers_by_leaders],
+            "rsvp": [round((sum(y['has_rsvped'] for y in  x['farmers'])/len(x['farmers'])), 2)*100 for x in farmers_by_leaders]
         }
+
+        meeting = context['data']
+
+        context['average'] = round(context['present']/(context['present']+context['absent']), 2)*100
 
         return render(request, 'fpo/meeting_stats.html', context)        
     elif (today_date == meeting_date):
@@ -372,10 +409,11 @@ def detail_meetings(request, id):
                             leader['farmers'] = sorted(leader['farmers'], key=lambda x: x['farmer'])
                             placed = True
                     if not placed:
+                        engagement_score = round(sum(leader_engagement[token['leader']])/len(leader_engagement[token['leader']]), 2)
                         farmers_by_leaders.append({
                             "leader_id": random.randint(10000, 99999), 
                             "leader_name": token['leader'], 
-                            "engagement": int(round(random.uniform(0,1), 2)*100),
+                            "engagement": engagement_score,
                             "farmers": [token],
                         })
                         
@@ -391,14 +429,13 @@ def detail_meetings(request, id):
                     locality['farmers'] = sorted(locality['farmers'], key=lambda x: x['farmer'])
                     placed = True
             if not placed:
+                engagement_score = round(sum(village_engagement[farmer['locality']])/len(village_engagement[farmer['locality']]), 2)
                 farmers_by_locality.append({
                     "locality_id": random.randint(10000, 99999), 
                     "locality_name": farmer['locality'], 
-                    "engagement": int(round(random.uniform(0,1), 2)*100),
+                    "engagement": engagement_score,
                     "farmers": [farmer],
                 })
-
-
 
         temp_farmers_by_locality = []
         special_attention_villages = []
@@ -411,6 +448,7 @@ def detail_meetings(request, id):
         farmers_by_locality = temp_farmers_by_locality
         special_attention_villages = sorted(special_attention_villages, key=lambda x: len(x['farmers']), reverse=True)
         # add the dictionary during initialization
+        # Right now it will pass only one singular meeting object for all cases. 
 
         context['leaders'] = sorted(farmers_by_leaders, key=lambda x: x['leader_name'])
 
@@ -441,7 +479,7 @@ def home(request):
 
 @login_required
 def meetings_view(request):
-# dictionary for initial data with  
+    # dictionary for initial data with  
     # field names as keys 
     context ={} 
 
@@ -476,6 +514,7 @@ def meetings_view(request):
 
     context['form']= form 
     return render(request, 'fpo/meetings.html',context)
+
 
 @login_required
 def meetings_delete(request, id):
@@ -675,7 +714,191 @@ def govtschemes_single(request, id):
 
 #---------------------------------------------------------------------------------------------------------
 def fpo_statistics(request):
-    return render(request, 'fpo/fpo_statistics.html')
+    context = {}
+    
+    # Get all the farmers
+    farmers = Farmer.objects.all()
+    
+    # Basic numbers
+    num_farmers = len(farmers)
+    num_villages = len(farmers.values('village').distinct())
+    avg_production_every_year = 3000
+    avg_profits_every_year = 10
+
+    context['num_farmers'] = num_farmers
+    context['num_villages'] = num_villages
+    context['avg_production'] = avg_production_every_year
+    context['avg_profits'] = avg_profits_every_year
+
+
+    # Communication Channels
+    communication_channels = UserProfile.objects.values('category').annotate(total=Count('category'))
+    communication_channels_data = [x['total'] for x in communication_channels if x['category'] not in ['A','L']]
+    communication_channels_labels = [x['category'] for x in communication_channels if x['category'] not in ['A','L']]
+    context['communication_channels_data'] = communication_channels_data if len(communication_channels_data) == 3 else communication_channels_data + [0 for x in range(3-len(communication_channels_data))]
+
+    for i in range(len(communication_channels_labels)):
+        if communication_channels_labels[i] == 'F':
+            communication_channels_labels[i] = 'Farmers with Smartphones'
+        elif communication_channels_labels[i] == 'P':
+            communication_channels_labels[i] = 'Farmers with Feature Phones'
+        elif communication_channels_labels[i] == 'N':
+            communication_channels_labels[i] = 'Farmers with No Phones'
+
+    context['communication_channels_labels'] = communication_channels_labels 
+    
+    # Farmers by Leaders
+    leaders = Leader.objects.all()
+    farmers_with_leaders = sum([len(x.farmers.all()) for x in leaders])
+    farmers_without_leaders = len(farmers) - farmers_with_leaders
+    context['farmers_with_leaders_data'] = [farmers_with_leaders, farmers_without_leaders]
+
+
+
+    # Farmer Engagement 
+
+    SP_by_months = {
+        'label': 'Farmers with Smartphones',
+        'data':[]
+    }
+
+    FP_by_months = {
+        'label': 'Farmers with Feature Phones',
+        'data':[]
+    }
+
+    NP_by_months = {
+        'label': 'Farmers with No Phones',
+        'data':[]
+    }
+
+    for month in range(1, 13):
+        meetings = Meetings.objects.filter(date__month=month)
+        meetings_tokens = []
+        for meeting in meetings:
+            meetings_tokens.extend(MeetingToken.objects.filter(meeting=meeting))
+        
+        SP = []
+        FP = []
+        NP = []
+        
+        for token in meetings_tokens:
+            if token.farmer.user.category == 'F':
+                SP.append(token)
+            elif token.farmer.user.category == 'P':
+                FP.append(token)
+            else:
+                NP.append(token)
+        
+        SP_engagement = round(sum(x.did_attend for  x in SP) / len(SP), 2)*100 if SP else 0.0
+        FP_engagement = round(sum(x.did_attend for  x in FP) / len(FP), 2)*100 if FP else 0.0
+        NP_engagement = round(sum(x.did_attend for  x in NP) / len(NP), 2)*100 if NP else 0.0
+
+        SP_by_months['data'].append(SP_engagement)
+        FP_by_months['data'].append(FP_engagement)
+        NP_by_months['data'].append(NP_engagement)
+
+    farmer_engagement_data = [SP_by_months, FP_by_months, NP_by_months]
+    
+    context['farmer_engagement_data'] = farmer_engagement_data
+
+
+
+    # Villages
+    villages = farmers.values('village').annotate(total=Count('village'))
+    villages_data = [x['total'] for x in villages]
+    villages_labels = [x['village'] for x in villages]
+    context['villages_data'] = villages_data
+    context['villages_labels'] = villages_labels
+
+
+    # Crops
+    context['crops_data'] = [1570, 1200, 1500, 580, 1900, 1650, 100]
+    context['crops_labels'] = ['Rice', 'Wheat', 'Corn', 'Sugarcane', 'Bajra', 'Paddy', 'Maize']
+
+
+    # Crop Production By Years
+    crops_by_years_data = [
+    {
+        'name': 'Rice',
+        'data': [100, 200, 300, 400, 500],
+        'years': ['2015', '2016', '2017', '2018', '2019']
+    },
+    {
+        'name': 'Wheat',
+        'data': [200, 300, 400, 500, 600],
+        'years': ['2015', '2016', '2017', '2018', '2019']
+    },
+    {
+        'name': 'Bajra',
+        'data': [400, 300, 500, 600, 900],
+        'years': ['2015', '2016', '2017', '2018', '2019']
+    }
+    ]
+
+    for crop in crops_by_years_data:
+        data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
+        prediction = predict_production(data)
+        crop['years'].append(f'{prediction[0]} (Prediction)')
+        crop['data'].append(round(prediction[1], 2))
+
+    context['crop_selector_options'] = [x['name'] for x in crops_by_years_data]
+
+    context['crops_by_years_data'] = crops_by_years_data
+
+
+    # Profits Per Crop
+    crops_profits_by_years_data = [
+    {
+        'name': 'Corn',
+        'data': [80, 60, 100, 150, 300],
+        'years': ['2015', '2016', '2017', '2018', '2019']
+    },
+    {
+        'name': 'Sugarcane',
+        'data': [60, 180, 120, 150, 130],
+        'years': ['2015', '2016', '2017', '2018', '2019']
+    },
+    {
+        'name': 'Paddy',
+        'data': [120, 300, 180, 80, 250],
+        'years': ['2015', '2016', '2017', '2018', '2019']
+    }
+    ]
+
+    for crop in crops_profits_by_years_data:
+        data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
+        prediction = predict_production(data)
+        crop['years'].append(f'{prediction[0]} (Prediction)')
+        crop['data'].append(round(prediction[1], 2))
+
+    context['crop_price_selector_options'] = [x['name'] for x in crops_profits_by_years_data]
+
+    context['crops_profits_by_years_data'] = crops_profits_by_years_data
+
+
+    # Profits By Year
+    profit_by_years_data = [
+    {
+        'year': '2017',
+        'data': [100, 200, 300, 400, 500, 500, 100, 200, 300, 400, 900, 200],
+    },
+    {
+        'year': '2018',
+        'data': [200, 300, 400, 500, 600, 400, 500, 500, 100, 200, 300, 400],
+    },
+    {
+        'year': '2019',
+        'data': [400, 300, 500, 600, 900, 100, 200, 300, 400, 500, 200, 100],
+    }
+    ]
+
+    context['profit_by_years_data'] = profit_by_years_data
+
+
+    return render(request, 'fpo/fpo_statistics.html', context)
+
+
 
 
 
@@ -984,3 +1207,12 @@ def orders_delete(request, id):
 def about(request):
     return HttpResponse('<h1> About </h1>')
 
+
+def send_message(request):
+    if request.method == 'POST':
+        message_body = json.loads(request.body)["message_body"]
+        farmers = Farmer.objects.all()
+        for farmer in farmers:
+            if farmer.user.category != 'N':
+                Send_Text_Message(f'+91{farmer.contact}', message_body=message_body)
+        return JsonResponse({"message": "The message has been broadcast"})
