@@ -238,14 +238,14 @@ class Orders(models.Model):
 class Produce(models.Model):
     crop = models.ForeignKey(Crops, on_delete=models.PROTECT)
     amount = models.FloatField()
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
     land = models.ForeignKey(Land, models.SET_NULL, null=True, blank=True)
     quality = models.BooleanField()
     owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
     income = models.FloatField(default=0)
 
     def __str__(self):
-        return self.owner + " " + self.crop.name
+        return self.owner.username + " " + self.crop.name
 
 
 class Kart(models.Model):

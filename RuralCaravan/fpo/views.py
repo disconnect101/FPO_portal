@@ -19,7 +19,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count, Q
 from .sms import send_message as Send_Text_Message
 from .get_production_prediction import predict_production
-
+from fpo.statisticalanalysis import *
 # Create your views here.
 
 posts = [
@@ -748,12 +748,14 @@ def fpo_statistics(request):
     
     # Get all the farmers
     farmers = Farmer.objects.all()
-    
+
+    staticalanalysis = StatisticalAnalysis()
+
     # Basic numbers
     num_farmers = len(farmers)
     num_villages = len(farmers.values('village').distinct())
-    avg_production_every_year = 3000
-    avg_profits_every_year = 10
+    avg_production_every_year = staticalanalysis.getAvgProduction()
+    avg_profits_every_year = staticalanalysis.getAvgProfit()
 
     context['num_farmers'] = num_farmers
     context['num_villages'] = num_villages
@@ -843,28 +845,32 @@ def fpo_statistics(request):
 
 
     # Crops
-    context['crops_data'] = [1570, 1200, 1500, 580, 1900, 1650, 100]
-    context['crops_labels'] = ['Rice', 'Wheat', 'Corn', 'Sugarcane', 'Bajra', 'Paddy', 'Maize']
+    cropdata = staticalanalysis.getCropWiseProduce()
+    context['crops_data'] = cropdata.get('productions')
+    context['crops_labels'] = cropdata.get('crops')
+    # context['crops_data'] = [1570, 1200, 1500, 580, 1900, 1650, 100]
+    # context['crops_labels'] = ['Rice', 'Wheat', 'Corn', 'Sugarcane', 'Bajra', 'Paddy', 'Maize']
 
 
     # Crop Production By Years
-    crops_by_years_data = [
-    {
-        'name': 'Rice',
-        'data': [100, 200, 300, 400, 500],
-        'years': ['2015', '2016', '2017', '2018', '2019']
-    },
-    {
-        'name': 'Wheat',
-        'data': [200, 300, 400, 500, 600],
-        'years': ['2015', '2016', '2017', '2018', '2019']
-    },
-    {
-        'name': 'Bajra',
-        'data': [400, 300, 500, 600, 900],
-        'years': ['2015', '2016', '2017', '2018', '2019']
-    }
-    ]
+    crops_by_years_data = staticalanalysis.getCropProductionByYear()
+    # crops_by_years_data = [
+    # {
+    #     'name': 'Rice',
+    #     'data': [100, 200, 300, 400, 500],
+    #     'years': ['2015', '2016', '2017', '2018', '2019']
+    # },
+    # {
+    #     'name': 'Wheat',
+    #     'data': [200, 300, 400, 500, 600],
+    #     'years': ['2015', '2016', '2017', '2018', '2019']
+    # },
+    # {
+    #     'name': 'Bajra',
+    #     'data': [400, 300, 500, 600, 900],
+    #     'years': ['2015', '2016', '2017', '2018', '2019']
+    # }
+    # ]
 
     for crop in crops_by_years_data:
         data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
@@ -878,23 +884,24 @@ def fpo_statistics(request):
 
 
     # Profits Per Crop
-    crops_profits_by_years_data = [
-    {
-        'name': 'Corn',
-        'data': [80, 60, 100, 150, 300],
-        'years': ['2015', '2016', '2017', '2018', '2019']
-    },
-    {
-        'name': 'Sugarcane',
-        'data': [60, 180, 120, 150, 130],
-        'years': ['2015', '2016', '2017', '2018', '2019']
-    },
-    {
-        'name': 'Paddy',
-        'data': [120, 300, 180, 80, 250],
-        'years': ['2015', '2016', '2017', '2018', '2019']
-    }
-    ]
+    crops_profits_by_years_data = staticalanalysis.getCropProfitsByYear()
+    # crops_profits_by_years_data = [
+    # {
+    #     'name': 'Corn',
+    #     'data': [80, 60, 100, 150, 300],
+    #     'years': ['2015', '2016', '2017', '2018', '2019']
+    # },
+    # {
+    #     'name': 'Sugarcane',
+    #     'data': [60, 180, 120, 150, 130],
+    #     'years': ['2015', '2016', '2017', '2018', '2019']
+    # },
+    # {
+    #     'name': 'Paddy',
+    #     'data': [120, 300, 180, 80, 250],
+    #     'years': ['2015', '2016', '2017', '2018', '2019']
+    # }
+    # ]
 
     for crop in crops_profits_by_years_data:
         data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
@@ -908,20 +915,21 @@ def fpo_statistics(request):
 
 
     # Profits By Year
-    profit_by_years_data = [
-    {
-        'year': '2017',
-        'data': [100, 200, 300, 400, 500, 500, 100, 200, 300, 400, 900, 200],
-    },
-    {
-        'year': '2018',
-        'data': [200, 300, 400, 500, 600, 400, 500, 500, 100, 200, 300, 400],
-    },
-    {
-        'year': '2019',
-        'data': [400, 300, 500, 600, 900, 100, 200, 300, 400, 500, 200, 100],
-    }
-    ]
+    profit_by_years_data = staticalanalysis.getProfitsByYear()
+    # profit_by_years_data = [
+    # {
+    #     'year': '2017',
+    #     'data': [100, 200, 300, 400, 500, 500, 100, 200, 300, 400, 900, 200],
+    # },
+    # {
+    #     'year': '2018',
+    #     'data': [200, 300, 400, 500, 600, 400, 500, 500, 100, 200, 300, 400],
+    # },
+    # {
+    #     'year': '2019',
+    #     'data': [400, 300, 500, 600, 900, 100, 200, 300, 400, 500, 200, 100],
+    # }
+    # ]
 
     context['profit_by_years_data'] = profit_by_years_data
 
