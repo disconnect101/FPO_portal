@@ -361,6 +361,7 @@ th,td{
 
             <th>ID</th>
             <th>Name</th>
+            <th>Username</th>
             <th>Village</th>
             <th>Contact</th>
             <th>Delete</th>
@@ -372,6 +373,7 @@ th,td{
 
         <td>{{farmer.id}}</td>
         <td><a href="{% url 'members' %}view_farmer/{{farmer.id}}">{{ farmer.first_name }}{{' '}}{{ farmer.last_name}}</a></td>
+        <td><{{ farmer.user.username }}/td>
         <td>{{farmer.village}}</td>
         <td>{{farmer.contact}}</td>
         <td><p data-placement="top" data-toggle="tooltip" title="Delete"><a href="delete/{{farmer.user_id}}"><i class="fas fa-trash-alt"></i></a></p></td>
