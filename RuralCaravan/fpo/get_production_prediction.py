@@ -23,18 +23,10 @@ def predict_production(data):
 
 
 if __name__ == '__main__':
+    data = {
+        'Year': [2019, 2020],
+        'Production': [100, 200]
+    }
 
-    data = pd.read_csv('Cleaned_Annual_Production.csv')
-
-    def get_production_data(dataFrame, element):
-        index = data.iloc[element, :].index
-        values = data.iloc[element, :].values
-        years = [int(x[3:]) for x in index[4:]]
-        production = values[4:]
-        return {'Year': years, 'Production': production}
-    
-    predict_for = get_production_data(data, 1)
-    pp.pprint(predict_for)
-
-    prediction = predict_production(predict_for)
+    prediction = predict_production(data)
     print(prediction)

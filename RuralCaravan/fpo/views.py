@@ -877,6 +877,7 @@ def fpo_statistics(request):
     for crop in crops_by_years_data:
         data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
         prediction = predict_production(data)
+        print(prediction)
         crop['years'].append(f'{prediction[0]} (Prediction)')
         crop['data'].append(round(prediction[1], 2))
 
