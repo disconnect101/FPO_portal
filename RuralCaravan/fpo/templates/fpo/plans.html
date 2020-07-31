@@ -64,7 +64,7 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}" target="_blank">
+      <a class="navbar-brand" href="{% url 'home' %}">
         <strong>FPO PORTAL</strong>
       </a>
 
@@ -79,45 +79,67 @@
 
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="{% url 'home' %}">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="{% url 'plans' %}" >Plans</a>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
           </li>
+             <li class="nav-item">
+            <a class="nav-link" href="{% url 'produce' %}" >Production</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
-          <li class="nav-item">
-            <a href="orders.html" class="nav-link" >
-             <i class="fas fa-shopping-cart"></i>
+            <li class="nav-item">
+            <a href="{% url 'add_user' %}" class="nav-link" >
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'transaction'%}" class="nav-link" >
+             <i class="fas fa-rupee-sign"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="statistics.html" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" >
+             <i class="fas fa-shopping-cart"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'products' %}" class="nav-link" >
+             <i class="fas fa-shopping-basket"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" >
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="members.html" class="nav-link border border-light rounded"
-              target="_blank">
+            <a href="{% url 'members' %}" class="nav-link border border-light rounded"
+             >
               <i class="fas fa-user"></i>Members
             </a>
           </li>
-		   <li class="nav-item">
+		  <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
-        </ul>
 
+
+        </ul>
 
       </div>
 
@@ -241,7 +263,7 @@
 
                 <!-- Form -->
                <div class="form-group">
-                   <form method="POST">
+                   <form method="POST" enctype="multipart/form-data">
                        {% csrf_token %}
                        {{form.media}}
                         <div class="md-form">
@@ -287,20 +309,19 @@
 
 
                 </div>
+                <div class="md-form">
+                  <p><strong>Products that can be availed</strong></p>
+                  <select class="custom-select" multiple name="products">
+                    {% for product in products %}
+                    <option value="{{product.id}}">{{product.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
                        <div class="form-row field-image">
-
-
                         <div>
-
-
-                                <label for="id_image"><strong>Upload Image:</strong></label>
-
-                                    <input type="file" name="image" accept="image/*" id="id_image">
-
-
-
+                          <label for="id_image"><strong>Upload Image:</strong></label>
+                          <input type="file" name="image" accept="image/*" id="id_image">
                         </div>
-
                  </div>
                        <div class="md-form">
                     <i class="fas fa-rupee-sign prefix green-text"></i>
@@ -445,12 +466,35 @@ $('#dtBasicExample2').DataTable({
       <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
-  </script>
-<script>
-        CKEDITOR.replace('guidance');
+    {% comment %} new WOW().init(); {% endcomment %}
+    var toolbarGroups = [
+        { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+        { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+        { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+        { name: 'forms', groups: [ 'forms' ] },
+        '/',
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+        { name: 'links', groups: [ 'links' ] },
+        { name: 'insert', groups: [ 'insert' ] },
+        { name: 'styles', groups: [ 'styles' ] },
+        { name: 'colors', groups: [ 'colors' ] },
+        { name: 'tools', groups: [ 'tools' ] },
+        { name: 'others', groups: [ 'others' ] },
+        { name: 'about', groups: [ 'about' ] }
+      ];
 
- </script>
+      var removeButtons = 'Source,Save,Templates,NewPage,Preview,Print,Cut,Copy,Redo,Undo,Paste,PasteText,PasteFromWord,Find,SelectAll,Replace,Scayt,Form,Checkbox,Radio,Textarea,TextField,Select,Button,ImageButton,HiddenField,CopyFormatting,RemoveFormat,CreateDiv,BidiLtr,BidiRtl,Language,Anchor,Unlink,Image,Flash,HorizontalRule,Table,Smiley,PageBreak,SpecialChar,Iframe,About,Maximize,ShowBlocks';
+
+
+
+    CKEDITOR.replace('guidance', {
+      toolbar: 'Basic',
+      uiColor: '#295e10',
+      toolbarGroups,
+      removeButtons
+    });
+  </script>
 </body>
 
 </html>

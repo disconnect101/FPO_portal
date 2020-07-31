@@ -16,7 +16,7 @@
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 <style>
-/*body {font-family: Arial;}*/
+body {font-family: Arial;}
 
 /* Style the tab */
 .tab {
@@ -156,7 +156,7 @@ footer {
    width: 100%;
    height:50px;
 }
-/*body {font-family: Arial;}*/
+body {font-family: Arial;}
 th {
   background-color: #547e40;
   color: white;
@@ -168,99 +168,89 @@ th,td{
 </style>
 </head>
 <body>
-   <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
-    <div class="container">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+        <div class="container">
 
-      <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}">
-        <strong>FPO PORTAL</strong>
-      </a>
+          <!-- Brand -->
+          <a class="navbar-brand" href="home.html">
+            <strong>FPO PORTAL</strong>
+          </a>
 
-      <!-- Collapse -->
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-        aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+          <!-- Collapse -->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
 
-      <!-- Links -->
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <!-- Links -->
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-        <!-- Left -->
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="{% url 'home' %}">Home
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
-          </li>
-             <li class="nav-item">
-            <a class="nav-link" href="{% url 'produce' %}" >Production</a>
-          </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
-            </li>
-        </ul>
+            <!-- Left -->
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}">Home
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'plans' %}">Plans</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
+              </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'produce' %}" >Production</a>
+               </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'FPOLedger' %}" >Ledger</a>
+               </li>
+            </ul>
 
-        <!-- Right -->
-        <ul class="navbar-nav nav-flex-icons">
-            <li class="nav-item">
-            <a href="{% url 'add_user' %}" class="nav-link" >
-             <i class="fas fa-user-plus"></i>
-            </a>
-          </li>
-             <li class="nav-item">
+            <!-- Right -->
+            <ul class="navbar-nav nav-flex-icons">
+                 <li class="nav-item">
             <a href="{% url 'transaction'%}" class="nav-link" >
              <i class="fas fa-rupee-sign"></i>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="{% url 'orders' %}" class="nav-link" >
-             <i class="fas fa-shopping-cart"></i>
-            </a>
-          </li>
-             <li class="nav-item">
-            <a href="{% url 'products' %}" class="nav-link" >
-             <i class="fas fa-shopping-basket"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'fpo_statistics' %}" class="nav-link" >
-             <i class="fas fa-chart-bar"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'members' %}" class="nav-link border border-light rounded"
-             >
-              <i class="fas fa-user"></i>Members
-            </a>
-          </li>
-		  <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}" >Logout</a>
-          </li>
+              <li class="nav-item">
+                <a href="{% url 'orders' %}" class="nav-link" >
+                 <i class="fas fa-shopping-cart"></i>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="statistics.html" class="nav-link" >
+                 <i class="fas fa-chart-bar"></i>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'members' %}" class="nav-link border border-light rounded"
+                 >
+                  <i class="fas fa-user"></i>Members
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'govtschemes' %}" >Logout</a>
+              </li>
 
 
-        </ul>
+            </ul>
 
-      </div>
+          </div>
 
-    </div>
-  </nav>
-<main style="padding-top: 5em;min-height: 90%;font-family:Arial">
+        </div>
+      </nav>
+<main style="padding-top: 5em;min-height: 90%;">
 <h3 style="padding-left: 2%;">Viewing {{data.first_name}}{{' '}}{{data.last_name}}'s Profile:</h3>
 
 
 <div class="tab">
   <button class="tablinks" onclick="openCity(event, 'personal_details')" id="defaultOpen" style="padding-left: 2%;color:white">Personal Details</button>
   <button class="tablinks" onclick="openCity(event, 'farmer_list')" style="color:white">Farmer List</button>
-  <button class="tablinks" onclick="openCity(event, 'balance_sheet')" style="color:white;">Balance Sheet</button>
+  <button class="tablinks" onclick="openCity(event, 'incentives')" style="color:white;">Incentives</button>
 </div>
 
 <div id="personal_details" class="tabcontent">
@@ -371,20 +361,22 @@ th,td{
 
             <th>ID</th>
             <th>Name</th>
+            <th>Username</th>
             <th>Village</th>
             <th>Contact</th>
             <th>Delete</th>
          </thead>
 <tbody>
-     {% for farmer in data.farmers.all %}
+     {% for farmer in leader %}
 
     <tr>
 
         <td>{{farmer.id}}</td>
         <td><a href="{% url 'members' %}view_farmer/{{farmer.id}}">{{ farmer.first_name }}{{' '}}{{ farmer.last_name}}</a></td>
+        <td><{{ farmer.user.username }}/td>
         <td>{{farmer.village}}</td>
         <td>{{farmer.contact}}</td>
-        <td><p data-placement="top" data-toggle="tooltip" title="Delete"><a href="delete/{{farmer.id}}"><i class="fas fa-trash-alt"></i></a></p></td>
+        <td><p data-placement="top" data-toggle="tooltip" title="Delete"><a href="delete/{{farmer.user_id}}"><i class="fas fa-trash-alt"></i></a></p></td>
     </tr>
     {% endfor %}
 </tbody>
@@ -393,28 +385,36 @@ th,td{
         </div>
     </div>
 </div>
-<div id="balance_sheet" class="tabcontent">
+<div id="incentives" class="tabcontent">
     <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
+         <h4>View Monetary Appreciation of the leader here</h4>
         <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
     <table
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
         <thead>
-         <th>Ref no.</th>
-            <th>Date</th>
-            <th>Amount</th>
-            <th>Closing Balance</th>
+
+            <th>S no.</th>
             <th>Description</th>
+            <th>Amount credited</th>
          </thead>
 <tbody>
-    {% for entry in transactions %}
-     <tr>
-        <td>{{entry.id}}</td>
-        <td>{{entry.date}}</td>
-        <td>{{entry.amount}}</td>
-        <td>{{entry.currrent_amount}}</td>
-        <td>{{entry.description}}</td>
+    <tr>
+
+        <td>1</td>
+        <td>Added 10 new farmers</td>
+        <td>1000</td>
     </tr>
-     {% endfor %}
+    <tr>
+        <td>1</td>
+        <td>Added 10 new farmers</td>
+        <td>1000</td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Added 10 new farmers</td>
+        <td>1000</td>
+
+    </tr>
 </tbody>
 
     </table>
@@ -434,15 +434,7 @@ th,td{
     <!--/.Copyright-->
 
   </footer>
-
-   <script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
-    <!-- Bootstrap core JavaScript -->
- <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-   <script type="text/javascript">
-    // Animations initialization
-    new WOW().init();
-  </script>
 <script>
      $(document).ready(function() {
         $('table.display').DataTable({

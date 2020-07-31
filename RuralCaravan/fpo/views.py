@@ -956,11 +956,16 @@ def plans_view(request):
     # field names as keys 
     context ={
         'crop' : Crops.objects.all()
-    } 
+    }
+
+    products = Products.objects.all() 
+    context['products'] = products
   
     # add the dictionary during initialization      # Add and view both
-    form = CropsForm(request.POST or None) 
+    form = CropsForm(request.POST or None, request.FILES)
     if form.is_valid(): 
+        print(request.POST)
+        print(request.FILES)
         form.save() 
         return redirect('/fpo/plans')
           
@@ -1012,13 +1017,17 @@ def plans_update(request, id):
     # dictionary for initial data with  
     # field names as keys 
     context ={} 
-  
     # fetch the object related to passed id 
     obj = get_object_or_404(Crops, id = id) 
   
     # pass the object as instance in form 
-    form = CropsForm(request.POST or None, instance = obj) 
-  
+    form = CropsForm(request.POST or None, request.FILES or None, instance = obj) 
+
+    products = Products.objects.all() 
+    context['products'] = products
+    context['selected_products'] = obj.products.all()
+
+
     # save the data from the form and 
     # redirect to detail_farmer 
     if form.is_valid(): 

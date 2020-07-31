@@ -194,7 +194,7 @@
                 <h4 style="text-align: left;"><strong class="green-text">Agenda:</strong> {{data.agenda}}</h4>
                 <br>
                 <p>
-                    <span style="font-size: 1.3rem;" class="green-text"><strong>Details:</strong></span> {{data.description}}
+                    <span style="font-size: 1.3rem;" class="green-text"><strong>Details:</strong></span> {{data.description|safe}}
                 </p>    
                 <h5 style="text-align: left;"><strong class="green-text">Time:</strong> {{data.time}}</h5>
                 <h5 style="text-align: left;"><strong class="green-text">Venue:</strong> {{data.venue}}</h5>
@@ -272,7 +272,7 @@
       <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
+    //new WOW().init();
 
     var present = {{present}};
     var absent = {{absent}};

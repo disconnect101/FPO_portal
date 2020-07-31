@@ -78,7 +78,16 @@ class CropsForm(forms.ModelForm):
             "weigth_per_land", 
             "guidance", 
             "live", 
+            "products",
+            "investment_requirements",
+            "facilities",
+            "subscribers",
+            "image"
         ]
+
+        widgets = {
+            "products": forms.widgets.CheckboxSelectMultiple()
+        }
 
 
 class ProductsForm(forms.ModelForm):
