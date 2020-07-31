@@ -209,7 +209,7 @@ def detail_leader(request, id):
     context["leader"]=farmer1
     context["data"] = Leader.objects.get(id = id)
     context["farmers"] = Farmer.objects.all()
-          
+    context["transactions"] = ew_transaction.objects.filter(user=context["data"].user)
     return render(request, "members/leader_profile.html", context)
 
 
