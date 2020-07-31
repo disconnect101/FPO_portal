@@ -82,6 +82,7 @@ class CropsForm(forms.ModelForm):
             "investment_requirements",
             "facilities",
             "subscribers",
+            "image"
         ]
 
         widgets = {

@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +15,9 @@
     <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet">
     <!--  custom styles  -->
     <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor/config.js' %}"></script>
     <style type="text/css">
 
       html,
@@ -285,9 +287,9 @@
 
 
                   <div class="md-form">
-                    <i class="fas fa-pencil-alt prefix green-text"></i>
+                    <i class="fas fa-clipboard green-text"></i>
+                    <span style="font-size: 1.2rem; font-weight: 300; opacity: 0.5">Enter Description</span>
                     <textarea   type="text"  class="md-textarea" name="description" cols="40" rows="10" required id="id_description"></textarea>
-                    <label class="required" for="id_description">Enter Description</label>
                   </div>
                   <div class="form-row field-photo">
 
@@ -351,7 +353,7 @@
       <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
+    {% comment %} new WOW().init(); {% endcomment %}
 
     document.querySelector('#add_meeting').addEventListener('submit', function() {
       var organiser = document.querySelector('#id_organiser').value;
@@ -403,6 +405,35 @@
                 .catch(function(err) {
                     console.log('The errror is', err);
                 });
+    });
+
+
+    var toolbarGroups = [
+        { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+        { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+        { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+        { name: 'forms', groups: [ 'forms' ] },
+        '/',
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+        { name: 'links', groups: [ 'links' ] },
+        { name: 'insert', groups: [ 'insert' ] },
+        { name: 'styles', groups: [ 'styles' ] },
+        { name: 'colors', groups: [ 'colors' ] },
+        { name: 'tools', groups: [ 'tools' ] },
+        { name: 'others', groups: [ 'others' ] },
+        { name: 'about', groups: [ 'about' ] }
+      ];
+
+      var removeButtons = 'Source,Save,Templates,NewPage,Preview,Print,Cut,Copy,Redo,Undo,Paste,PasteText,PasteFromWord,Find,SelectAll,Replace,Scayt,Form,Checkbox,Radio,Textarea,TextField,Select,Button,ImageButton,HiddenField,CopyFormatting,RemoveFormat,CreateDiv,BidiLtr,BidiRtl,Language,Anchor,Unlink,Image,Flash,HorizontalRule,Table,Smiley,PageBreak,SpecialChar,Iframe,About,Maximize,ShowBlocks';
+
+
+
+    CKEDITOR.replace('id_description', {
+      toolbar: 'Basic',
+      uiColor: '#295e10',
+      toolbarGroups,
+      removeButtons
     });
 
   </script>

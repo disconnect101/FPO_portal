@@ -241,7 +241,7 @@
 
                 <!-- Form -->
                <div class="form-group">
-                   <form method="POST">
+                   <form method="POST" enctype="multipart/form-data">
                        {% csrf_token %}
                        {{form.media}}
                         <div class="md-form">
@@ -296,19 +296,10 @@
                   </select>
                 </div>
                        <div class="form-row field-image">
-
-
                         <div>
-
-
-                                <label for="id_image"><strong>Upload Image:</strong></label>
-
-                                    <input type="file" name="image" accept="image/*" id="id_image">
-
-
-
+                          <label for="id_image"><strong>Upload Image:</strong></label>
+                          <input type="file" name="image" accept="image/*" id="id_image">
                         </div>
-
                  </div>
                        <div class="md-form">
                     <i class="fas fa-rupee-sign prefix green-text"></i>
@@ -453,12 +444,35 @@ $('#dtBasicExample2').DataTable({
       <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
-  </script>
-<script>
-        CKEDITOR.replace('guidance');
+    {% comment %} new WOW().init(); {% endcomment %}
+    var toolbarGroups = [
+        { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+        { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+        { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+        { name: 'forms', groups: [ 'forms' ] },
+        '/',
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+        { name: 'links', groups: [ 'links' ] },
+        { name: 'insert', groups: [ 'insert' ] },
+        { name: 'styles', groups: [ 'styles' ] },
+        { name: 'colors', groups: [ 'colors' ] },
+        { name: 'tools', groups: [ 'tools' ] },
+        { name: 'others', groups: [ 'others' ] },
+        { name: 'about', groups: [ 'about' ] }
+      ];
 
- </script>
+      var removeButtons = 'Source,Save,Templates,NewPage,Preview,Print,Cut,Copy,Redo,Undo,Paste,PasteText,PasteFromWord,Find,SelectAll,Replace,Scayt,Form,Checkbox,Radio,Textarea,TextField,Select,Button,ImageButton,HiddenField,CopyFormatting,RemoveFormat,CreateDiv,BidiLtr,BidiRtl,Language,Anchor,Unlink,Image,Flash,HorizontalRule,Table,Smiley,PageBreak,SpecialChar,Iframe,About,Maximize,ShowBlocks';
+
+
+
+    CKEDITOR.replace('guidance', {
+      toolbar: 'Basic',
+      uiColor: '#295e10',
+      toolbarGroups,
+      removeButtons
+    });
+  </script>
 </body>
 
 </html>
