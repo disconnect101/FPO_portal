@@ -1,9 +1,11 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from farmer.models import Leader, UserProfile
+from farmer.models import Leader, UserProfile, Farmer
 from farmer.api.utils import statuscode
 from django.db.models import F
+from rest_framework.authtoken.models import Token
+
 
 
 @api_view(['GET', ])
@@ -16,16 +18,21 @@ def downlinefarmers(request):
     try:
         downlinefarmers = Leader.objects.get(user=user)\
                                         .farmers\
-                                        .all()\
-                                        .annotate(farmerid=F('id'), username=F('user__username'))\
-                                        .values('farmerid',
-                                                'username',
-                                                'first_name',
-                                                'last_name')
+                                        .all()
     except:
         return Response(statuscode(12))
 
-    return Response(statuscode('0', { 'farmerlist': list(downlinefarmers) }))
+    farmer_details = Farmer.objects.select_related('user').filter(user__in=downlinefarmers)
+    tokens = Token.objects.select_related('user').filter(user__in=downlinefarmers)
+
+    farmer_list = []
+    for farmer in farmer_details:
+        farmer_name = farmer.first_name + " " + farmer.last_name
+        token = tokens.get(user=farmer.user).key
+        userID = farmer.user.username
+        farmer_list.append({'farmer_name': farmer_name, 'token': token, 'userid': userID})
+
+    return Response(statuscode('0', { 'farmerlist': farmer_list }))
 
 
 

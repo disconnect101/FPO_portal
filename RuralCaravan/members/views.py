@@ -6,7 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
 from django.contrib import messages
-from .forms import FarmerForm, leader_add_farmerForm, ProduceForm, FPOLedgerForm, TransactionForm, OrdersForm
+from .forms import FarmerForm, leader_add_farmerForm, ProduceForm, FPOLedgerForm, TransactionForm, OrdersForm, LandForm, \
+    BankForm
 from .forms import LeaderForm
 from .forms import UserProfileForm
 from farmer.models import *
@@ -108,11 +109,11 @@ def detail_farmer(request, id):
   
     # add the dictionary during initialization 
     context["data"] = Farmer.objects.get(id = id)
-    #context["bank_details"] = BankDetails.objects.all()
-    #context["land_details"] = Land.objects.get(id = id)
     context["produce"] = Produce.objects.all()
     context["transactions"] = ew_transaction.objects.filter(user = context["data"].user)
     context["orders"] = Orders.objects.filter(buyer = context["data"].user)
+    context["landdetails"] = Land.objects.filter(owner=context["data"].user)
+    context["bankdetails"] = BankDetails.objects.filter(user=context["data"].user)
     return render(request, "members/farmer_profile.html", context) 
 
 
@@ -123,7 +124,11 @@ def add_farmer(request):
   
     # add the dictionary during initialization 
     form = FarmerForm(data = request.POST , files=request.FILES) 
-    if form.is_valid(): 
+    if form.is_valid():
+        aadhar = form.cleaned_data['aadhar']
+        contact = form.cleaned_data['contact']
+        if len(aadhar) != 12 or len(contact) != 10:
+            return redirect('/members/member_page/add_farmer')
         form.save() 
         return redirect('/members/member_page')
           
@@ -191,7 +196,7 @@ def detail_leader(request, id):
     # add the dictionary during initialization 
     context["data"] = Leader.objects.get(id = id)
     context["farmers"] = Farmer.objects.all()
-          
+    context["transactions"] = ew_transaction.objects.filter(user=context["data"].user)
     return render(request, "members/leader_profile.html", context)
 
 
@@ -203,11 +208,15 @@ def add_leader(request):
     # add the dictionary during initialization
     form = LeaderForm(data=request.POST, files=request.FILES)
     if form.is_valid():
+        aadhar = form.cleaned_data['aadhar']
+        contact = form.cleaned_data['contact']
+        if len(aadhar) != 12 or len(contact) != 10:
+            return redirect('/members/member_page/add_farmer')
         form.save()
         return redirect('/members/member_page')
 
     context['form'] = form
-    context['farmers'] =Farmer.objects.all()
+    context['farmers'] = Farmer.objects.all()
     context['users'] = UserProfile.objects.all()
     return render(request, 'members/addnewleader.html', context)
 
@@ -231,7 +240,7 @@ def add_user(request):
     context['form'] = form
     context['users'] = UserProfile.objects.all()
     # context['form_u']=form
-    return render(request, 'members/addtest.html', context) #add
+    return render(request, 'members/add.html', context) #add
 
 
 def leader_del_farmer(request, id1, id2):
@@ -449,7 +458,10 @@ def add_transaction(request):
         amount = form.cleaned_data['amount']
         description = form.cleaned_data['description']
         last = ew_transaction.objects.filter(user=user).last()
-        last_amount = last.currrent_amount
+        if last:
+            last_amount = last.currrent_amount
+        else:
+            last_amount = 0
         currrent_amount = last_amount + amount
         p = ew_transaction.objects.create(user=user, amount=amount, currrent_amount=currrent_amount,
                                           description=description)
@@ -613,6 +625,30 @@ def orders_edit(request, id):
     context["form"] = form
 
     return render(request, "members/orders.html", context)
+
+
+def bank_add_farmer(request,id):
+    context = {}
+    form = BankForm(data=request.POST, files=request.FILES)
+    if form.is_valid():
+        form.save()
+        return redirect('/members/member_page')
+
+    context['form'] = form
+    context['users'] = UserProfile.objects.all()
+    return render(request, 'members/addbank.html', context)
+
+
+def land_add_farmer(request,id):
+    context = {}
+    form = LandForm(data=request.POST, files=request.FILES)
+    if form.is_valid():
+        form.save()
+        return redirect('/members/member_page/')
+
+    context['form'] = form
+    context['users'] = UserProfile.objects.all()
+    return render(request, 'members/addland.html', context)
 # def order(request):
 #   return render(request, "members/farmer_profile.html")
 # def leader_profile(request):

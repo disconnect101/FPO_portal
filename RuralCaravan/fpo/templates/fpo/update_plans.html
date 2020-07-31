@@ -61,7 +61,7 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}" target="_blank">
+      <a class="navbar-brand" href="{% url 'home' %}">
         <strong>FPO PORTAL</strong>
       </a>
 
@@ -81,19 +81,35 @@
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
-          <li class="nav-item active ">
-            <a class="nav-link" href="{% url 'plans' %}" >Plans</a>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
           </li>
+             <li class="nav-item">
+            <a class="nav-link" href="{% url 'produce' %}" >Production</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item">
+            <a href="{% url 'add_user' %}" class="nav-link" >
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'transaction'%}" class="nav-link" >
+             <i class="fas fa-rupee-sign"></i>
+            </a>
+          </li>
           <li class="nav-item">
             <a href="{% url 'orders' %}" class="nav-link" >
              <i class="fas fa-shopping-cart"></i>
@@ -105,21 +121,22 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="statistics.html" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" >
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
           <li class="nav-item">
             <a href="{% url 'members' %}" class="nav-link border border-light rounded"
-              target="_blank">
+             >
               <i class="fas fa-user"></i>Members
             </a>
           </li>
-		   <li class="nav-item">
+		  <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
-        </ul>
 
+
+        </ul>
 
       </div>
 
@@ -181,7 +198,7 @@
                   <div class="md-form">
 				  <i class="fas fa-weight-hanging prefix green-text"></i>
 
-                    <input type="number" name="weigth_per_land" step="any" required id="id_weigth_per_land"  class="form-control" value="{{form.weigth_per_land.value }}" >
+                    <input type="number" name="weigth_per_land" step="any" required id="id_weigth_per_land"  class="form-control" value="{{form.weigth_per_land.value }}" />
                     <label class="required active" for="id_weigth_per_land">Enter Weight per land</label>
                   </div>
 
@@ -199,7 +216,33 @@
 
 
                 </div>
-                  <div >
+
+                     <div class="md-form">
+                    <i class="fas fa-rupee-sign prefix green-text"></i>
+                    <textarea type="text" class="md-textarea" name="investment_requirements" cols="40" rows="10" required id="id_investment_requirements"
+               >{{form.investment_requirements.value}}</textarea>
+                    <label for="id_investment_requirements">Enter Investment Requirements:</label>
+                  </div>
+                       <div class="md-form">
+                    <i class="fas fa-pencil-alt prefix green-text"></i>
+                    <textarea type="text"  class="md-textarea" name="facilities" cols="40" rows="10" required id="id_facilities"
+                  >{{form.facilities.value}}</textarea>
+                    <label for="id_facilities">Enter Facilities</label>
+                  </div>
+                    <div>
+
+
+                <i class="fas fa-warehouse prefix green-text"></i>
+
+
+
+
+                        <label class="required" for="id_subscribers"><strong>Subscribers:</strong></label>
+
+                            <input type="number" name="subscribers" value="{{form.subscribers.value}}"  required id="id_subscribers">
+
+
+
 
 
                 <i class="fas fa-warehouse prefix green-text"></i>

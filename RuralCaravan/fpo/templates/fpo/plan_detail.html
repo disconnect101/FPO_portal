@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Meetings</title>
+    <title>Plan Details</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <!-- Bootstrap core CSS -->
@@ -51,9 +51,6 @@
               }
           }
 
-    .no-click {
-    pointer-events: none;
-}
 
     </style>
 </head>
@@ -140,82 +137,212 @@
 
 
         <!--Section: Main features & Quick Start-->
+
+       {% block content %}
       <section style="padding-bottom:5%">
-              <!--Grid row-->
-        <div class="row wow fadeIn">
-
-         <div class="col-lg-12 col-md-12">
-			<!--Card-->
-            <div class="card">
-
-              <!--Card content-->
-              <div class="card-body">
-
-                <h3 class="dark-grey-text text-center" >
-                    <strong>PLAN DETAILS</strong>
-                  </h3>
-                  <hr>
 
 
 
+          <!-- Grid row -->
 
+      <div class="row wow fadeIn">
 
- {% block content %}
-
-            <div class="row">
-
-              <div class="col-lg-6 col-md-12">
-                   <div class="card">
-
-              <!--Card content-->
-              <div class="card-body">
-                  <p><div class="btn btn-grey no-click">CROP CODE</div><span><strong>{{plans.code}}</strong></span></p>
-               <p>   <div class="btn btn-grey no-click">CROP NAME</div><span><strong>{{plans.name}}</strong></span></p>
-                <p>  <div class="btn btn-grey no-click">CROP TYPE</div><span><strong>{{plans.type}}</strong></span></p>
-              </div>
-                   </div>
-              </div>
-                 <div class="col-lg-6 col-md-12">
-                      <div class="card">
-
-              <!--Card content-->
-              <div class="card-body">
-                <p>   <div class="btn btn-grey no-click">MAXIMUM CAPACITY</div><span><strong>{{plans.max_cap}}</strong></span></p>
-                 <p> <div class="btn btn-grey no-click">WEIGHT PER LAND</div><span><strong>{{plans.weigth_per_land}}</strong></span></p>
-
-                 <p>  <div class="btn btn-grey no-click">CURRENT AMOUNT</div><span><strong>{{plans.current_amount}}</strong></span></p>
-                 </div>
-                      </div>
-                 </div>
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
 
 
 
+          <!-- Card-->
+          <div class="card ">
 
-              </div>
-                   <hr>
-
-                   <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                              <div class="card">
-
-              <!--Card content-->
-              <div class="card-body">
-                    <p>  <div class="btn btn-green no-click">GUIDELINES</div><span>{{plans.guidance | safe}}</span></p>
-                        </div>
-                              </div></div>
+            <!-- Card header -->
+            <div class="card-header text-center">
+             <strong style="color:#384238"> Estimated Crop Quantity Percentage from villages</style></strong>
             </div>
-            <!--/First row-->
+
+            <!--Card content-->
+            <div class="card-body">
+
+              <canvas id="pieChart1"></canvas>
+
+            </div>
+
+          </div></div>
+
+          <!-- Grid Column -->
+          <!--Grid column-->
+        <div class="col-md-6 mb-4">
+
+
+                      {% if plans.image %}
+                          <center><img src="{{plans.image.url}}" width="50%" height="50%"/></center>
+                          {% else %}
+                         <center><img src="{% static 'img/download.png'%}" width="60%" height="60%" style="margin:2rem;" /></center>
+                          {% endif %}
 
 
 
 
-      {% endblock content %}
+
+
+
+        </div>
+
+
+        </div>
+        <!--Grid column-->
+
+
+
+
+
+            <!--Grid row-->
+      <div class="row wow fadeIn">
+
+        <!--Grid column-->
+
+        <div class="col-md-9 mb-4">
+
+          <!--Card-->
+          <div class="card">
+
+            <!--Card content-->
+            <div class="card-body">
+
+              <canvas id="myChart"></canvas>
+
+            </div>
 
           </div>
-          <!--/Grid column-->
+          <!--/.Card-->
+
+        </div>
+        <!--Grid column-->
+
+           <!--Card-->
+          <div class="col-md-3 mb-4">
+          <div class="card mb-4">
+
+            <!--Card content-->
+            <div class="card-body">
+
+              <!-- List group links -->
+              <div class="list-group list-group-flush">
+                  <center>
+                      <a class="list-group-item list-group-item-action waves-effect"><h5 style="color:green"><strong>SUBSCRIBERS</strong></h5>
+                          <h1><span class="badge badge-success badge-pill pull-right">{{plans.subscribers}}
+
+                          </span></h1>
+                        </a>
+                      <a class="list-group-item list-group-item-action waves-effect"><h5 style="color:#f0ad4e"><strong>ESTIMATED CROP QUANTITY</strong></h5>
+                          <h2><span class="badge badge-warning badge-pill pull-right">{{plans.current_amount}} Kgs
+
+                          </span></h2>
+                        </a>
+
+
+                       <a class="list-group-item list-group-item-action waves-effect"><h5 style="color:#0275d8"><strong>MAXIMUM CAPACITY</strong></h5>
+                  <h2><span class="badge badge-primary badge-pill pull-right">{{plans.max_cap}}
+
+                  </span></h2></a>
+
+                </center>
+                  </div>
+              <!-- List group links -->
+
+            </div>
+
+          </div>
+          <!--/.Card-->
+          </div></div>
+            <!--Grid row-->
+      <div class="row wow fadeIn">
+
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+
+          <!--Card-->
+          <div class="card">
+
+            {{plans.products.name}}
+
+          </div>
+          <!--/.Card-->
+
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+
+          <!--Card-->
+
+
+            <div class="card">
+            <!-- content of the card goes here -->
+              <div class="card-header"><center><strong>INVESTMENTS REQUIRED</strong></center></div>
+              <div class="card-body">{{plans.investment_requirements}}</div>
+
+            </div>
+
+
+          <!--/.Card-->
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+
+
+      <!--Grid row-->
+
+      <div class="row wow fadeIn">
+
+        <!--Grid column-->
+        <div class="col-md-12 mb-4">
+
+
+           <div class="card">
+            <!-- content of the card goes here -->
+              <div class="card-header"><strong>GUIDELINES</strong></div>
+              <div class="card-body">{{plans.guidance|safe}}</div>
+
+            </div>
+
+
+
+        </div></div>
+        <!--Grid row-->
+
+      <div class="row wow fadeIn">
+
+        <!--Grid column-->
+        <div class="col-md-12 mb-4">
+
+
+           <div class="card">
+            <!-- content of the card goes here -->
+              <div class="card-header"><strong>FACILITIES PROVIDED</strong></div>
+              <div class="card-body"><p>
+
+                {{plans.facilities}}
+
+
+              </p></div>
+
+            </div>
+
+
+
+        </div></div>
+
+
 
 
       </section>
+      {% endblock content %}
     </div>
   </main>
   <!--Main layout-->
@@ -253,6 +380,176 @@
         CKEDITOR.replace('guidance');
 
     </script>
+<script>
+   <!-- Charts -->
+
+    // Line
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ["Diskit ", "Landour", "Malana", " Majuli", "Mandawa", "Gokarna"], //village names
+        datasets: [{
+          label: 'No of Subscribers',
+          data: [12, 19, 3, 5, 2, 3],
+          backgroundColor: [
+            'rgba(255, 99, 132,0.5)',
+            'rgba(54, 162, 235,0.5)',
+            'rgba(255, 206, 86,0.5)',
+            'rgba(75, 192, 192,0.5)',
+            'rgba(153, 102, 255,0.5)',
+            'rgba(255, 159, 64,0.5)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+
+    //pie1
+    var ctxP = document.getElementById("pieChart1").getContext('2d');
+    var myPieChart = new Chart(ctxP, {
+      type: 'pie',
+      data: {
+        labels: ["Diskit ", "Landour", "Malana", " Majuli", "Mandawa", "Gokarna"],
+        datasets: [{
+          data: [60, 50, 40, 40, 40, 10],
+          backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#5cb85c"],
+          hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5","#616774", "#7ed97e"]
+        }]
+      },
+      options: {
+        responsive: true,
+        legend: false
+      }
+    });
+
+      //pie2
+    var ctxP = document.getElementById("pieChart2").getContext('2d');
+    var myPieChart = new Chart(ctxP, {
+      type: 'pie',
+      data: {
+        labels: ["Diskit ", "Landour", "Malana", " Majuli", "Mandawa", "Gokarna"],
+        datasets: [{
+          data: [60, 40, 50, 30, 70, 90],
+          backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#5cb85c"],
+          hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774","#7ed97e"]
+        }]
+      },
+      options: {
+        responsive: true,
+        legend: false
+      }
+    });
+
+
+
+    //line
+    var ctxL = document.getElementById("lineChart").getContext('2d');
+    var myLineChart = new Chart(ctxL, {
+      type: 'line',
+      data: {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [{
+            label: "My First dataset",
+            backgroundColor: [
+              'rgba(105, 0, 132, .2)',
+            ],
+            borderColor: [
+              'rgba(200, 99, 132, .7)',
+            ],
+            borderWidth: 2,
+            data: [65, 59, 80, 81, 56, 55, 40]
+          },
+          {
+            label: "My Second dataset",
+            backgroundColor: [
+              'rgba(0, 137, 132, .2)',
+            ],
+            borderColor: [
+              'rgba(0, 10, 130, .7)',
+            ],
+            data: [28, 48, 40, 19, 86, 27, 90]
+          }
+        ]
+      },
+      options: {
+        responsive: true
+      }
+    });
+
+
+    //radar
+    var ctxR = document.getElementById("radarChart").getContext('2d');
+    var myRadarChart = new Chart(ctxR, {
+      type: 'radar',
+      data: {
+        labels: ["Eating", "Drinking", "Sleeping", "Designing", "Coding", "Cycling", "Running"],
+        datasets: [{
+          label: "My First dataset",
+          data: [65, 59, 90, 81, 56, 55, 40],
+          backgroundColor: [
+            'rgba(105, 0, 132, .2)',
+          ],
+          borderColor: [
+            'rgba(200, 99, 132, .7)',
+          ],
+          borderWidth: 2
+        }, {
+          label: "My Second dataset",
+          data: [28, 48, 40, 19, 96, 27, 100],
+          backgroundColor: [
+            'rgba(0, 250, 220, .2)',
+          ],
+          borderColor: [
+            'rgba(0, 213, 132, .7)',
+          ],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+
+    //doughnut
+    var ctxD = document.getElementById("doughnutChart").getContext('2d');
+    var myLineChart = new Chart(ctxD, {
+      type: 'doughnut',
+      data: {
+        labels: ["Red", "Green", "Yellow", "Grey", "Dark Grey"],
+        datasets: [{
+          data: [300, 50, 100, 40, 120],
+          backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+          hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+
+
+
+
+  </script>
+
 </body>
 
 </html>

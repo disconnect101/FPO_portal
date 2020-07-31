@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Meetings</title>
+    <title>Govt Scheme</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <!-- Bootstrap core CSS -->
@@ -96,7 +96,7 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}" target="_blank">
+      <a class="navbar-brand" href="{% url 'home' %}">
         <strong>FPO PORTAL</strong>
       </a>
 
@@ -111,45 +111,67 @@
 
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="{% url 'home' %}">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="{% url 'plans' %}" >Plans</a>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
           </li>
+             <li class="nav-item">
+            <a class="nav-link" href="{% url 'produce' %}" >Production</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
-          <li class="nav-item">
-            <a href="orders.html" class="nav-link" >
-             <i class="fas fa-shopping-cart"></i>
+            <li class="nav-item">
+            <a href="{% url 'add_user' %}" class="nav-link" >
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'transaction'%}" class="nav-link" >
+             <i class="fas fa-rupee-sign"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="statistics.html" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" >
+             <i class="fas fa-shopping-cart"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'products' %}" class="nav-link" >
+             <i class="fas fa-shopping-basket"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" >
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
           <li class="nav-item">
             <a href="{% url 'members' %}" class="nav-link border border-light rounded"
-              target="_blank">
+             >
               <i class="fas fa-user"></i>Members
             </a>
           </li>
-		   <li class="nav-item">
+		  <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
-        </ul>
 
+
+        </ul>
 
       </div>
 
@@ -164,6 +186,9 @@
     <div class="container" >
         <div class="row">
             <div class="col-12">
+                <div style="text-align: center;">
+                    <i class="fas fa-users fa-5x green-text mb-3" style="opacity: 0.2"></i>
+                </div>
                 <p style="text-align: center; opacity: 0.2" class="mb-0"><strong>GOVERNMENT SCHEME</strong></p>
                 <h1 style="text-align: center;" class="green-text mt-0 mb-3">{{data.name}}</h1>
                 <hr style="margin: auto; width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
@@ -235,6 +260,7 @@
             </div>
         {% endfor %}
         {% endif %}
+        {% if villages %}
         <h1 class="green-text mt-4">Villages</h1>
         <hr style="margin: 0; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
         {% for village in villages %}
@@ -279,6 +305,7 @@
             </div>
             </div>
         {% endfor %}
+        {% endif %}
     </div>
 </main>
   <!--Main layout-->
@@ -321,7 +348,7 @@
     var borderColor = [];
     for(let i = 0; i < villageTotal.length; i++){
         let eng = villageTotal[i];
-        if(eng > 50) {
+        if(eng > 75) {
             backgroundColor.push('rgba(75, 192, 192, 0.2)');
             borderColor.push('rgba(75, 192, 192, 1)');
         } else if (eng < 35) {
@@ -443,7 +470,7 @@
 
         for(let i = 0; i < villageTotal.length; i++){
         let eng = villageTotal[i];
-        if(eng > 50) {
+        if(eng > 75) {
                 backgroundColor.push('rgba(75, 192, 192, 0.2)');
                 borderColor.push('rgba(75, 192, 192, 1)');
             } else if (eng < 35) {
