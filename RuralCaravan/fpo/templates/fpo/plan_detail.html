@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Meetings</title>
+    <title>Plan Details</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <!-- Bootstrap core CSS -->
@@ -137,6 +137,8 @@
 
 
         <!--Section: Main features & Quick Start-->
+
+       {% block content %}
       <section style="padding-bottom:5%">
 
 
@@ -172,7 +174,16 @@
         <div class="col-md-6 mb-4">
 
 
-            <center><img src="{% static 'img/person.svg'%}" width="50%" height="50%"/></center>
+                      {% if plans.image %}
+                          <center><img src="{{plans.image.url}}" width="50%" height="50%"/></center>
+                          {% else %}
+                         <center><img src="{% static 'img/download.png'%}" width="60%" height="60%" style="margin:2rem;" /></center>
+                          {% endif %}
+
+
+
+
+
 
 
         </div>
@@ -218,22 +229,22 @@
               <!-- List group links -->
               <div class="list-group list-group-flush">
                   <center>
-                      <a class="list-group-item list-group-item-action waves-effect"><h4 style="color:green"><strong>SUBSCRIBERS</strong></h4>
-                          <h1><span class="badge badge-success badge-pill pull-right">2200
+                      <a class="list-group-item list-group-item-action waves-effect"><h5 style="color:green"><strong>SUBSCRIBERS</strong></h5>
+                          <h1><span class="badge badge-success badge-pill pull-right">{{plans.subscribers}}
 
                           </span></h1>
                         </a>
                       <a class="list-group-item list-group-item-action waves-effect"><h5 style="color:#f0ad4e"><strong>ESTIMATED CROP QUANTITY</strong></h5>
-                          <h1><span class="badge badge-warning badge-pill pull-right">760 Kgs
+                          <h2><span class="badge badge-warning badge-pill pull-right">{{plans.current_amount}} Kgs
 
-                          </span></h1>
+                          </span></h2>
                         </a>
 
 
-                       <a class="list-group-item list-group-item-action waves-effect"><h4 style="color:#0275d8"><strong>PROFIT</strong></h4>
-                  <h1><span class="badge badge-primary badge-pill pull-right">&#8377; 7600
+                       <a class="list-group-item list-group-item-action waves-effect"><h5 style="color:#0275d8"><strong>MAXIMUM CAPACITY</strong></h5>
+                  <h2><span class="badge badge-primary badge-pill pull-right">{{plans.max_cap}}
 
-                  </span></h1></a>
+                  </span></h2></a>
 
                 </center>
                   </div>
@@ -253,51 +264,7 @@
           <!--Card-->
           <div class="card">
 
-            <!--Card content-->
-            <div class="card-body">
-
-              <!-- Table  -->
-              <table class="table table-hover">
-                <!-- Table head -->
-                  <tr>
-                      <center><strong>PRODUCTS</strong></center>
-                  </tr>
-                <thead class="blue-grey lighten-4">
-                  <tr>
-                    <th>#</th>
-                    <th>Lorem</th>
-                    <th>Ipsum</th>
-                    <th>Dolor</th>
-                  </tr>
-                </thead>
-                <!-- Table head -->
-
-                <!-- Table body -->
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Cell 1</td>
-                    <td>Cell 2</td>
-                    <td>Cell 3</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Cell 4</td>
-                    <td>Cell 5</td>
-                    <td>Cell 6</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Cell 7</td>
-                    <td>Cell 8</td>
-                    <td>Cell 9</td>
-                  </tr>
-                </tbody>
-                <!-- Table body -->
-              </table>
-              <!-- Table  -->
-
-            </div>
+            {{plans.products.name}}
 
           </div>
           <!--/.Card-->
@@ -309,57 +276,16 @@
         <div class="col-md-6 mb-4">
 
           <!--Card-->
-          <div class="card">
-
-            <!--Card content-->
-            <div class="card-body">
-
-              <!-- Table  -->
-              <table class="table table-hover">
-                   <tr>
-                      <center><strong>INVESTMENTS REQUIRED</strong></center>
-                  </tr>
 
 
-                <!-- Table head -->
-                <thead class="blue lighten-4">
-                  <tr>
-                    <th>#</th>
-                    <th>Lorem</th>
-                    <th>Ipsum</th>
-                    <th>Dolor</th>
-                  </tr>
-                </thead>
-                <!-- Table head -->
-
-                <!-- Table body -->
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Cell 1</td>
-                    <td>Cell 2</td>
-                    <td>Cell 3</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Cell 4</td>
-                    <td>Cell 5</td>
-                    <td>Cell 6</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Cell 7</td>
-                    <td>Cell 8</td>
-                    <td>Cell 9</td>
-                  </tr>
-                </tbody>
-                <!-- Table body -->
-              </table>
-              <!-- Table  -->
+            <div class="card">
+            <!-- content of the card goes here -->
+              <div class="card-header"><center><strong>INVESTMENTS REQUIRED</strong></center></div>
+              <div class="card-body">{{plans.investment_requirements}}</div>
 
             </div>
 
-          </div>
+
           <!--/.Card-->
 
         </div>
@@ -381,7 +307,7 @@
            <div class="card">
             <!-- content of the card goes here -->
               <div class="card-header"><strong>GUIDELINES</strong></div>
-              <div class="card-body"><p>Carrot "annual" or "biannual" herb belongs to family of Umbelliferae and it is native of "Europe". It is a great source of Vitamin A. Carrot is major vegetable crop of India. Haryana, Andhra Pradesh, Karnataka, Punjab and Uttar Pradesh are major carrot growing states. </p></div>
+              <div class="card-body">{{plans.guidance|safe}}</div>
 
             </div>
 
@@ -400,8 +326,8 @@
             <!-- content of the card goes here -->
               <div class="card-header"><strong>FACILITIES PROVIDED</strong></div>
               <div class="card-body"><p>
-               After sowing, apply first irrigation, it will help in good germination. Depending upon soil type and climate, apply remaining irrigations at interval of 6-7 days in summer and 10-12 days interval in winter month. Overall carrot required three to four irrigations. Avoid excessive irrigation as it will leads misshape of roots and numerous hair growth. Stop irrigation two to three weeks before harvesting, It will help in increase in sweetness and taste of carrot.
 
+                {{plans.facilities}}
 
 
               </p></div>
@@ -416,6 +342,7 @@
 
 
       </section>
+      {% endblock content %}
     </div>
   </main>
   <!--Main layout-->
