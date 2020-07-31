@@ -167,15 +167,10 @@
                 </th>
 
 
-                 <th class="th-sm">EDIT PLAN
+                 <th class="th-sm">ACTIONS
 
                 </th>
-                  <th class="th-sm">VIEW DETAILS
 
-                </th>
-                <th class="th-sm">TOGGLE STATUS
-
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -188,9 +183,9 @@
                 <td>{{plans.name}}</td>
                 <td>{{plans.type}}</td>
 
-                <td><a href="update/{{ plans.id }}"><p style="text-align:center"><i class="fas fa-edit blue-text"></i></p></a></td>
-                  <td><a href="detail/{{ plans.id }}"><p style="text-align:center"><i class="fas fa-eye purple-text"></i></p></a></td>
-                <td><a href="toggle/{{ plans.id }}" onclick="return confirm('Are you sure you want to make this plan inactive?');"><p style="text-align:center"><i class="fas fa-ban red-text"></i></p></a></td>
+                  <td><p style="text-align:center"><a href="update/{{ plans.id }}" title="Edit Plan"><i class="fas fa-edit blue-text" style="margin-right:2rem;"></i></a>
+                  <a href="detail/{{ plans.id }}" title="View Details"><i class="fas fa-eye purple-text" style="margin-right:2rem;"></i></a>
+                    <a href="toggle/{{ plans.id }}" onclick="return confirm('Are you sure you want to make this plan inactive?');" title="Make it inactive"><i class="fas fa-ban red-text"></i></a></p></td></tr>
                 {% endif %}
                 {% endfor %}
       {% endblock contentactive %}
@@ -212,15 +207,10 @@
 
                 </th>
 
-                 <th class="th-sm">EDIT PLAN
+                 <th class="th-sm">ACTIONS
 
                 </th>
-                   <th class="th-sm">VIEW DETAILS
 
-                </th>
-                <th class="th-sm">TOGGLE STATUS
-
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -232,9 +222,9 @@
                 <td>{{plans.code}}</td>
                 <td>{{plans.name}}</td>
                 <td>{{plans.type}}</td>
-                 <td><a href="update/{{ plans.id }}"><p style="text-align:center"><i class="fas fa-edit blue-text"></i></p></a></td>
-                   <td><a href="detail/{{ plans.id }}"><p style="text-align:center"><i class="fas fa-eye purple-text"></i> </p></a></td>
-                 <td><a href="toggle/{{ plans.id }}" onclick="return confirm('Are you sure you want to make this plan active?');"><p style="text-align:center"><i class="fas fa-check green-text"></i></p></a></td>
+                 <td><p style="text-align:center"><a href="update/{{ plans.id }}" title="Edit Plan"><i class="fas fa-edit blue-text" style="margin-right:2rem;"></i></a>
+                   <a href="detail/{{ plans.id }}" title="View Details"><i class="fas fa-eye purple-text" style="margin-right:2rem;"></i> </a>
+                     <a href="toggle/{{ plans.id }}" onclick="return confirm('Are you sure you want to make this plan active?');" title="Make it active"><i class="fas fa-check green-text"></i></a></p></td>
                  {% endif %}
                 {% endfor %}
       {% endblock contentinactive %}
@@ -432,7 +422,7 @@ $(document).ready(function () {
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [0,2,3,4,5]
+  targets: [0,2,3]
   }]
 });
   $('.dataTables_length').addClass('bs-select');
@@ -444,7 +434,7 @@ $('#dtBasicExample2').DataTable({
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [0,2,3,4,5]
+  targets: [0,2,3]
   }]
 });
 
