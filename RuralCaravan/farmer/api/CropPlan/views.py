@@ -90,9 +90,12 @@ def confcrop(request, cropID):
             return Response(statuscode('12'))
 
         message = "You have successfully subcribed to " + crop.name
-        if user.category != 'N':
-            send_to = str(user.contact_set.first().number)
-            sms.send_message('+91' + send_to, sms.TWILIO_NUMBER, message)
+        try:
+            if user.category != 'N':
+                send_to = str(user.contact_set.first().number)
+                sms.send_message('+91' + send_to, sms.TWILIO_NUMBER, message)
+        except:
+            print("SMS could not be sent")
         return Response(statuscode('0'))
 
     if request.method=='DELETE':

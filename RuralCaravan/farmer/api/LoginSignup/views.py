@@ -14,7 +14,7 @@ from django.contrib.auth import login
 from farmer.models import Farmer, UserProfile
 from rest_framework.authtoken.views import ObtainAuthToken
 import pytz
-
+from farmer.api.utils import *
 
 @api_view(['POST'],)
 def register(request):
@@ -108,7 +108,7 @@ def userData(request):
             farmer = Farmer.objects.get(user=user)
             print(farmer.first_name)
         except Farmer.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(statuscode('farmer details not available'))
         serializer = FarmerSerializer(farmer)
         return Response(serializer.data)
 

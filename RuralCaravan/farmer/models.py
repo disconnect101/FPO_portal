@@ -208,7 +208,10 @@ def send_sms_notification(sender, instance=None, created=False, **kwargs):
         message = "A meeting on \"" + agenda + "\" by " + organiser + " is scheduled on " + date
         contacts = Contact.objects.filter(verification_status=True)
         for contact in contacts:
-            sms.send_message("+91"+contact.number, sms.TWILIO_NUMBER, message)
+            try:
+                sms.send_message("+91"+contact.number, sms.TWILIO_NUMBER, message)
+            except:
+                print("unable to send SMS")
 
 
 class Orders(models.Model):
@@ -235,14 +238,15 @@ class Orders(models.Model):
 class Produce(models.Model):
     crop = models.ForeignKey(Crops, on_delete=models.PROTECT)
     amount = models.FloatField()
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
     land = models.ForeignKey(Land, models.SET_NULL, null=True, blank=True)
     quality = models.BooleanField()
     owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
     income = models.FloatField(default=0)
 
-    # def __str__(self):
-    #     return self.owner + " " + self.crop.name
+
+    def __str__(self):
+        return self.owner.username + " " + self.crop.name
 
 
 class Kart(models.Model):
@@ -279,7 +283,11 @@ def send_sms_conf(sender, instance=None, created=False, **kwargs):
         else:
             message = "Your E-wallet has been debited for Rs." + str(instance.amount)
         send_to = str(instance.user.contact_set.first().number)
-        sms.send_message( '+91'+send_to, sms.TWILIO_NUMBER, message)
+        try:
+            sms.send_message( '+91'+send_to, sms.TWILIO_NUMBER, message)
+        except:
+            print("unable to send sms")
+
 
 class FPOLedger(models.Model):
     crop = models.ForeignKey(Crops, on_delete=models.PROTECT)
