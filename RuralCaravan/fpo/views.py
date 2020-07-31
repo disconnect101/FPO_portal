@@ -948,11 +948,15 @@ def plans_view(request):
     # field names as keys 
     context ={
         'crop' : Crops.objects.all()
-    } 
+    }
+
+    products = Products.objects.all() 
+    context['products'] = products
   
     # add the dictionary during initialization      # Add and view both
     form = CropsForm(request.POST or None) 
     if form.is_valid(): 
+        print(request.POST)
         form.save() 
         return redirect('/fpo/plans')
           

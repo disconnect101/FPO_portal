@@ -287,6 +287,14 @@
 
 
                 </div>
+                <div class="md-form">
+                  <p><strong>Products that can be availed</strong></p>
+                  <select class="custom-select" multiple name="products">
+                    {% for product in products %}
+                    <option value="{{product.id}}">{{product.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
                        <div class="form-row field-image">
 
 
