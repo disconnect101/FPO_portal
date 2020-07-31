@@ -2,9 +2,10 @@ package com.example.ruralcaravan.Fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
 
 public class PlanDetailsFragment extends Fragment {
 
@@ -72,12 +76,12 @@ public class PlanDetailsFragment extends Fragment {
                 .placeholder(R.drawable.app_logo)
                 .into(imageViewPlan);
         textViewMaximumCapacity.setText(planDetails.getMaxCap().toString());
-        double acquiredPercentage = 1.0*planDetails.getCurrentAmount()/planDetails.getMaxCap();
+        double acquiredPercentage = 100.0*planDetails.getCurrentAmount()/planDetails.getMaxCap();
         textViewPercentageAcquired.setText(String.format("%.2f", acquiredPercentage) + "%");
         textViewSubscriberCount.setText(planDetails.getSubscribers().toString());
-        textViewGuidance.setText(planDetails.getGuidance());
-        textViewFacilities.setText(planDetails.getFacilities());
-        textViewInvestments.setText(planDetails.getInvestments());
+        textViewGuidance.setText(Html.fromHtml(planDetails.getGuidance()));
+        textViewFacilities.setText(Html.fromHtml(planDetails.getFacilities()));
+        textViewInvestments.setText(Html.fromHtml(planDetails.getInvestments()));
 
         setButtonState(((PlanActivity)getActivity()).getIsPlanSubscribed());
 
@@ -131,26 +135,37 @@ public class PlanDetailsFragment extends Fragment {
     }
 
     private void notifyServerAboutSubscription(final boolean status, String landArea) {
+
+        final ACProgressFlower dialog = new ACProgressFlower.Builder(getActivity())
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         String updatePlanSubscriptionUrl = getString(R.string.base_end_point_ip) + "confcrop/" + planDetails.getId() + "/";
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
-                        Log.e("Subscription button", "response");
                         setButtonState(status);
                     } else {
                         Toast.makeText(getActivity(), ResponseStatusCodeHandler.getMessage(response.getString("statuscode")), Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
                 }
+                dialog.dismiss();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
             }
         };
         JsonObjectRequest updatePlanSubscriptionRequest = null;

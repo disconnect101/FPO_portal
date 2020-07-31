@@ -1,6 +1,7 @@
 package com.example.ruralcaravan.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -29,6 +30,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
+
 public class PlanActivity extends AppCompatActivity {
 
     private PlansResponse planDetails;
@@ -37,6 +41,8 @@ public class PlanActivity extends AppCompatActivity {
     private boolean isPlanSubscribed;
     private TextView textViewPlanDetails;
     private TextView textViewProductsUnderPlan;
+    private int count;
+    private ACProgressFlower dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,13 @@ public class PlanActivity extends AppCompatActivity {
 
         firstTabSelected = false;
 
+        count = 2;
+        dialog = new ACProgressFlower.Builder(PlanActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
         fetchPlanDetails(planId);
         fetchProductsUnderPlan(planId);
 
@@ -68,11 +81,16 @@ public class PlanActivity extends AppCompatActivity {
                         GsonBuilder gsonBuilder = new GsonBuilder();
                         Gson gson = gsonBuilder.create();
                         itemsDetails = gson.fromJson(response.getJSONArray("data").toString(), ItemDetailedResponse[].class);
+                        count--;
+                        if(count == 0)
+                            dialog.dismiss();
                     } else {
                         Toast.makeText(PlanActivity.this, ResponseStatusCodeHandler.getMessage(response.getString("statuscode")), Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Toast.makeText(PlanActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             }
         };
@@ -81,6 +99,8 @@ public class PlanActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                Toast.makeText(PlanActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
             }
         };
 
@@ -105,12 +125,18 @@ public class PlanActivity extends AppCompatActivity {
                         GsonBuilder gsonBuilder = new GsonBuilder();
                         Gson gson = gsonBuilder.create();
                         planDetails = gson.fromJson(response.getJSONObject("data").toString(), PlansResponse.class);
+                        count--;
+                        if(count == 0) {
+                            dialog.dismiss();
+                        }
                         showPlanDetails(null);
                     } else {
                         Toast.makeText(PlanActivity.this, ResponseStatusCodeHandler.getMessage(response.getString("stauscode")), Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Toast.makeText(PlanActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             }
         };
@@ -118,6 +144,8 @@ public class PlanActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                Toast.makeText(PlanActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
             }
         };
         JsonObjectRequest planDetailsRequest = new JsonObjectRequest(Request.Method.GET, planDetailsUrl, null, responseListener, errorListener) {

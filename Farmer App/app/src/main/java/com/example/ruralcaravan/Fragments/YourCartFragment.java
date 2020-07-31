@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.crowdfire.cfalertdialog.CFAlertDialog;
+import com.example.ruralcaravan.Activities.LoginActivity;
 import com.example.ruralcaravan.Adapters.CartItemsAdapter;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.CartItemsResponse;
@@ -56,6 +57,7 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
     private String amount;
     private ACProgressFlower dialog;
     private TextView textViewSummary;
+    private TextView textViewEmptyCartMessage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +75,7 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
 
         recyclerViewCart = rootView.findViewById(R.id.recyclerViewCart);
         proceedToBuy = rootView.findViewById(R.id.proceedToBuy);
+        textViewEmptyCartMessage = rootView.findViewById(R.id.textViewEmptyCartMessage);
 
         //TODO: Update the summary
         textViewSummary = rootView.findViewWithTag(R.id.textViewSummary);
@@ -115,15 +118,18 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                     cartItems = gson.fromJson(response.getJSONArray("data").toString(), CartItemsResponse[].class);
                     jsonResponseSize = cartItems.length;
                     if(jsonResponseSize == 0) {
-                        dialog.dismiss();
-                        rootView.setVisibility(View.VISIBLE);
+                        textViewEmptyCartMessage.setVisibility(View.VISIBLE);
                         proceedToBuy.setVisibility(View.GONE);
+                        rootView.setVisibility(View.VISIBLE);
+                        dialog.dismiss();
                     } else {
-                        proceedToBuy.setVisibility(View.VISIBLE);
+                        textViewEmptyCartMessage.setVisibility(View.GONE);
+                        handleResponse(cartItems);
                     }
-                    handleResponse(cartItems);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             }
         };
@@ -131,6 +137,7 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
             }
         };
         JsonObjectRequest cartItemsRequest = new JsonObjectRequest(Request.Method.GET, cartItemsUrl, null, responseListener, errorListener){
@@ -183,6 +190,8 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest itemDetailsRequest = new JsonObjectRequest(Request.Method.POST, itemDetailsUrl, jsonBody, responseListener, errorListener) {
@@ -200,6 +209,14 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
     }
 
     public void updateCartItem(String cartId, final TextView textViewQuantity, final int change) {
+
+        dialog = new ACProgressFlower.Builder(getActivity())
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         String quantityUpdateUrl = getResources().getString(R.string.base_end_point_ip) + "kart/";
         JSONObject jsonBody = new JSONObject();
         try {
@@ -214,8 +231,9 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                         } else {
                             Toast.makeText(getContext(), ResponseStatusCodeHandler.getMessage(response.getString("statuscode")), Toast.LENGTH_LONG);
                         }
+                        dialog.dismiss();
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
                     }
                 }
             };
@@ -223,6 +241,8 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest updateCartItemRequest = new JsonObjectRequest(Request.Method.POST, quantityUpdateUrl, jsonBody, responseListener, errorListener) {
@@ -241,6 +261,13 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
 
     public void deleteCartItem(String cartId, final int position) {
 
+        dialog = new ACProgressFlower.Builder(getActivity())
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         String cartDeleteUrl = getResources().getString(R.string.base_end_point_ip) + "kart/delete/";
         JSONObject jsonBody = new JSONObject();
         try {
@@ -248,20 +275,29 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.e("json", jsonBody.toString());
 
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("position", String.valueOf(position));
-                Log.e("response", response.toString());
                 try {
                     if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
                         cartItemsAdapterArrayList.remove(position);
-                        recyclerViewCart.getAdapter().notifyDataSetChanged();
+                        if(cartItemsAdapterArrayList.size() == 0) {
+                            proceedToBuy.setVisibility(View.GONE);
+                            textViewEmptyCartMessage.setVisibility(View.VISIBLE);
+                        } else {
+                            recyclerViewCart.getAdapter().notifyDataSetChanged();
+                        }
+                    } else {
+                        Toast.makeText(getActivity(),
+                                ResponseStatusCodeHandler.getMessage(response.getString("statuscode")),
+                                Toast.LENGTH_LONG).show();
                     }
+                    dialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    dialog.dismiss();
+                    Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -335,6 +371,14 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
     }
 
     private void buyItem() {
+
+        dialog = new ACProgressFlower.Builder(getActivity())
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         String buyItemsUrl = getString(R.string.base_end_point_ip) + "order/";
         JSONObject jsonBody = new JSONObject();
         try {
@@ -362,8 +406,11 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                             builder.setMessage(ResponseStatusCodeHandler.getMessage(response.getString("statuscode")));
                         }
                         builder.show();
+                        dialog.dismiss();
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
                     }
                 }
             };
@@ -371,6 +418,8 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest buyItemRequest = new JsonObjectRequest(Request.Method.POST, buyItemsUrl, jsonBody, responseListener, errorListener){

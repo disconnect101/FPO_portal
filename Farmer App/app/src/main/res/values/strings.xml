@@ -87,4 +87,13 @@
     <string name="are_you_sure_you_want_to">Are you sure you want to </string>
     <string name="enter_land_area_in_bigha">Enter land area (in bigha)</string>
     <string name="confirmation">Confirmation</string>
+    <string name="enter_6_digit_OTP">Enter 6 digit OTP</string>
+    <string name="server_error">Server error</string>
+    <string name="no_items_found">No items found</string>
+    <string name="no_upcoming_meetings">No upcoming meetings</string>
+    <string name="no_delivered_orders">No delivered orders</string>
+    <string name="no_pending_orders">No pending orders</string>
+    <string name="no_items_added_to_cart">No items added to cart</string>
+    <string name="no_new_plans">No new plans</string>
+    <string name="no_subscribed_plans">No subscribed plans</string>
 </resources>

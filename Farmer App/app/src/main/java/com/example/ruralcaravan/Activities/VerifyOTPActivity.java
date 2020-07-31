@@ -3,11 +3,13 @@ package com.example.ruralcaravan.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -25,12 +27,16 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
+
 public class VerifyOTPActivity extends AppCompatActivity {
 
     private PinView pinViewOTP;
     private TextView textViewOTPDescriptionText;
     private TextView textViewErrorMessage;
     private String phoneNumber;
+    private ACProgressFlower dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +61,12 @@ public class VerifyOTPActivity extends AppCompatActivity {
 
     public void verifyCodeButtonPressed(View view) {
         textViewErrorMessage.setText("");
+        dialog = new ACProgressFlower.Builder(VerifyOTPActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
         String otp = pinViewOTP.getText().toString();
         if (otp.length() == 6) {
             String verifyOTPUrl = getResources().getString(R.string.base_end_point_ip) + "register/OTP/";
@@ -71,6 +83,7 @@ public class VerifyOTPActivity extends AppCompatActivity {
                         Gson gson = gsonBuilder.create();
                         OTPValidationResponse otpValidationResponse = gson.fromJson(response.toString(), OTPValidationResponse.class);
                         handleOTPValidation(otpValidationResponse);
+                        dialog.dismiss();
                     }
                 };
                 Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -78,6 +91,7 @@ public class VerifyOTPActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         textViewErrorMessage.setText("Unable to connect with server");
                         Log.e("Error", error.toString());
+                        dialog.dismiss();
                     }
                 };
                 Log.e("json", String.valueOf(jsonBody));
@@ -85,7 +99,11 @@ public class VerifyOTPActivity extends AppCompatActivity {
                 VolleySingleton.getInstance(VerifyOTPActivity.this).addToRequestQueue(otpValidationRequest);
             } catch (JSONException e) {
                 e.printStackTrace();
+                dialog.dismiss();
             }
+        } else {
+            textViewErrorMessage.setText(getString(R.string.enter_6_digit_OTP));
+            dialog.dismiss();
         }
     }
 

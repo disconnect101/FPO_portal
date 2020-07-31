@@ -2,10 +2,11 @@ package com.example.ruralcaravan.Fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,12 +42,14 @@ public class MeetingsFragment extends Fragment {
     private ArrayList<MeetingsResponse> meetingsAdapterArrayList;
     private ACProgressFlower dialog;
     private View rootView;
+    private TextView textViewNoUpcomingMeetings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_meetings, container, false);
+        textViewNoUpcomingMeetings = rootView.findViewById(R.id.textViewNoUpcomingMeetings);
         dialog = new ACProgressFlower.Builder(getActivity())
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                 .themeColor(Color.WHITE)
@@ -73,9 +76,16 @@ public class MeetingsFragment extends Fragment {
                         Gson gson = gsonBuilder.create();
                         MeetingsResponse[] meetings = gson.fromJson(response.getJSONArray("data").toString(), MeetingsResponse[].class);
                         handleMeetingsResponse(meetings);
+                        dialog.dismiss();
+                    } else {
+                        Toast.makeText(getActivity(),
+                                ResponseStatusCodeHandler.getMessage(response.getString("statuscode")),
+                                Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    dialog.dismiss();
                 }
             }
         };
@@ -97,11 +107,15 @@ public class MeetingsFragment extends Fragment {
     }
 
     private void handleMeetingsResponse(MeetingsResponse[] meetings) {
-        meetingsAdapterArrayList.clear();
-        meetingsAdapterArrayList.addAll(Arrays.asList(meetings));
-        meetingsRecyclerView.getAdapter().notifyDataSetChanged();
+        if(meetings.length == 0) {
+            textViewNoUpcomingMeetings.setVisibility(View.VISIBLE);
+        } else {
+            textViewNoUpcomingMeetings.setVisibility(View.INVISIBLE);
+            meetingsAdapterArrayList.clear();
+            meetingsAdapterArrayList.addAll(Arrays.asList(meetings));
+            meetingsRecyclerView.getAdapter().notifyDataSetChanged();
+        }
         rootView.setVisibility(View.VISIBLE);
-        dialog.dismiss();
     }
 
 }

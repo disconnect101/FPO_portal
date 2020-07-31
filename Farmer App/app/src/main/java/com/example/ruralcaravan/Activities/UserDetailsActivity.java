@@ -3,6 +3,7 @@ package com.example.ruralcaravan.Activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +36,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
+
 public class UserDetailsActivity extends AppCompatActivity {
 
     private TextInputEditText editTextFirstName;
@@ -45,6 +49,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     private ArrayList<String> villages;
     private JSONObject locationResponse;
     private TextView textViewErrorMessage;
+    private ACProgressFlower dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +71,24 @@ public class UserDetailsActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 locationResponse = response;
                 handleLocationListResponse(response);
+                dialog.dismiss();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 textViewErrorMessage.setText("SERVER error");
+                dialog.dismiss();
             }
         };
+
+        dialog = new ACProgressFlower.Builder(UserDetailsActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         JsonObjectRequest locationListRequest = new JsonObjectRequest(Request.Method.GET, getLocationListUrl, null, responseListener, errorListener){
             @Override
             public Map<String, String> getHeaders() {
@@ -153,6 +168,14 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     public void moveToMainActivity(View view) {
         //TODO: Check the inputs
+
+        dialog = new ACProgressFlower.Builder(UserDetailsActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         String postUserDataUrl = getResources().getString(R.string.base_end_point_ip) + "userdata/";
         JSONObject jsonBody = new JSONObject();
         try {
@@ -164,12 +187,14 @@ public class UserDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(JSONObject response) {
                     handlePostUserDataResponse(response);
+                    dialog.dismiss();
                 }
             };
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     textViewErrorMessage.setText("SERVER Error");
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest postUserDetails = new JsonObjectRequest(Request.Method.POST, postUserDataUrl, jsonBody, responseListener, errorListener){
@@ -184,6 +209,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         } catch (JSONException e) {
             textViewErrorMessage.setText(e.toString());
             e.printStackTrace();
+            dialog.dismiss();
         }
     }
 

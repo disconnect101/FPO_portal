@@ -3,6 +3,7 @@ package com.example.ruralcaravan.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,12 +25,16 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private TextInputEditText editTextPhoneNumber;
     private TextInputEditText editTextUserName;
     private TextInputEditText editTextPassword;
     private TextView textViewErrorMessage;
+    private ACProgressFlower dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,12 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void validateDetails(View view) {
+        dialog = new ACProgressFlower.Builder(RegisterActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
         textViewErrorMessage.setText("");
         if(checkInput()) {
             //Make request to the REST Server
@@ -62,10 +73,12 @@ public class RegisterActivity extends AppCompatActivity {
                 Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.e("response", response.toString());
                         GsonBuilder gsonBuilder = new GsonBuilder();
                         Gson gson = gsonBuilder.create();
                         RegistrationDetailsValidationResponse registrationDetailsValidationResponse = gson.fromJson(response.toString(), RegistrationDetailsValidationResponse.class);
                         handleRegisterValidation(registrationDetailsValidationResponse);
+                        dialog.dismiss();
                     }
                 };
                 Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -73,13 +86,15 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         textViewErrorMessage.setText("Unable to connect with server");
                         Log.e("Error",error.toString());
+                        error.printStackTrace();
+                        dialog.dismiss();
                     }
                 };
-                Log.e("json", String.valueOf(jsonBody));
                 JsonObjectRequest registrationDetailsValidationRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody, responseListener, errorListener);
                 VolleySingleton.getInstance(RegisterActivity.this).addToRequestQueue(registrationDetailsValidationRequest);
             } catch (JSONException e) {
                 e.printStackTrace();
+                dialog.dismiss();
             }
         }
     }
@@ -92,7 +107,6 @@ public class RegisterActivity extends AppCompatActivity {
             intent.putExtra("phoneNumber", editTextPhoneNumber.getText().toString());
             startActivity(intent);
         } else {
-            //Prompt error
             textViewErrorMessage.setText(ResponseStatusCodeHandler.getMessage(registrationDetailsValidationResponse.getStatuscode()));
         }
     }

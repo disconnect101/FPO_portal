@@ -6,6 +6,7 @@ import androidx.cardview.widget.CardView;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.InputType;
@@ -43,6 +44,9 @@ import org.w3c.dom.Text;
 import java.util.HashMap;
 import java.util.Map;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
+
 public class ItemDetailsActivity extends AppCompatActivity {
 
     private ImageView imageViewItem;
@@ -51,10 +55,9 @@ public class ItemDetailsActivity extends AppCompatActivity {
     private TextView textViewItemDescription;
     private TextView textViewQuantity;
     private String productId;
-
     private Button buttonDecreaseQuantity;
-
     private int paymentMode;
+    private ACProgressFlower dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,13 @@ public class ItemDetailsActivity extends AppCompatActivity {
             buttonDecreaseQuantity.setEnabled(false);
         }
 
+        dialog = new ACProgressFlower.Builder(ItemDetailsActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         //place orders options
         Intent intent = getIntent();
         productId = intent.getStringExtra(Constants.KEY_PRODUCT_ID);
@@ -87,12 +97,15 @@ public class ItemDetailsActivity extends AppCompatActivity {
                     Gson gson = gsonBuilder.create();
                     ItemDetailedResponse itemDetailedResponse = gson.fromJson(response.toString(), ItemDetailedResponse.class);
                     handleResponse(itemDetailedResponse);
+                    dialog.dismiss();
                 }
             };
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    Toast.makeText(ItemDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest itemDetailsRequest = new JsonObjectRequest(Request.Method.POST, itemDetailsUrl, jsonBody, responseListener, errorListener){
@@ -106,6 +119,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
             VolleySingleton.getInstance(ItemDetailsActivity.this).addToRequestQueue(itemDetailsRequest);
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(ItemDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
         }
     }
 
@@ -188,6 +203,14 @@ public class ItemDetailsActivity extends AppCompatActivity {
     }
 
     private void buyItem() {
+
+        dialog = new ACProgressFlower.Builder(ItemDetailsActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         String buyItemUrl = getString(R.string.base_end_point_ip) + "order/";
         JSONObject jsonBody = new JSONObject();
         try {
@@ -218,13 +241,17 @@ public class ItemDetailsActivity extends AppCompatActivity {
                         builder.show();
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        Toast.makeText(ItemDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
                     }
+                    dialog.dismiss();
                 }
             };
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    Toast.makeText(ItemDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest buyItemRequest = new JsonObjectRequest(Request.Method.POST, buyItemUrl, jsonBody, responseListener, errorListener){
@@ -246,6 +273,14 @@ public class ItemDetailsActivity extends AppCompatActivity {
             makeMeShake(textViewQuantity, 20, 5);
             return;
         }
+
+        dialog = new ACProgressFlower.Builder(ItemDetailsActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         String addToCartUrl = getResources().getString(R.string.base_end_point_ip) + "kart/";
         JSONObject jsonBody = new JSONObject();
         try {
@@ -265,13 +300,17 @@ public class ItemDetailsActivity extends AppCompatActivity {
                         builder.show();
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        Toast.makeText(ItemDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
                     }
+                    dialog.dismiss();
                 }
             };
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    Toast.makeText(ItemDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest addToCartRequest = new JsonObjectRequest(Request.Method.PUT, addToCartUrl, jsonBody, responseListener, errorListener) {
@@ -285,8 +324,9 @@ public class ItemDetailsActivity extends AppCompatActivity {
             VolleySingleton.getInstance(ItemDetailsActivity.this).addToRequestQueue(addToCartRequest);
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(ItemDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+            dialog.dismiss();
         }
-
     }
 
     public static View makeMeShake(View view, int duration, int offset) {

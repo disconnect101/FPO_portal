@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -56,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     private ACProgressFlower dialog;
     private boolean doubleBackToExitPressedOnce;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,14 +95,14 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(JSONObject response) {
                     SharedPreferenceUtils.setUserData(MainActivity.this, response.toString());
-                    Log.e("Data","fetched");
                     dialog.dismiss();
                 }
             };
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    Toast.makeText(MainActivity.this, "Server error", Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest userDataRequest = new JsonObjectRequest(Request.Method.GET, getUserDataUrl, null, responseListener, errorListener){
@@ -115,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
             };
             VolleySingleton.getInstance(MainActivity.this).addToRequestQueue(userDataRequest);
         }
-
     }
 
     private void setupDrawerContent(NavigationView navigationView) {

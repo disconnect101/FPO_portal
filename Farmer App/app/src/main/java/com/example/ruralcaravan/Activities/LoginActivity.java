@@ -1,8 +1,8 @@
 package com.example.ruralcaravan.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -25,11 +25,15 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
+
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText editTextUserName;
     private TextInputEditText editTextLoginPassword;
     private TextView textViewErrorMessage;
+    private ACProgressFlower dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,12 @@ public class LoginActivity extends AppCompatActivity {
 
     public void loginButtonPressed(View view) {
         textViewErrorMessage.setText("");
+        dialog = new ACProgressFlower.Builder(LoginActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
         //Server request for login
         String url = getResources().getString(R.string.base_end_point_ip) + "login/";
         JSONObject jsonBody = new JSONObject();
@@ -81,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             textViewErrorMessage.setText(ResponseStatusCodeHandler.getMessage(loginResponse.getStatuscode()));
         }
+        dialog.dismiss();
     }
 
     public void moveToRegisterActivity(View view) {
