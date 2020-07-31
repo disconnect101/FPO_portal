@@ -879,7 +879,7 @@ def fpo_statistics(request):
         prediction = predict_production(data)
         print(prediction)
         crop['years'].append(f'{prediction[0]} (Prediction)')
-        crop['data'].append(round(prediction[1], 2))
+        crop['data'].append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
 
     context['crop_selector_options'] = [x['name'] for x in crops_by_years_data]
 
@@ -914,7 +914,7 @@ def fpo_statistics(request):
         print()
         prediction = predict_production(data)
         crop['years'].append(f'{prediction[0]} (Prediction)')
-        crop['data'].append(round(prediction[1], 2))
+        crop['data'].append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
 
     context['crop_price_selector_options'] = [x['name'] for x in crops_profits_by_years_data]
 
