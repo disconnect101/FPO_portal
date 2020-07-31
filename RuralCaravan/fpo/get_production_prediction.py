@@ -9,6 +9,8 @@ pp = pprint.PrettyPrinter()
 
 def predict_production(data):
     # data is simply -> {'Year': [2000, 2001, 2002], 'Production': [1,2,3]}
+    if not data['Year']:
+        return 0, 0
     new_data = pd.DataFrame(data=data)
     regressor = LinearRegression()
     # regressor = SVR(kernel="rbf")    

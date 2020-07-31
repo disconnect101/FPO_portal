@@ -854,6 +854,7 @@ def fpo_statistics(request):
 
     # Crop Production By Years
     crops_by_years_data = staticalanalysis.getCropProductionByYear()
+    print(f'\n\nThis is the data\n\n{crops_by_years_data}\n\n')
     # crops_by_years_data = [
     # {
     #     'name': 'Rice',
@@ -885,6 +886,7 @@ def fpo_statistics(request):
 
     # Profits Per Crop
     crops_profits_by_years_data = staticalanalysis.getCropProfitsByYear()
+    print(f'\n\nThis is the data\n\n{crops_profits_by_years_data}\n\n')
     # crops_profits_by_years_data = [
     # {
     #     'name': 'Corn',
@@ -905,6 +907,9 @@ def fpo_statistics(request):
 
     for crop in crops_profits_by_years_data:
         data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
+        print()
+        print(f'Data->>{data}')
+        print()
         prediction = predict_production(data)
         crop['years'].append(f'{prediction[0]} (Prediction)')
         crop['data'].append(round(prediction[1], 2))
@@ -932,7 +937,7 @@ def fpo_statistics(request):
     # ]
 
     context['profit_by_years_data'] = profit_by_years_data
-
+    context['year_selector_options'] = [x['year'] for x in profit_by_years_data]
 
     return render(request, 'fpo/fpo_statistics.html', context)
 

@@ -1,5 +1,6 @@
 from farmer.models import *
 from django.db.models import Count, Sum
+from datetime import datetime
 
 class StatisticalAnalysis:
     productionYearWise = ""
@@ -79,12 +80,14 @@ class StatisticalAnalysis:
         profitsByYear = []
         for year in years:
             monthWise = yearMonthWiseProfits.filter(date__year=year.get('date__year'))
-            profits = []
+            MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+            profits = [0 for _ in MONTHS]
             for month in monthWise:
-                profits.append(month.get('income'))
+                month_name = datetime.strptime(str(month['date__month']), "%m")
+                profits[MONTHS.index(month_name.strftime("%B"))] = month.get('income')
 
             yeardata = {
-                'year': year.get('date__year'),
+                'year': str(year.get('date__year')),
                 'data': profits
             }
 

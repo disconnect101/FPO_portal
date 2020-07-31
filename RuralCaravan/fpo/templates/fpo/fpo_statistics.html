@@ -306,9 +306,9 @@
                 <div class="form-group">
                     <label for="yearSelector" style="color: #4caf50;"><strong>Select Year</strong></label>
                     <select class="form-control" style="border: 1px solid #4caf50; color: #4caf50;" id="yearSelector">
-                        <option style="color: #4caf50">2017</option>
-                        <option style="color: #4caf50">2018</option>
-                        <option style="color: #4caf50">2019</option>
+                        {% for option in year_selector_options %}
+                        <option style="color: #4caf50">{{option}}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <canvas id="profitsByYear" width="100" height="60"></canvas>
@@ -611,8 +611,6 @@
     }
 
     var profitsData = profitByYearsData[0].data;
-
-
 
     var ctxProfitsByYear = document.getElementById('profitsByYear').getContext('2d');
 	var profitsByYear = new Chart(ctxProfitsByYear, {
