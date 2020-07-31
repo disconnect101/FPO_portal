@@ -148,7 +148,7 @@
 
 
   <!--Main layout-->
-  <main style="padding-top:10%">
+  <main style="padding-top:8rem;">
     <div class="container" >
 
 
@@ -156,207 +156,99 @@
 
        {% block content %}
       <section style="padding-bottom:5%">
-
-
-
           <!-- Grid row -->
-
-      <div class="row wow fadeIn">
-
-        <!--Grid column-->
-        <div class="col-md-6 mb-4">
-
-
-
-          <!-- Card-->
-          <div class="card ">
-
-            <!-- Card header -->
-            <div class="card-header text-center">
-             <strong style="color:#384238"> Estimated Crop Quantity Percentage from villages</style></strong>
-            </div>
-
-            <!--Card content-->
-            <div class="card-body">
-
-              <canvas id="pieChart1"></canvas>
-
-            </div>
-
-          </div></div>
-
-          <!-- Grid Column -->
-          <!--Grid column-->
-        <div class="col-md-6 mb-4">
-
-
-                      {% if plans.image %}
-                          <center><img src="{{plans.image.url}}" width="50%" height="50%"/></center>
-                          {% else %}
-                         <center><img src="{% static 'img/download.png'%}" width="60%" height="60%" style="margin:2rem;" /></center>
-                          {% endif %}
-
-
-
-
-
-
-
-        </div>
-
-
-        </div>
-        <!--Grid column-->
-
-
-
-
-
-            <!--Grid row-->
-      <div class="row wow fadeIn">
-
-        <!--Grid column-->
-
-        <div class="col-md-9 mb-4">
-
-          <!--Card-->
-          <div class="card">
-
-            <!--Card content-->
-            <div class="card-body">
-
-              <canvas id="myChart"></canvas>
-
-            </div>
-
+      <div class="row">
+          <div class="col-12">
+              <div class="text-center">
+                  <i class="fas fa-seedling fa-4x mb-2 green-text" style="opacity: 0.2"></i>
+              </div>
+              <p style="text-align: center; opacity: 0.2" class="mb-0"><strong>MORE INFORMATION</strong></p>
+              <h1 style="text-align: center;" class="green-text mt-0 mb-3">Plan Details</h1>
+              <hr style="margin: auto; width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
+              <br>
           </div>
-          <!--/.Card-->
-
-        </div>
-        <!--Grid column-->
-
-           <!--Card-->
-          <div class="col-md-3 mb-4">
-          <div class="card mb-4">
-
-            <!--Card content-->
-            <div class="card-body">
-
-              <!-- List group links -->
-              <div class="list-group list-group-flush">
-                  <center>
-                      <a class="list-group-item list-group-item-action waves-effect"><h5 style="color:green"><strong>SUBSCRIBERS</strong></h5>
-                          <h1><span class="badge badge-success badge-pill pull-right">{{plans.subscribers}}
-
-                          </span></h1>
-                        </a>
-                      <a class="list-group-item list-group-item-action waves-effect"><h5 style="color:#f0ad4e"><strong>ESTIMATED CROP QUANTITY</strong></h5>
-                          <h2><span class="badge badge-warning badge-pill pull-right">{{plans.current_amount}} Kgs
-
-                          </span></h2>
-                        </a>
-
-
-                       <a class="list-group-item list-group-item-action waves-effect"><h5 style="color:#0275d8"><strong>MAXIMUM CAPACITY</strong></h5>
-                  <h2><span class="badge badge-primary badge-pill pull-right">{{plans.max_cap}}
-
-                  </span></h2></a>
-
-                </center>
-                  </div>
-              <!-- List group links -->
-
-            </div>
-
-          </div>
-          <!--/.Card-->
-          </div></div>
-            <!--Grid row-->
-      <div class="row wow fadeIn">
-
-        <!--Grid column-->
-        <div class="col-md-6 mb-4">
-
-          <!--Card-->
-          <div class="card">
-
-            {{plans.products.name}}
-
-          </div>
-          <!--/.Card-->
-
-        </div>
-        <!--Grid column-->
-
-        <!--Grid column-->
-        <div class="col-md-6 mb-4">
-
-          <!--Card-->
-
-
-            <div class="card">
-            <!-- content of the card goes here -->
-              <div class="card-header"><center><strong>INVESTMENTS REQUIRED</strong></center></div>
-              <div class="card-body">{{plans.investment_requirements}}</div>
-
-            </div>
-
-
-          <!--/.Card-->
-
-        </div>
-        <!--Grid column-->
-
       </div>
-      <!--Grid row-->
 
+      <div class="row">
+          <div class="col-md-12 col-lg-6">
+            <p style="text-align: left; opacity: 0.2" class="mb-0"><strong>{{plans.code}}</strong></p>
+            <h1 style="text-align: left;" class="green-text mt-0 mb-3">{{plans.name}}</h1>
+            <hr style="margin: 0; width: 4rem; border: 2px solid lightgray; border-radius: 20rem;">
+            <br>
+            <p style="text-align: right; text-transform: uppercase; font-size: 1.2rem;" class="green-text"><strong>{{data.date}}</strong></p>
 
-
-      <!--Grid row-->
-
-      <div class="row wow fadeIn">
-
-        <!--Grid column-->
-        <div class="col-md-12 mb-4">
-
-
-           <div class="card">
-            <!-- content of the card goes here -->
-              <div class="card-header"><strong>GUIDELINES</strong></div>
-              <div class="card-body">{{plans.guidance|safe}}</div>
-
+            <h5 style="text-align: left;"><strong class="green-text">Type:</strong> {{plans.type}}</h5>
+            <h5 style="text-align: left;"><strong class="green-text">Investment Requirements:</strong> {{plans.investment_requirements}}</h5>
+            <h5 style="text-align: left;"><strong class="green-text">Facilities:</strong> {{plans.facilities}}</h5>
             </div>
-
-
-
-        </div></div>
-        <!--Grid row-->
-
-      <div class="row wow fadeIn">
-
-        <!--Grid column-->
-        <div class="col-md-12 mb-4">
-
-
-           <div class="card">
-            <!-- content of the card goes here -->
-              <div class="card-header"><strong>FACILITIES PROVIDED</strong></div>
-              <div class="card-body"><p>
-
-                {{plans.facilities}}
-
-
-              </p></div>
-
-            </div>
-
-
-
-        </div></div>
-
-
-
-
+          <div class="col-md-12 col-lg-6 mb-4">
+            {% if plans.image %}
+              <center>
+                <img src="{{plans.image.url}}" width="100%" height="100%"/>
+              </center>
+            {% else %}
+              <center>
+                <img src="{% static 'img/download.png'%}" width="60%" height="60%" style="margin:2rem;" />
+              </center>
+            {% endif %} 
+        </div>
+      </div>
+      <div class="row" style="margin: 8rem auto;">
+        <div class="col-3" style="border-right: 2px solid gray;">
+          <h1 class="text-center mb-0" style="color: lighgray;">{{plans.subscribers}}</h1>
+          <p class="text-center mb-0"><strong style="color: #4caf50; font-size: 1.2rem;">SUBSCRIBERS</strong></p>
+        </div>
+        <div class="col-3" style="border-right: 2px solid gray;">
+          <h1 class="text-center mb-0" style="color: lighgray;">{{plans.max_cap}} <span style="font-size: 1rem;">QT.</span></h1>
+          <p class="text-center mb-0"><strong style="color: #4caf50; font-size: 1.2rem;">REQUIREMENT</strong></p>
+        </div>
+        <div class="col-3" style="border-right: 2px solid gray;">
+          <h1 class="text-center mb-0" style="color: lighgray;">{{plans.current_amount}} <span style="font-size: 1rem;">QT.</span></h1>
+          <p class="text-center mb-0"><strong style="color: #4caf50; font-size: 1.2rem;">COLLECTED</strong></p>
+        </div>
+        <div class="col-3">
+          <h1 class="text-center mb-0" style="color: lighgray;">{{plans.weigth_per_land}} <span style="font-size: 1rem;">QT.</span></h1>
+          <p class="text-center mb-0"><strong style="color: #4caf50; font-size: 1.2rem;">WEIGHT PER ACRE</strong></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <h1 style="text-align: center;" class="green-text mb-4">Estimated Crop Contribution</h1>
+          <hr class="mb-4" style="width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
+          <canvas id="pieChart1" width="100" height="100"></canvas>
+        </div>
+        <div class="col-md-6">
+          <h1 style="text-align: center;" class="green-text mb-2">Products</h1>
+          <hr style="width: 6rem; border: 2px solid #4caf50; border-radius: 20rem; margin-bottom: 2rem;">
+          <div class="text-center">
+            <i class="fas fa-sitemap fa-3x mb-4" style="opacity: 0.15; color: #4caf50"></i>
+          </div>
+          <p style="text-align: center;">These are the products that are required for the cultivation of {{plans.name}}</p>
+          <ul class="list-group">
+            {% for product in products %}
+            <li class="list-group-item list-group-item-success">{{product.name}}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8rem;">
+        <div class="col-md-12">
+          <p style="text-align: left; opacity: 0.2" class="mb-0"><strong>TIPS</strong></p>
+            <h1 style="text-align: left;" class="green-text mt-0 mb-3">Guidelines</h1>
+            <hr style="margin: 0; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
+            <br>
+            <p style="text-align: right; text-transform: uppercase; font-size: 1.2rem;" class="green-text"><strong>{{data.date}}</strong></p>
+            <h5 style="text-align: left;"><strong class="green-text">Details:</strong></h5>
+            {{plans.guidance|safe}}
+        </div>
+      </div>
+      <div class="row" style="margin-top: 8rem;">
+        <div class="col-12">
+          <h1 style="text-align: center;" class="green-text mb-4">Subscribers By Village</h1>
+          <hr class="mb-4" style="width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
+          <canvas id="myChart" width="100" height="60"></canvas>
+        </div>
+      </div>
       </section>
       {% endblock content %}
     </div>
@@ -390,24 +282,23 @@
       <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
+    //new WOW().init();
   </script>
- <script>
-        CKEDITOR.replace('guidance');
 
-    </script>
 <script>
-   <!-- Charts -->
 
     // Line
+    var villages = {{ villages|safe }};
+    var villageTotal = {{ village_total|safe }};
+
     var ctx = document.getElementById("myChart").getContext('2d');
     var myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ["Diskit ", "Landour", "Malana", " Majuli", "Mandawa", "Gokarna"], //village names
+        labels: villages, //village names
         datasets: [{
-          label: 'No of Subscribers',
-          data: [12, 19, 3, 5, 2, 3],
+          label: 'Total Number of Subscribers',
+          data: villageTotal,
           backgroundColor: [
             'rgba(255, 99, 132,0.5)',
             'rgba(54, 162, 235,0.5)',
@@ -437,132 +328,42 @@
         }
       }
     });
-
-    //pie1
-    var ctxP = document.getElementById("pieChart1").getContext('2d');
-    var myPieChart = new Chart(ctxP, {
+    
+    //pie2
+    var produceAmountPercentages = {{ produce_amount_percentages|safe }};
+    var produceVillages = {{ produce_villages|safe }};
+    
+    var ctxP2 = document.getElementById("pieChart1").getContext('2d');
+    var myPieChart = new Chart(ctxP2, {
       type: 'pie',
       data: {
-        labels: ["Diskit ", "Landour", "Malana", " Majuli", "Mandawa", "Gokarna"],
+        labels: produceVillages,
         datasets: [{
-          data: [60, 50, 40, 40, 40, 10],
-          backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#5cb85c"],
-          hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5","#616774", "#7ed97e"]
+          data: produceAmountPercentages,
+          backgroundColor: [
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(78, 205, 196, 0.2)',
+                'rgba(255, 107, 107, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)'
+            ],
+          borderColor: [
+                'rgba(255, 206, 86, 1)',
+                'rgba(78, 205, 196, 1)',
+                'rgba(255, 107, 107, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)'
+            ]
         }]
       },
       options: {
         responsive: true,
-        legend: false
       }
     });
-
-      //pie2
-    var ctxP = document.getElementById("pieChart2").getContext('2d');
-    var myPieChart = new Chart(ctxP, {
-      type: 'pie',
-      data: {
-        labels: ["Diskit ", "Landour", "Malana", " Majuli", "Mandawa", "Gokarna"],
-        datasets: [{
-          data: [60, 40, 50, 30, 70, 90],
-          backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#5cb85c"],
-          hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774","#7ed97e"]
-        }]
-      },
-      options: {
-        responsive: true,
-        legend: false
-      }
-    });
-
-
-
-    //line
-    var ctxL = document.getElementById("lineChart").getContext('2d');
-    var myLineChart = new Chart(ctxL, {
-      type: 'line',
-      data: {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
-        datasets: [{
-            label: "My First dataset",
-            backgroundColor: [
-              'rgba(105, 0, 132, .2)',
-            ],
-            borderColor: [
-              'rgba(200, 99, 132, .7)',
-            ],
-            borderWidth: 2,
-            data: [65, 59, 80, 81, 56, 55, 40]
-          },
-          {
-            label: "My Second dataset",
-            backgroundColor: [
-              'rgba(0, 137, 132, .2)',
-            ],
-            borderColor: [
-              'rgba(0, 10, 130, .7)',
-            ],
-            data: [28, 48, 40, 19, 86, 27, 90]
-          }
-        ]
-      },
-      options: {
-        responsive: true
-      }
-    });
-
-
-    //radar
-    var ctxR = document.getElementById("radarChart").getContext('2d');
-    var myRadarChart = new Chart(ctxR, {
-      type: 'radar',
-      data: {
-        labels: ["Eating", "Drinking", "Sleeping", "Designing", "Coding", "Cycling", "Running"],
-        datasets: [{
-          label: "My First dataset",
-          data: [65, 59, 90, 81, 56, 55, 40],
-          backgroundColor: [
-            'rgba(105, 0, 132, .2)',
-          ],
-          borderColor: [
-            'rgba(200, 99, 132, .7)',
-          ],
-          borderWidth: 2
-        }, {
-          label: "My Second dataset",
-          data: [28, 48, 40, 19, 96, 27, 100],
-          backgroundColor: [
-            'rgba(0, 250, 220, .2)',
-          ],
-          borderColor: [
-            'rgba(0, 213, 132, .7)',
-          ],
-          borderWidth: 2
-        }]
-      },
-      options: {
-        responsive: true
-      }
-    });
-
-    //doughnut
-    var ctxD = document.getElementById("doughnutChart").getContext('2d');
-    var myLineChart = new Chart(ctxD, {
-      type: 'doughnut',
-      data: {
-        labels: ["Red", "Green", "Yellow", "Grey", "Dark Grey"],
-        datasets: [{
-          data: [300, 50, 100, 40, 120],
-          backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-          hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
-        }]
-      },
-      options: {
-        responsive: true
-      }
-    });
-
-
-
 
   </script>
 
