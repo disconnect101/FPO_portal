@@ -78,7 +78,10 @@ class CropsForm(forms.ModelForm):
             "weigth_per_land", 
             "guidance", 
             "live", 
-            "products"
+            "products",
+            "investment_requirements",
+            "facilities",
+            "subscribers",
         ]
 
         widgets = {

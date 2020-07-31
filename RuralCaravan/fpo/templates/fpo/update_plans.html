@@ -216,6 +216,15 @@
 
 
                 </div>
+                </div>
+                <div class="md-form">
+                  <p><strong>Products that can be availed</strong></p>
+                  <select class="custom-select" multiple name="products">
+                    {% for product in products %}
+                    <option value="{{product.id}}" {% if product in selected_products %} selected {% else %}{% endif %}>{{product.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
 
                      <div class="md-form">
                     <i class="fas fa-rupee-sign prefix green-text"></i>
