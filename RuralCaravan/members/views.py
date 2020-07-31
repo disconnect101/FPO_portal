@@ -11,6 +11,7 @@ from .forms import FarmerForm, leader_add_farmerForm, ProduceForm, FPOLedgerForm
 from .forms import LeaderForm
 from .forms import UserProfileForm
 from farmer.models import *
+from django.db.models import Q
 
 
 # Create your views here.
@@ -192,12 +193,25 @@ def detail_leader(request, id):
     # dictionary for initial data with  
     # field names as keys 
     context ={} 
+    leader = Leader.objects.get(id = id)
+    users = leader.farmers.all()
+    farmer1 = []
+    print(users)
+    for farmer in users:
+        far = Farmer.objects.filter(user_id = farmer.id)
+        farmer1.append(far.first())
+
+        # print(far.first().village)
+
+
   
     # add the dictionary during initialization 
+    context["leader"]=farmer1
     context["data"] = Leader.objects.get(id = id)
     context["farmers"] = Farmer.objects.all()
-    context["transactions"] = ew_transaction.objects.filter(user=context["data"].user)
+          
     return render(request, "members/leader_profile.html", context)
+
 
 
 def add_leader(request):
@@ -243,6 +257,62 @@ def add_user(request):
     return render(request, 'members/add.html', context) #add
 
 
+# def leader_del_farmer(request, id1, id2):
+#     # dictionary for initial data with
+#     # field names as keys
+#     context = {}
+
+#     # add the dictionary during initialization
+#     # user
+#     # context["leader"] = Leader2.objects.get(user_id = id).all()
+#     obj = get_object_or_404(Leader, id=id1)
+#     sub = get_object_or_404(obj.farmers, id=id2)
+#     # sub = Leader.objects.filter(user_id = id1, farmers_id = id2)
+
+#     obj.farmers.remove(sub)
+#     if (obj.farmers.count() >= 0):
+#         print(obj.farmers.all())
+#         return redirect('detail_leader',id=id1)
+
+#     # farmer = []
+
+#     # print(sub)
+#     # for leader in sub :
+#     #     obj = leader.farmers
+#     #     farmer.append(obj)
+#     #     print(obj)
+#     # context["farmers"] = farmer
+#     return render(request, "members/leader_farmer.html", context)
+
+
+# def leader_add_farmer(request, id):
+#     # dictionary for initial data with
+#     # field names as keys
+#     context = {}
+
+#     form = leader_add_farmerForm(request.POST or None, files=request.FILES)
+#     if form.is_valid():
+#         # form.save()
+#         context["form"] = form
+#         username = form.cleaned_data['username']
+#         print(username)
+#         obj = get_object_or_404(UserProfile, username=username, category='F')
+#         print(obj.id)
+#         obj2 = get_object_or_404(Farmer, user=obj.id)
+#         sub = get_object_or_404(Leader, id=id)
+#         sub.farmers.add(obj2)
+#         sub.save()
+#         if (sub.farmers.count() > 0):
+#             # for far in sub.farmers.all():
+#             #     print("hello")
+#             print(sub.farmers.all())
+#             return redirect('detail_leader',id=id)
+
+#     context['form'] = form
+#     context['users'] = UserProfile.objects.all()
+#     return render(request, "members/leader_profile.html", context)  # change according to tempalate
+
+
 def leader_del_farmer(request, id1, id2):
     # dictionary for initial data with
     # field names as keys
@@ -258,7 +328,7 @@ def leader_del_farmer(request, id1, id2):
     obj.farmers.remove(sub)
     if (obj.farmers.count() >= 0):
         print(obj.farmers.all())
-        return redirect('detail_leader',id=id1)
+    return redirect('detail_leader',id=id1)
 
     # farmer = []
 
@@ -279,25 +349,41 @@ def leader_add_farmer(request, id):
     form = leader_add_farmerForm(request.POST or None, files=request.FILES)
     if form.is_valid():
         # form.save()
+        context["data"] = form
         context["form"] = form
+
         username = form.cleaned_data['username']
         print(username)
-        obj = get_object_or_404(UserProfile, username=username, category='F')
-        print(obj.id)
-        obj2 = get_object_or_404(Farmer, user=obj.id)
+        q1 = Q(category='F')
+        q2 = Q(category='P')
+        q3 = Q(category='N')
+        q4 = Q(username=username)
+        obj = UserProfile.objects.filter((q1 | q2 | q3) & q4)   
+        # obj = get_object_or_404(UserProfile, username=username, category='F')
+        print(obj.count())
+
+        
+        if obj.count() < 1:
+            return redirect('/members/member_page/view_leader/'+id)
+        objt = get_object_or_404(UserProfile, username=obj[0].username)
+        # print(obj[0].username)
+    
+        
+        obj2 = get_object_or_404(Farmer, user=objt.id)   
+        print(obj2)
         sub = get_object_or_404(Leader, id=id)
-        sub.farmers.add(obj2)
+        sub.farmers.add(objt)
         sub.save()
         if (sub.farmers.count() > 0):
-            # for far in sub.farmers.all():
-            #     print("hello")
-            print(sub.farmers.all())
-            return redirect('detail_leader',id=id)
+            for far in sub.farmers.all():
+                print(far.id)
+            # print(sub.farmers.all())
+            # return redirect('detail_leader',id=id)
+        return redirect('/members/member_page/view_leader/'+id)
 
     context['form'] = form
     context['users'] = UserProfile.objects.all()
     return render(request, "members/leader_profile.html", context)  # change according to tempalate
-
 
 #def add_FPOLedger(request):
     # field names as keys
