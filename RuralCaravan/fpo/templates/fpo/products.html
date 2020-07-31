@@ -179,10 +179,10 @@
                 <th class="th-sm">PRODUCT NAME
 
                 </th>
-                <th class="th-sm">CROP NAME
+                <th class="th-sm">CATEGORY
 
                 </th>
-                <th class="th-sm">CATEGORY
+                <th class="th-sm">RATE
 
                 </th>
                  </th>
@@ -205,8 +205,9 @@
               <tr>
 
                 <td>{{prod.name}}</td>
-                <td>{{prod.associated_crop.name}}</td>
-                <td>{{prod.category}}</td>
+                  <td>{{prod.category}}</td>
+                <td>{{prod.rate}}</td>
+
                   <td><a href="detail/{{ prod.id }}"><p style="text-align:center"><i class="fas fa-eye purple-text"></i></p></a></td>
 
                 <td><a href="update/{{ prod.id }}"><p style="text-align:center"><i class="fas fa-edit blue-text"></i></p></a></td>

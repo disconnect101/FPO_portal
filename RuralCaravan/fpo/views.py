@@ -1191,7 +1191,7 @@ def products_update(request, id):
     obj = get_object_or_404(Products, id=id)
 
     # pass the object as instance in form
-    form = ProductsForm(request.POST or None, instance=obj)#, request.FILES
+    form = ProductsForm(request.POST,request.FILES or None, instance=obj)#, request.FILES
 
     if form.is_valid():
         form.save()
