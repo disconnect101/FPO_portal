@@ -70,7 +70,7 @@ body {font-family: Arial;}
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'meetings' %}">Plans</a>
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
@@ -79,13 +79,13 @@ body {font-family: Arial;}
             <a class="nav-link" href="{% url 'produce' %}" >Production</a>
           </li>
             <li class="nav-item">
-            <a class="nav-link" href="{% url 'FPOLedger' %}" >Ledger</a>
-          </li>
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
-             <li class="nav-item">
+            <li class="nav-item">
             <a href="{% url 'add_user' %}" class="nav-link" >
              <i class="fas fa-user-plus"></i>
             </a>
@@ -100,8 +100,13 @@ body {font-family: Arial;}
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
+             <li class="nav-item">
+            <a href="{% url 'products' %}" class="nav-link" >
+             <i class="fas fa-shopping-basket"></i>
+            </a>
+          </li>
           <li class="nav-item">
-            <a href="statistics.html" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" >
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
@@ -112,7 +117,7 @@ body {font-family: Arial;}
             </a>
           </li>
 		  <li class="nav-item">
-            <a class="nav-link" href="govtschemes.html" >Logout</a>
+            <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
 
 
