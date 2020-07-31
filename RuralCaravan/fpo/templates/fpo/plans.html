@@ -64,7 +64,7 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}">
+      <a class="navbar-brand" href="{% url 'home' %}" target="_blank">
         <strong>FPO PORTAL</strong>
       </a>
 
@@ -79,67 +79,45 @@
 
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item ">
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'plans' %}" >Plans</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
           </li>
-             <li class="nav-item">
-            <a class="nav-link" href="{% url 'produce' %}" >Production</a>
-          </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
-            </li>
         </ul>
 
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
-            <li class="nav-item">
-            <a href="{% url 'add_user' %}" class="nav-link" >
-             <i class="fas fa-user-plus"></i>
-            </a>
-          </li>
-             <li class="nav-item">
-            <a href="{% url 'transaction'%}" class="nav-link" >
-             <i class="fas fa-rupee-sign"></i>
-            </a>
-          </li>
           <li class="nav-item">
-            <a href="{% url 'orders' %}" class="nav-link" >
+            <a href="orders.html" class="nav-link" >
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
-             <li class="nav-item">
-            <a href="{% url 'products' %}" class="nav-link" >
-             <i class="fas fa-shopping-basket"></i>
-            </a>
-          </li>
           <li class="nav-item">
-            <a href="{% url 'fpo_statistics' %}" class="nav-link" >
+            <a href="statistics.html" class="nav-link" >
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'members' %}" class="nav-link border border-light rounded"
-             >
+            <a href="members.html" class="nav-link border border-light rounded"
+              target="_blank">
               <i class="fas fa-user"></i>Members
             </a>
           </li>
-		  <li class="nav-item">
+		   <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
-
-
         </ul>
+
 
       </div>
 
@@ -147,13 +125,13 @@
   </nav>
   <!-- Navbar -->
 
- 
+
 
   <!--Main layout-->
   <main style="padding-top:10%">
     <div class="container" >
 
-     
+
         <!--Section: Main features & Quick Start-->
       <section style="padding-bottom:5%;margin-top:2em;">
 
@@ -165,7 +143,7 @@
               aria-selected="true">ACTIVE PLANS</a>
           </li>
           <li class="nav-item">
-            <a class="btn btn-red" id="profile-tab" data-toggle="tab" href="#inactive" role="tab" aria-controls="inactive"
+            <a class="btn btn-orange" id="profile-tab" data-toggle="tab" href="#inactive" role="tab" aria-controls="inactive"
               aria-selected="false">INACTIVE PLANS</a>
           </li>
           <li class="nav-item">
@@ -195,7 +173,7 @@
                   <th class="th-sm">VIEW DETAILS
 
                 </th>
-                <th class="th-sm">MAKE IT INACTIVE
+                <th class="th-sm">TOGGLE STATUS
 
                 </th>
               </tr>
@@ -240,7 +218,7 @@
                    <th class="th-sm">VIEW DETAILS
 
                 </th>
-                <th class="th-sm">MAKE IT ACTIVE
+                <th class="th-sm">TOGGLE STATUS
 
                 </th>
               </tr>
@@ -273,7 +251,7 @@
 
                 <!-- Form -->
                <div class="form-group">
-                   <form method="POST" enctype="multipart/form-data">
+                   <form method="POST">
                        {% csrf_token %}
                        {{form.media}}
                         <div class="md-form">
@@ -319,17 +297,56 @@
 
 
                 </div>
+                       <div class="form-row field-image">
+
+
+                        <div>
+
+
+                                <label for="id_image"><strong>Upload Image:</strong></label>
+
+                                    <input type="file" name="image" accept="image/*" id="id_image">
+
+
+
+                        </div>
+
+                 </div>
+                       <div class="md-form">
+                    <i class="fas fa-rupee-sign prefix green-text"></i>
+                    <textarea type="text" class="md-textarea" name="investment_requirements" cols="40" rows="10" required id="id_investment_requirements"></textarea>
+                    <label for="id_investment_requirements">Enter Investment Requirements:</label>
+                  </div>
+                       <div class="md-form">
+                    <i class="fas fa-pencil-alt prefix green-text"></i>
+                    <textarea type="text"  class="md-textarea" name="facilities" cols="40" rows="10" required id="id_facilities"></textarea>
+                    <label for="id_facilities">Enter Facilities</label>
+                  </div>
                     <div>
 
 
                 <i class="fas fa-warehouse prefix green-text"></i>
-                    <label class="required" for="id_current_amount">Current amount:</label>
+
+
+
+
+                        <label class="required" for="id_subscribers"><strong>Subscribers:</strong></label>
+
+                            <input type="number" name="subscribers" value="0"  required id="id_subscribers" readonly>
+
+
+
+
+                        <label class="required" for="id_current_amount"><strong>Current amount:</strong></label>
                           <input type="number" name="current_amount"  value="0" required id="id_current_amount" readonly >
+                    </div>
+                       <div>
                         <input type="checkbox" name="live" id="id_live" checked readonly>
-                          <label  for="id_live">Add as an active plan</label>
+                        <label  for="id_live"><strong>Add as an active plan</strong></label>
 
 
                 </div>
+
 
 
 
@@ -374,7 +391,7 @@
   </div>
 </div>
 
-</div>
+
 
 
 
@@ -387,12 +404,12 @@
   <!--Footer-->
   <footer class="page-footer text-center font-small mt-4 wow fadeIn" >
 
-   
+
 
     <!--Copyright-->
     <div class="footer-copyright py-3">
       © 2020 Copyright:
-  Rural Caravan 
+  Rural Caravan
     </div>
     <!--/.Copyright-->
 
