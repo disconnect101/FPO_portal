@@ -241,8 +241,8 @@ class Produce(models.Model):
     owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
     income = models.FloatField(default=0)
 
-    def __str__(self):
-        return self.owner + " " + self.crop.name
+    # def __str__(self):
+    #     return self.owner + " " + self.crop.name
 
 
 class Kart(models.Model):

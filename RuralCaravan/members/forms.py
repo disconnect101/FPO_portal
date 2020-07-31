@@ -104,7 +104,15 @@ class ProduceForm(forms.ModelForm):
         model = Produce
 
         # specify fields to be used
-        fields = '__all__'
+        fields = [
+            "crop"  ,     
+            "amount",       
+                
+              
+            "quality" ,       
+            "owner"  ,      
+          
+        ]
 
 
 class TransactionForm(forms.ModelForm):
