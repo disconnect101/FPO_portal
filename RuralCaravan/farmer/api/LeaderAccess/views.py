@@ -16,9 +16,7 @@ def downlinefarmers(request):
         return Response(statuscode('20'))
 
     try:
-        downlinefarmers = Leader.objects.get(user=user)\
-                                        .farmers\
-                                        .all()
+        downlinefarmers = Leader.objects.get(user=user).farmers.all()
     except:
         return Response(statuscode(12))
 
