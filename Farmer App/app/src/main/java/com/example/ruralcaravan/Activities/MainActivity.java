@@ -6,10 +6,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,9 +26,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ruralcaravan.Fragments.CatalogueCategoryFragment;
 import com.example.ruralcaravan.Fragments.EWalletFragment;
 import com.example.ruralcaravan.Fragments.HomeFragment;
+import com.example.ruralcaravan.Fragments.ListPlansFragment;
 import com.example.ruralcaravan.Fragments.MeetingsFragment;
 import com.example.ruralcaravan.Fragments.NewsFragment;
-import com.example.ruralcaravan.Fragments.ListPlansFragment;
 import com.example.ruralcaravan.Fragments.WeatherFragment;
 import com.example.ruralcaravan.Fragments.YourCartFragment;
 import com.example.ruralcaravan.Fragments.YourOrdersFragment;
@@ -59,11 +57,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Toast.makeText(this, "Hello", Toast.LENGTH_LONG).show();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
 
@@ -95,13 +95,16 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(JSONObject response) {
                     SharedPreferenceUtils.setUserData(MainActivity.this, response.toString());
+                    Toast.makeText(MainActivity.this,
+                            "Hello " + SharedPreferenceUtils.getUserData(MainActivity.this).getFirstName(),
+                            Toast.LENGTH_LONG);
                     dialog.dismiss();
                 }
             };
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(MainActivity.this, "Server error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
                     dialog.dismiss();
                 }
             };
@@ -123,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         selectDrawerItem(menuItem);
-                        return false;
+                        return true;
                     }
                 });
     }
@@ -155,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 switchToNewFragment(ListPlansFragment.class, menuItem);
                 break;
             case R.id.contact:
-                contactFPO();
+                contactFPO(menuItem);
                 break;
             case R.id.logOut:
                 logOut();
@@ -180,16 +183,17 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.closeDrawers();
     }
 
-    private void contactFPO() {
+    private void contactFPO(MenuItem menuItem) {
         //TODO: Add FPO contact number
         String url = "tel:1234567890";
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse(url));
         startActivity(intent);
+        menuItem.setChecked(false);
     }
 
     private void logOut() {
-        SharedPreferenceUtils.clearUserData(MainActivity.this);
+        SharedPreferenceUtils.clearUserData(MainActivity.this, true);
         Intent intent = new Intent(MainActivity.this, StartUpActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -198,6 +202,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        if(SharedPreferenceUtils.isLeader(MainActivity.this)) {
+            menu.findItem(R.id.leaderAccess).setVisible(true);
+        } else {
+            menu.findItem(R.id.leaderAccess).setVisible(false);
+        }
         return true;
     }
 
@@ -213,7 +222,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             case R.id.notification: {
-                Toast.makeText(MainActivity.this, "Notification clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, SharedPreferenceUtils.getUserData(MainActivity.this).getFirstName(), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            case R.id.leaderAccess: {
+                Intent intent = new Intent(MainActivity.this, LeaderAccessActivity.class);
+                startActivity(intent);
                 return true;
             }
         }
@@ -255,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }, 2000);
             } else {
-                Log.e("Fragment","other fragment");
+                setTitle(R.string.home);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragmentContainer, new HomeFragment())

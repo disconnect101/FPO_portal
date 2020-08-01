@@ -187,13 +187,12 @@ public class UserDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(JSONObject response) {
                     handlePostUserDataResponse(response);
-                    dialog.dismiss();
                 }
             };
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    textViewErrorMessage.setText("SERVER Error");
+                    textViewErrorMessage.setText(getString(R.string.server_error));
                     dialog.dismiss();
                 }
             };
@@ -218,9 +217,11 @@ public class UserDetailsActivity extends AppCompatActivity {
             if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
                 Intent intent = new Intent(UserDetailsActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                dialog.dismiss();
                 startActivity(intent);
             } else {
                 textViewErrorMessage.setText(ResponseStatusCodeHandler.getMessage(response.getString("statuscode")));
+                dialog.dismiss();
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -1,7 +1,7 @@
 package com.example.ruralcaravan.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,14 +9,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.InputType;
-import android.text.SpannableString;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,11 +33,9 @@ import com.example.ruralcaravan.Utilities.SharedPreferenceUtils;
 import com.example.ruralcaravan.Utilities.VolleySingleton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,14 +51,20 @@ public class ItemDetailsActivity extends AppCompatActivity {
     private TextView textViewItemDescription;
     private TextView textViewQuantity;
     private String productId;
+    private String productName;
     private Button buttonDecreaseQuantity;
     private int paymentMode;
     private ACProgressFlower dialog;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_details);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imageViewItem = findViewById(R.id.imageViewItem);
         textViewItemName = findViewById(R.id.textViewItemName);
@@ -85,6 +87,9 @@ public class ItemDetailsActivity extends AppCompatActivity {
         //place orders options
         Intent intent = getIntent();
         productId = intent.getStringExtra(Constants.KEY_PRODUCT_ID);
+        productName = intent.getStringExtra(Constants.KEY_PRODUCT_NAME);
+        getSupportActionBar().setTitle(productName);
+
         String itemDetailsUrl = getResources().getString(R.string.base_end_point_ip) + "product/";
         JSONObject jsonBody = new JSONObject();
         try {
@@ -180,7 +185,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         final CFAlertDialog.Builder builder = new CFAlertDialog.Builder(ItemDetailsActivity.this);
         builder.setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT);
         builder.setTitle(getString(R.string.payment_mode));
-        builder.setSingleChoiceItems(new String[]{getString(R.string.cash_on_delivery), getString(R.string.pay_with_e_wallet), getString(R.string.pay_at_FPO_office)}, 0, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(new String[]{getString(R.string.cash_on_delivery), getString(R.string.pay_with_account), getString(R.string.pay_at_FPO_office)}, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 paymentMode = which;
@@ -336,6 +341,14 @@ public class ItemDetailsActivity extends AppCompatActivity {
         anim.setRepeatCount(5);
         view.startAnimation(anim);
         return view;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

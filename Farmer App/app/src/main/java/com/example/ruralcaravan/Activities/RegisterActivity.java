@@ -8,6 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -16,11 +20,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.RegistrationDetailsValidationResponse;
+import com.example.ruralcaravan.Utilities.SharedPreferenceUtils;
 import com.example.ruralcaravan.Utilities.VolleySingleton;
 import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hbb20.CountryCodePicker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +42,10 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText editTextPassword;
     private TextView textViewErrorMessage;
     private ACProgressFlower dialog;
+    private AutoCompleteTextView dropdownText;
+    private TextInputLayout registerPhoneNumber;
+    private CountryCodePicker countryCodePicker;
+    private LinearLayout linearLayoutPhoneStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +57,34 @@ public class RegisterActivity extends AppCompatActivity {
         editTextUserName = findViewById(R.id.editTextUserName);
         editTextPassword = findViewById(R.id.editTextPassword);
         textViewErrorMessage = findViewById(R.id.textViewErrorMessage);
+        dropdownText = findViewById(R.id.dropdownText);
+        registerPhoneNumber = findViewById(R.id.registerPhoneNumber);
+        countryCodePicker = findViewById(R.id.countryCodePicker);
+        linearLayoutPhoneStatus = findViewById(R.id.linearLayoutPhoneStatus);
+        String[] options = new String[]{
+                getString(R.string.smartphone),
+                getString(R.string.feature_phone),
+                getString(R.string.no_phone)
+        };
+
+        if(!SharedPreferenceUtils.isLeader(RegisterActivity.this)) {
+            linearLayoutPhoneStatus.setVisibility(View.GONE);
+        }
+
+        ArrayAdapter<String> dropdownAdapter = new ArrayAdapter<>(RegisterActivity.this, R.layout.dropdown_item, options);
+        dropdownText.setAdapter(dropdownAdapter);
+        dropdownText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 2) {
+                    registerPhoneNumber.setVisibility(View.GONE);
+                    countryCodePicker.setVisibility(View.GONE);
+                } else {
+                    registerPhoneNumber.setVisibility(View.VISIBLE);
+                    countryCodePicker.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     public void backButtonPressed(View view) {
@@ -78,13 +117,12 @@ public class RegisterActivity extends AppCompatActivity {
                         Gson gson = gsonBuilder.create();
                         RegistrationDetailsValidationResponse registrationDetailsValidationResponse = gson.fromJson(response.toString(), RegistrationDetailsValidationResponse.class);
                         handleRegisterValidation(registrationDetailsValidationResponse);
-                        dialog.dismiss();
                     }
                 };
                 Response.ErrorListener errorListener = new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        textViewErrorMessage.setText("Unable to connect with server");
+                        textViewErrorMessage.setText(getString(R.string.server_error));
                         Log.e("Error",error.toString());
                         error.printStackTrace();
                         dialog.dismiss();
@@ -102,12 +140,14 @@ public class RegisterActivity extends AppCompatActivity {
     private void handleRegisterValidation(RegistrationDetailsValidationResponse registrationDetailsValidationResponse) {
         if(ResponseStatusCodeHandler.isSuccessful(registrationDetailsValidationResponse.getStatuscode())) {
             //Move on to the next activity
+            dialog.dismiss();
             Log.e("Success","Hello");
             Intent intent = new Intent(RegisterActivity.this, VerifyOTPActivity.class);
             intent.putExtra("phoneNumber", editTextPhoneNumber.getText().toString());
             startActivity(intent);
         } else {
             textViewErrorMessage.setText(ResponseStatusCodeHandler.getMessage(registrationDetailsValidationResponse.getStatuscode()));
+            dialog.dismiss();
         }
     }
 

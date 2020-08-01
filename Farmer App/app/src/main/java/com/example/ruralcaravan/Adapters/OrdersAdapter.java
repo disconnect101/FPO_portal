@@ -64,6 +64,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
                 Intent intent = new Intent(context, ItemDetailsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(Constants.KEY_PRODUCT_ID, order.getItemId().toString());
+                intent.putExtra(Constants.KEY_PRODUCT_NAME, order.getName());
                 context.startActivity(intent);
             }
         });
@@ -72,7 +73,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
     private String getModeOfPayment(String type) {
         switch (type) {
             case "PEW":
-                return context.getString(R.string.pay_with_e_wallet);
+                return context.getString(R.string.pay_with_account);
             case "CAS":
                 return context.getString(R.string.pay_at_FPO_office);
             default:

@@ -21,7 +21,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.crowdfire.cfalertdialog.CFAlertDialog;
-import com.example.ruralcaravan.Activities.LoginActivity;
 import com.example.ruralcaravan.Adapters.CartItemsAdapter;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.CartItemsResponse;
@@ -348,7 +347,7 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
         final CFAlertDialog.Builder builder = new CFAlertDialog.Builder(getActivity());
         builder.setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT);
         builder.setTitle(getString(R.string.payment_mode));
-        builder.setSingleChoiceItems(new String[]{getString(R.string.cash_on_delivery), getString(R.string.pay_with_e_wallet), getString(R.string.pay_at_FPO_office)}, 0, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(new String[]{getString(R.string.cash_on_delivery), getString(R.string.pay_with_account), getString(R.string.pay_at_FPO_office)}, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 paymentMode = which;

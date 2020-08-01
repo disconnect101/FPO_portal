@@ -92,6 +92,9 @@ public class MeetingsFragment extends Fragment {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error){
+                error.printStackTrace();
+                Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
             }
         };
         JsonObjectRequest meetingsRequest = new JsonObjectRequest(Request.Method.GET, meetingsUrl,null, responseListener, errorListener) {

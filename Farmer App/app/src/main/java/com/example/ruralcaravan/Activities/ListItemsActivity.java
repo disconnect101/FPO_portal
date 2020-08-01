@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +45,7 @@ public class ListItemsActivity extends AppCompatActivity {
     private ArrayList<ItemsResponse> catalogueAdapterArrayList;
     private ACProgressFlower dialog;
     private TextView textViewEmptyList;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,10 @@ public class ListItemsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_items);
 
         textViewEmptyList = findViewById(R.id.textViewEmptyList);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         listItemsRecyclerView = findViewById(R.id.listItemsRecyclerView);
         listItemsRecyclerView.setHasFixedSize(true);
@@ -66,18 +73,23 @@ public class ListItemsActivity extends AppCompatActivity {
         try { switch (whatToList) {
                 case Constants.LIST_SEED:
                     jsonBody.put("category", "SED");
+                    getSupportActionBar().setTitle("Seeds");
                     break;
                 case Constants.LIST_FERTILIZER:
                     jsonBody.put("category", "FER");
+                    getSupportActionBar().setTitle("Fertilisers");
                     break;
                 case Constants.LIST_PESTICIDES:
                     jsonBody.put("category", "PES");
+                    getSupportActionBar().setTitle("Pesticides");
                     break;
                 case Constants.LIST_EQUIPMENTS:
                     jsonBody.put("category", "EQP");
+                    getSupportActionBar().setTitle("Equipments");
                     break;
                 case Constants.LIST_OTHERS:
                     jsonBody.put("category", "OTH");
+                    getSupportActionBar().setTitle("Others");
                     break;
             }
         } catch (JSONException e) {
@@ -133,5 +145,13 @@ public class ListItemsActivity extends AppCompatActivity {
             catalogueAdapterArrayList.addAll(Arrays.asList(response));
             listItemsRecyclerView.getAdapter().notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

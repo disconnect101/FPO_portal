@@ -3,12 +3,11 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="greeting_message">Hello, Manas</string>
     <string name="home">Home</string>
     <string name="catalogue">Catalogue</string>
-    <string name="eWallet">E-wallet</string>
+    <string name="balanceSheet">Balance Sheet</string>
     <string name="meetings">Meetings</string>
     <string name="yourOrders">Your Orders</string>
     <string name="news">News</string>
@@ -58,7 +57,7 @@
     <string name="amount">Amount</string>
     <string name="payment_mode">Select payment mode</string>
     <string name="cash_on_delivery">Cash On Delivery</string>
-    <string name="pay_with_e_wallet">Pay with E-Wallet</string>
+    <string name="pay_with_account">Pay with Account</string>
     <string name="pay_at_FPO_office">Pay at FPO Office</string>
     <string name="pay">PAY</string>
     <string name="cancel">CANCEL</string>
@@ -96,4 +95,15 @@
     <string name="no_items_added_to_cart">No items added to cart</string>
     <string name="no_new_plans">No new plans</string>
     <string name="no_subscribed_plans">No subscribed plans</string>
+    <string name="leader_access">Leader Access</string>
+    <string name="switch_to_leader_profile">Switch to leader profile</string>
+    <string name="add_new_farmer">Add farmer</string>
+    <string name="loading">Loading</string>
+    <string name="notification">Notification</string>
+    <string name="profile">Profile</string>
+    <string name="welcome_leader">Welcome Leader</string>
+    <string name="smartphone">Smartphone</string>
+    <string name="feature_phone">Feature Phone</string>
+    <string name="no_phone">No Phone</string>
+    <string name="select_phone_status">Select phone status</string>
 </resources>
