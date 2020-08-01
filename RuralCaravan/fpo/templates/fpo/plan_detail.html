@@ -50,6 +50,39 @@
                   background:#295e10!important;
               }
           }
+img{
+    border-radius:50%;
+}
+.counter {
+    background-color:#b5eb86;
+    padding: 20px 0;
+    border-radius: 5px;
+}
+
+.count-title {
+    font-size: 40px;
+    font-weight: normal;
+    margin-top: 10px;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.count-text {
+    font-size: 13px;
+    font-weight: normal;
+    margin-top: 10px;
+    margin-bottom: 0;
+    text-align: center;
+
+}
+
+.fa-2x {
+    margin: 0 auto;
+    float: none;
+    display: table;
+    color: #389016;
+}
+
 
 
     </style>
@@ -159,41 +192,73 @@
           <!-- Grid row -->
       <div class="row">
           <div class="col-12">
-              <div class="text-center">
+             <!-- <div class="text-center">
                   <i class="fas fa-seedling fa-4x mb-2 green-text" style="opacity: 0.2"></i>
               </div>
-              <p style="text-align: center; opacity: 0.2" class="mb-0"><strong>MORE INFORMATION</strong></p>
+              <p style="text-align: center; opacity: 0.2" class="mb-0"><strong>MORE INFORMATION</strong></p>-->
               <h1 style="text-align: center;" class="green-text mt-0 mb-3">Plan Details</h1>
-              <hr style="margin: auto; width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
+              <hr style="margin: auto; width: 6rem; border: 2px solid #4aa327; border-radius: 20rem;">
               <br>
           </div>
       </div>
+          <div class="row wow fadeIn">
 
-      <div class="row">
-          <div class="col-md-12 col-lg-6">
-            <p style="text-align: left; opacity: 0.2" class="mb-0"><strong>{{plans.code}}</strong></p>
-            <h1 style="text-align: left;" class="green-text mt-0 mb-3">{{plans.name}}</h1>
-            <hr style="margin: 0; width: 4rem; border: 2px solid lightgray; border-radius: 20rem;">
-            <br>
-            <p style="text-align: right; text-transform: uppercase; font-size: 1.2rem;" class="green-text"><strong>{{data.date}}</strong></p>
+        <!--Grid column-->
+        <div class="col-md-6 mb-4  ">
 
-            <h5 style="text-align: left;"><strong class="green-text">Type:</strong> {{plans.type}}</h5>
-            <h5 style="text-align: left;"><strong class="green-text">Investment Requirements:</strong> {{plans.investment_requirements}}</h5>
-            <h5 style="text-align: left;"><strong class="green-text">Facilities:</strong> {{plans.facilities}}</h5>
-            </div>
-          <div class="col-md-12 col-lg-6 mb-4">
-            {% if plans.image %}
-              <center>
-                <img src="{{plans.image.url}}" width="100%" height="100%"/>
-              </center>
-            {% else %}
-              <center>
-                <img src="{% static 'img/download.png'%}" width="60%" height="60%" style="margin:2rem;" />
-              </center>
-            {% endif %} 
+
+                        {% if plans.image %}
+                          <center><img src="{{plans.image.url}}"  /></center>
+                          {% else %}
+                         <center><img src="{% static 'img/download.png'%}" /></center>
+                          {% endif %}
+
+
+
+
         </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+
+          <!--Card-->
+          <div class="card">
+
+            <!--Card content-->
+            <div class="card-body">
+
+                <h5 style="text-align: left;"><strong class="green-text">Plan Code:</strong> {{plans.code}}</h5>
+                <h5 style="text-align: left;"><strong class="green-text">Crop Name:</strong> {{plans.name}}</h5>
+               <h5 style="text-align: left;"><strong class="green-text">Crop Type:</strong> {{plans.type}}</h5>
+                 <h5 style="text-align: left;"><strong class="green-text">Plan Status:</strong>
+                     {% if plans.live %}
+                           <strong class="blue-text"> ACTIVE</strong>
+                    {% else %}
+                           <strong class="orange-text"> INACTIVE</strong>
+                    {% endif %}
+
+
+
+
+
+                </h5>
+
+
+
+
+            </div>
+
+          </div>
+          <!--/.Card-->
+
+        </div>
+        <!--Grid column-->
+
       </div>
-      <div class="row" style="margin: 8rem auto;">
+      <!--Grid row-->
+
+      <!--<div class="row" style="margin: 8rem auto;">
         <div class="col-3" style="border-right: 2px solid rgba(128,128,128, 0.5);">
           <h1 class="text-center mb-0" style="color: lighgray; opacity: 0.5;">{{plans.subscribers}}</h1>
           <p class="text-center mb-0"><strong style="color: #4caf50; font-size: 1.2rem;">SUBSCRIBERS</strong></p>
@@ -210,7 +275,39 @@
           <h1 class="text-center mb-0" style="color: lighgray; opacity: 0.5;">{{plans.weigth_per_land}} <span style="font-size: 1rem;">QT.</span></h1>
           <p class="text-center mb-0"><strong style="color: #4caf50; font-size: 1.2rem;">WEIGHT PER ACRE</strong></p>
         </div>
-      </div>
+      </div>-->
+          <div class="row text-center">
+	        <div class="col">
+	        <div class="counter">
+                <i class="fas fa-users fa-2x"></i>
+
+              <h2 class="timer count-title count-number" data-to="{{plans.subscribers}}" data-speed="1500"></h2>
+               <p class="count-text ">SUBSCRIBERS</p>
+            </div>
+	        </div>
+              <div class="col">
+               <div class="counter">
+              <i class="fas fa-weight-hanging fa-2x"></i>
+              <h2 class="timer count-title count-number" data-to="{{plans.max_cap}}" data-speed="1500"></h2>
+              <p class="count-text ">REQUIREMENT(Kgs)</p>
+            </div>
+              </div>
+              <div class="col">
+                  <div class="counter">
+                  <i class="fas fa-weight-hanging fa-2x"></i>
+                  <h2 class="timer count-title count-number" data-to="{{plans.current_amount}}" data-speed="1500"></h2>
+                  <p class="count-text ">COLLECTED(Kgs)</p>
+                </div></div>
+              <div class="col">
+              <div class="counter">
+              <i class="fas fa-weight-hanging fa-2x"></i>
+              <h2 class="timer count-title count-number" data-to="{{plans.weigth_per_land}}" data-speed="1500"></h2>
+              <p class="count-text ">WEIGHT PER ACRE(Kgs)</p>
+             </div>
+              </div>
+         </div>
+
+
       <div class="row">
         <div class="col-md-6">
           <h1 style="text-align: center;" class="green-text mb-4">Estimated Crop Contribution</h1>
@@ -242,6 +339,17 @@
             {{plans.guidance|safe}}
         </div>
       </div>
+          <div class="row">
+          <div class="col-md-12 col-lg-12">
+
+            <h5 style="text-align: left;"><strong class="green-text">Investment Requirements:</strong>
+                {{plans.investment_requirements}}</h5>
+
+            </div>
+
+      </div>
+
+          <h5 style="text-align: left;"><strong class="green-text">Facilities:</strong> {{plans.facilities}}</h5>
       <div class="row" style="margin-top: 8rem;">
         <div class="col-12">
           <h1 style="text-align: center;" class="green-text mb-4">Subscribers By Village</h1>
@@ -366,6 +474,107 @@
     });
 
   </script>
+<script>
+    (function ($) {
+	$.fn.countTo = function (options) {
+		options = options || {};
+
+		return $(this).each(function () {
+			// set options for current element
+			var settings = $.extend({}, $.fn.countTo.defaults, {
+				from:            $(this).data('from'),
+				to:              $(this).data('to'),
+				speed:           $(this).data('speed'),
+				refreshInterval: $(this).data('refresh-interval'),
+				decimals:        $(this).data('decimals')
+			}, options);
+
+			// how many times to update the value, and how much to increment the value on each update
+			var loops = Math.ceil(settings.speed / settings.refreshInterval),
+				increment = (settings.to - settings.from) / loops;
+
+			// references & variables that will change with each update
+			var self = this,
+				$self = $(this),
+				loopCount = 0,
+				value = settings.from,
+				data = $self.data('countTo') || {};
+
+			$self.data('countTo', data);
+
+			// if an existing interval can be found, clear it first
+			if (data.interval) {
+				clearInterval(data.interval);
+			}
+			data.interval = setInterval(updateTimer, settings.refreshInterval);
+
+			// initialize the element with the starting value
+			render(value);
+
+			function updateTimer() {
+				value += increment;
+				loopCount++;
+
+				render(value);
+
+				if (typeof(settings.onUpdate) == 'function') {
+					settings.onUpdate.call(self, value);
+				}
+
+				if (loopCount >= loops) {
+					// remove the interval
+					$self.removeData('countTo');
+					clearInterval(data.interval);
+					value = settings.to;
+
+					if (typeof(settings.onComplete) == 'function') {
+						settings.onComplete.call(self, value);
+					}
+				}
+			}
+
+			function render(value) {
+				var formattedValue = settings.formatter.call(self, value, settings);
+				$self.html(formattedValue);
+			}
+		});
+	};
+
+	$.fn.countTo.defaults = {
+		from: 0,               // the number the element should start at
+		to: 0,                 // the number the element should end at
+		speed: 1000,           // how long it should take to count between the target numbers
+		refreshInterval: 100,  // how often the element should be updated
+		decimals: 0,           // the number of decimal places to show
+		formatter: formatter,  // handler for formatting the value before rendering
+		onUpdate: null,        // callback method for every time the element is updated
+		onComplete: null       // callback method for when the element finishes updating
+	};
+
+	function formatter(value, settings) {
+		return value.toFixed(settings.decimals);
+	}
+}(jQuery));
+
+jQuery(function ($) {
+  // custom formatting example
+  $('.count-number').data('countToOptions', {
+	formatter: function (value, options) {
+	  return value.toFixed(options.decimals).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',');
+	}
+  });
+
+  // start all the timers
+  $('.timer').each(count);
+
+  function count(options) {
+	var $this = $(this);
+	options = $.extend({}, options || {}, $this.data('countToOptions') || {});
+	$this.countTo(options);
+  }
+});
+
+</script>
 
 </body>
 
