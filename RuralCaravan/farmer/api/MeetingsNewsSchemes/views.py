@@ -18,7 +18,10 @@ def meetings(request):
     meetingsList = []
     for meeting in meetings:
         #serialized = MeetingsSerializer(meeting)
-        meetingtoken = MeetingToken.objects.get(farmer=farmer, meeting_id=meeting.get('id'))
+        try:
+            meetingtoken = MeetingToken.objects.get(farmer=farmer, meeting_id=meeting.get('id'))
+        except:
+            return Response(statuscode('Meeting token for meetingID : ' + str(meeting.get('id'))  + ' couldn\'t be found'))
         meeting.update( { 'meetingtoken': meetingtoken.token_number } )
         meetingsList.append(meeting)
 
@@ -31,8 +34,14 @@ def meetings(request):
 def rsvpMeeting(request):
     user = request.user
 
-    meetingToken = request.data.get('meetingtoken')
-    token = MeetingToken.objects.get(token_number=meetingToken)
+    try:
+        meetingToken = request.data.get('meetingtoken')
+    except:
+        return Response(statuscode('23'))
+    try:
+        token = MeetingToken.objects.get(token_number=meetingToken)
+    except:
+        return Response(statuscode('24'))
     token.has_rsvped = True
     token.save()
 
