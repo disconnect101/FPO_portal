@@ -1364,6 +1364,7 @@ def products_toggle(request,id):
 def orders_view(request):
     # dictionary for initial data with
     # field names as keys
+    
     context = {
         'orders': Orders.objects.all()
     }

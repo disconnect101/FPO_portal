@@ -136,7 +136,17 @@ class OrdersForm(forms.ModelForm):
         model = Orders
 
         # specify fields to be used
-        fields = '__all__'
+        fields = [
+            "type",            
+            "item",             
+            "buyer",         
+            "quantity",             
+            "is_paid",             
+            "is_delivered", 
+            "date" ,           
+            
+
+        ]
 
 
 class LandForm(forms.ModelForm):

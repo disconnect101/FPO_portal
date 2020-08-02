@@ -778,13 +778,22 @@ def orders_add(request):
     }
     form = OrdersForm(request.POST or None)
     if form.is_valid():
-        form.save()
+        type = form.cleaned_data['type']
+        item = form.cleaned_data['item']
+        buyer = form.cleaned_data['buyer']
+        quantity = form.cleaned_data['quantity']
+        is_paid = form.cleaned_data['is_paid']
+        is_delivered = form.cleaned_data['is_delivered']
+        rate = item.rate
+        price = rate*quantity
+        p = Orders.objects.create(type=type, item=item, buyer=buyer, quantity=quantity, is_paid=is_paid, is_delivered=is_delivered, rate=rate, price=price)
+        # form.save()
         return redirect('/members/member_page/orders')
 
     context['form'] = form
     context['farmers'] = Farmer.objects.all()
     context['items'] = Products.objects.all()
-    return render(request, 'members/addneworder.html', context)
+    return render(request, 'members/addtest.html', context)#addneworder
 
 
 def orders_edit(request, id):
