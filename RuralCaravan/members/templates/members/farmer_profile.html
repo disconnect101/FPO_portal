@@ -256,8 +256,9 @@ th,td{
     </div>
   </nav>
   <!-- Navbar -->
-      <main style="padding-top:5em;min-height: 90%;font-family:Arial">
-<h3 style="padding-left: 2%;">Viewing {{data.first_name}}{{' '}}{{data.last_name}}'s Profile:</h3>
+      <main style="padding-top:3em;min-height: 90%;font-family:Arial">
+<!---<h3 style="padding-left: 2%;">Viewing {{data.first_name}}{{' '}}{{data.last_name}}'s Profile:</h3>---->
+<h3 style="text-align: center;padding-top:1%" class="green-text mt-0 mb-3">Viewing {{data.first_name}}{{' '}}{{data.last_name}}'s Profile:</h3>
 
 <div class="tab">
   <button class="tablinks" onclick="openCity(event, 'personal_details')" id="defaultOpen" style="padding-left: 2%;color:white">Personal Details</button>
@@ -354,7 +355,7 @@ th,td{
     <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
          <!----<span><a href="addnewtransaction.html" class="btn btn-primary">Add New Transaction</a></span>--->
         <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
-    <table
+    <table id="tbldisplay"
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
         <thead>
             <th>S no.</th>
@@ -382,7 +383,6 @@ th,td{
 </div>
 <div id="orders" class="tabcontent">
     <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
-        <h4>Visit Orders section to view all Pending orders</h4>
             <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
     <table
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
@@ -588,6 +588,17 @@ function openCity(evt, Name) {
 }
 document.getElementById("defaultOpen").click();
 </script>
-
+<script language="JavaScript">
+         $(document).ready(function () {
+ $("#tbldisplay td:nth-child(3)").each(function () {
+                if (parseInt($(this).text(), 10) < 0) {
+                    $(this).parent("tr").css("background-color", "orange");
+                }
+                else{
+                    $(this).parent("tr").css("background-color", "Lightgreen");
+                }
+            });
+});
+</script>
 </body>
 </html>

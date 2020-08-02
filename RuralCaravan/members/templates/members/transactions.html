@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>FPO Transactions</title>
+    <title>FPO Accounts</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <script src="http://code.jquery.com/jquery-1.11.1.min.js" language="JavaScript"></script>
@@ -180,9 +180,11 @@ th,td{
   </nav>
   <!-- Navbar -->
 <main style="padding-top:5%;min-height:90%" >
-<h3 style="padding-left: 2%;padding-top:2%">All Transactions:</h3><hr>
+<!----<h3 style="padding-left: 2%;padding-top:2%">All Transactions:</h3><hr>---->
+    <h1 style="text-align: center;padding-top:2%" class="green-text mt-0 mb-3">Accounts</h1>
+    <hr style="margin: auto; width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
 <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
-         <span><a href="{% url 'add_transaction' %}" class="btn btn-primary">Add New Transaction</a></span>
+         <span><a href="{% url 'add_transaction' %}" class="btn btn-primary">Add New Record</a></span>
         <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
     <table id="tbldisplay"
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
@@ -198,7 +200,7 @@ th,td{
             <tbody>
         {% for entry in transactions %}
              <tr>
-                    <td>{{entry.id}}</td>
+                    <td>{{entry.refno}}</td>
                     <td>{{entry.user.username}}</td>
                     <td>{{entry.amount}}</td>
                     <td>{{entry.date}}</td>
