@@ -186,8 +186,9 @@
                        <option value="" selected>---------</option>
                     {% block content %}
                       {% for user in users %}
+                         {% if user.category == "F" or user.category == "P" or user.category == "N" %}
                          <option value="{{user.id}}" >{{user.username}}</option>
-
+                         {% endif %}
                       {% endfor %}
                     {% endblock content %}
                     </select>

@@ -38,10 +38,10 @@ def cropplan(request, cropID=0):
                                                                                                     'live',
                                                                                                     'image',
                                                                                                     'subscribers')
-
-        #### Recommendation System starts......
-
         unsubscribedCropList = list(crops)
+        #### Recommendation System starts......
+        """
+        
         investments = Orders.objects.values('date__year').annotate(investment=Sum('price'))
         investmentSum = 0
         for investment in investments:
@@ -67,8 +67,10 @@ def cropplan(request, cropID=0):
             unsubscribedCropList[i].update({'estimatedProfit': estprofit})
             i+=1
             #cropEstProfit.append(cropProfit)
-
+        """
         #### Recommendation System ends......
+        for temp in unsubscribedCropList:
+            temp.update({'estimatedProfit': 0})
 
 
         data = {
@@ -119,6 +121,7 @@ def confcrop(request, cropID):
         try:
             FarmerCropMap(farmer=user, crop=crop, landarea=landarea).save()
             crop.current_amount += crop.weigth_per_land*landarea
+            crop.subscribers += 1
             crop.save()
         except:
             return Response(statuscode('12'))
@@ -141,6 +144,8 @@ def confcrop(request, cropID):
         try:
             subscription = FarmerCropMap.objects.get(farmer=user, crop=crop)
             crop.current_amount -= subscription.landarea*crop.weigth_per_land
+            crop.subscribers -= 1
+            crop.save()
             subscription.delete()
         except:
             return Response(statuscode('12'))

@@ -286,7 +286,7 @@ th,td{
                             </div><!-- /.col -->
 
                             <div class="col-xs-12 col-sm-9" style="margin-top:5px;">
-                                <h4 style="color: blue;margin-left: 15px;">
+                                <h4 style="margin-left: 15px;" class="green-text mt-0 mb-3">
                                     <span class="middle">{{data.first_name}}{{' '}}{{data.last_name}}</span>
 
 
@@ -350,7 +350,7 @@ th,td{
 </div>
 <div id="farmer_list" class="tabcontent">
     <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
-         <h4>Add A Farmer Under {{ data.first_name }}{{' '}}{{ data.last_name}}</h4>
+         <h4 class="green-text mt-0 mb-3">Add A Farmer Under {{ data.first_name }}{{' '}}{{ data.last_name}}</h4>
         <!----action="{% url 'members'%}view_leader/{{data.id}}/add/--->
          <form method="POST" enctype="multipart/form-data" action="{% url 'members'%}view_leader/{{data.id}}/add/">{% csrf_token %}
              <!-----{{form}}-->
@@ -363,13 +363,13 @@ th,td{
              <button type="submit" value="Submit" class="btn btn-primary">ADD</button>
          </form>
         <hr>
-        <h4>Existing Farmers Under {{ data.first_name }}{{' '}}{{ data.last_name}}</h4>
+        <h4 class="green-text mt-0 mb-3">Existing Farmers Under {{ data.first_name }}{{' '}}{{ data.last_name}}</h4>
         <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
     <table
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
         <thead>
 
-            <th>ID</th>
+            <th>S.no.</th>
             <th>Name</th>
             <th>Username</th>
             <th>Village</th>
@@ -381,7 +381,7 @@ th,td{
 
     <tr>
 
-        <td>{{farmer.id}}</td>
+        <td>{{forloop.counter}}</td>
         <td><a href="{% url 'members' %}view_farmer/{{farmer.id}}">{{ farmer.first_name }}{{' '}}{{ farmer.last_name}}</a></td>
 
         <td>{{ farmer.user.username }}</td>
@@ -399,6 +399,7 @@ th,td{
 </div>
 <div id="balance_sheet" class="tabcontent">
     <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
+       <h3 class="green-text mt-0 mb-3">Balance Sheet:</h3>
         <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
     <table id="tbldisplay"
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
@@ -412,7 +413,7 @@ th,td{
 <tbody>
     {% for entry in transactions %}
      <tr>
-        <td>{{entry.id}}</td>
+        <td>{{entry.refno}}</td>
         <td>{{entry.date}}</td>
         <td>{{entry.amount}}</td>
         <td>{{entry.currrent_amount}}</td>

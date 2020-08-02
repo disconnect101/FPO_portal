@@ -129,6 +129,7 @@ def detail_farmer(request, id):
 
     # Crop Production By Years
     crops_by_years_data = staticalanalysis.getCropProductionByYear()
+
     print(f'\n\nThis is the data\n\n{crops_by_years_data}\n\n')
 
     for crop in crops_by_years_data:
