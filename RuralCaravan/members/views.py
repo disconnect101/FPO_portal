@@ -12,6 +12,8 @@ from .forms import LeaderForm
 from .forms import UserProfileForm
 from farmer.models import *
 from django.db.models import Q
+import random
+
 
 
 # Create your views here.
@@ -433,8 +435,11 @@ def add_FPOLedger(request):
                     last_amount = last.currrent_amount
                 else:
                     last_amount = 0
-
-            p = ew_transaction.objects.create(user=owner, amount=cost, currrent_amount=last_amount + cost, description='crop sold')
+            num = ew_transaction.objects.all().count() + 1
+            year = datetime.now().year
+            refno = "REF" + str(year) + str(random.randint(100, 999)) + str(num)
+            # print(refno)
+            p = ew_transaction.objects.create(refno=refno, user=owner, amount=cost, currrent_amount=last_amount + cost, description='crop sold')
         # form_u.save()
         return redirect('/members/member_page/fpoledger')
 
@@ -555,7 +560,12 @@ def add_transaction(request):
         else:
             last_amount = 0
         currrent_amount = last_amount + amount
-        p = ew_transaction.objects.create(user=user, amount=amount, currrent_amount=currrent_amount,
+        num = ew_transaction.objects.all().count() + 1
+        year = datetime.now().year
+        refno = "REF" + str(year) + str(random.randint(100, 999)) + str(num)
+        # print(refno)
+        # print(hello)
+        p = ew_transaction.objects.create(refno=refno, user=user, amount=amount, currrent_amount=currrent_amount,
                                           description=description)
         # form.save()
         # form_u.save()
