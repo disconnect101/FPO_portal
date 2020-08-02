@@ -245,6 +245,13 @@ footer {
         </div>
       </div>
 
+      <div class="row" style="margin-top: 4rem; margin-bottom: 1rem;">
+      <div class="col-1"></div>
+      <div class="col-10 mt-4">
+          <h1 style="text-align: center;" class="green-text">Product History</h1>
+          <hr class="mb-4" style="width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
+          <canvas id="productHistory" width="100" height="70"></canvas>
+      </div>
 
 
       {% endblock content %}
@@ -326,6 +333,49 @@ footer {
           }
           }
       });
+
+    var years = {{ years|safe }};
+    var yearsAmount = {{ year_amounts|safe }}
+    var ctxProductHistory = document.getElementById('productHistory').getContext('2d');
+    var productHistory = new Chart(ctxProductHistory, {
+        type: 'bar',
+        data: {
+        labels: years,
+        datasets: [{
+            label: 'Product Bought By Years',
+            data: yearsAmount,
+            backgroundColor: [
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(78, 205, 196, 0.2)',
+                'rgba(255, 107, 107, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 206, 86, 1)',
+                'rgba(78, 205, 196, 1)',
+                'rgba(255, 107, 107, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+        options: {
+             scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+        }
+    });
+
   </script>
 </body>
 

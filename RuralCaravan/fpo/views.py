@@ -1306,10 +1306,37 @@ def products_toggle(request, id):
 
 @login_required
 def products_detail(request, id):
+    context = {}
     products = get_object_or_404(Products,id=id)
+    context['products'] = products
     current_year = datetime.datetime.now().year
-    previous_year_orders = Orders.objects.filter(item=products, date__year=current_year-1)
+    previous_orders = Orders.objects.filter(item=products)
+    previous_year_orders = previous_orders.filter(date__year=current_year-1)
     
+    orders_by_years = {}
+    for order in previous_orders:
+        if order.date.year in orders_by_years.keys():
+            orders_by_years[order.date.year] += order.quantity
+        else:
+            orders_by_years[order.date.year] = order.quantity
+    
+    Years = []
+    Amount = []
+
+    for k, v in orders_by_years.items():
+        Years.append(k)
+        Amount.append(v)
+
+    data = {'Production': Amount, 'Year': Years}
+    
+    prediction = predict_production(data)
+    
+    Years.append(f'{prediction[0]} (Prediction)')
+    Amount.append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
+
+    context['years'] = Years
+    context['year_amounts'] = Amount
+
     products_by_villages = {}
     for order in previous_year_orders:
         farmer = Farmer.objects.get(user=order.buyer)
@@ -1323,8 +1350,11 @@ def products_detail(request, id):
     for k, v in products_by_villages.items():
         villages.append(k)
         amount.append(v)
+    
+    context['villages'] = villages
+    context['amount'] = amount
 
-    return render(request, "fpo/product_detail.html",context={'products': products, 'villages': villages, 'amount':amount})
+    return render(request, "fpo/product_detail.html",context)
 
 def products_toggle(request,id):
     # dictionary for initial data with  
