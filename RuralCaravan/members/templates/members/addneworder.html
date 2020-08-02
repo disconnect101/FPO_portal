@@ -214,7 +214,7 @@
                        <option value="" selected>-----------</option>
 
                       {% for farmer in farmers %}
-                         <option value="{{farmer.id}}" >{{farmer.user.username}}</option>
+                         <option value="{{farmer.user.id}}" >{{farmer.user.username}}</option>
                       {% endfor %}
 
                     </select>
@@ -222,20 +222,8 @@
 
                     <div class="md-form">
                     <i class="fas fa-rupee-sign prefix green-text"></i>
-                    <input type="number" class="form-control" name="rate" step="any" required id="id_rate">
-                    <label for="id_rate">Enter Rate</label>
-                  </div>
-
-                    <div class="md-form">
-                    <i class="fas fa-rupee-sign prefix green-text"></i>
                     <input type="number" class="form-control" name="quantity" step="any" required id="id_quantity">
                     <label for="id_quantity">Enter Quantity</label>
-                  </div>
-
-                      <div class="md-form">
-                    <i class="fas fa-rupee-sign prefix green-text"></i>
-                    <input type="number" class="form-control" name="price" step="any" required id="id_price">
-                    <label for="id_price">Enter Total Price</label>
                   </div>
 
                     <div class="md-form">

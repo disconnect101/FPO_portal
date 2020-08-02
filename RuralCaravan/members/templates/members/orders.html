@@ -25,7 +25,7 @@
 .tab {
   overflow: hidden;
   border: 1px solid #ccc;
-  background-color:#4CAF50;
+  background-color:#547e40;
 }
 
 /* Style the buttons inside the tab */
@@ -226,7 +226,7 @@ th,td{
                  {% else %}
                  <td><p data-placement="top" data-toggle="tooltip" >Not Delivered<br><button type="button" class="btn-primary"><a href="delivered/{{entry.id}}" style="color:white">Change Status</a></button></p></td>
                  {% endif %}
-                 <td><p data-placement="top" data-toggle="tooltip" title="Delete Entry"><a href="orders/delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt"></i></a></p></td>
+                 <td><p data-placement="top" data-toggle="tooltip" title="Delete Entry"><a href="delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt"></i></a></p></td>
              </tr>
             {% endif %}
         {% endfor %}

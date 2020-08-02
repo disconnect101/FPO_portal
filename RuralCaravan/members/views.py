@@ -767,9 +767,9 @@ def orders_delete(request, id):
         obj.delete()
         # after deleting redirect to
         # home page
-        return redirect("/member/member_page/orders")
+        return redirect("/members/member_page/orders")
 
-    return render(request, "members/orders.html", context)
+    return redirect('/members/member_page/orders')
 
 
 def orders_add(request):
@@ -793,7 +793,7 @@ def orders_add(request):
     context['form'] = form
     context['farmers'] = Farmer.objects.all()
     context['items'] = Products.objects.all()
-    return render(request, 'members/addtest.html', context)#addneworder
+    return render(request, 'members/addneworder.html', context)#addneworder
 
 
 def orders_edit(request, id):
