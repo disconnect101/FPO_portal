@@ -167,3 +167,8 @@ class BankForm(forms.ModelForm):
 
         # specify fields to be used
         fields = '__all__'
+
+
+class farmerCropMapForm(forms.Form):
+    # create meta class
+    crop = forms.CharField(max_length=100)
