@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -20,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.RegistrationDetailsValidationResponse;
+import com.example.ruralcaravan.Utilities.Constants;
 import com.example.ruralcaravan.Utilities.SharedPreferenceUtils;
 import com.example.ruralcaravan.Utilities.VolleySingleton;
 import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
@@ -46,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout registerPhoneNumber;
     private CountryCodePicker countryCodePicker;
     private LinearLayout linearLayoutPhoneStatus;
+    private int phoneStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,7 @@ public class RegisterActivity extends AppCompatActivity {
                     registerPhoneNumber.setVisibility(View.VISIBLE);
                     countryCodePicker.setVisibility(View.VISIBLE);
                 }
+                phoneStatus = position;
             }
         });
     }
@@ -95,19 +99,28 @@ public class RegisterActivity extends AppCompatActivity {
         dialog = new ACProgressFlower.Builder(RegisterActivity.this)
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                 .themeColor(Color.WHITE)
-                .text("Loading")
+                .text(getString(R.string.loading))
                 .fadeColor(Color.DKGRAY).build();
         dialog.show();
         textViewErrorMessage.setText("");
         if(checkInput()) {
             //Make request to the REST Server
-            String url = getResources().getString(R.string.base_end_point_ip) + "register/";
+            String url = getString(R.string.base_end_point_ip) + "register/";
             JSONObject jsonBody = new JSONObject();
             try {
                 jsonBody.put("username", editTextUserName.getText().toString());
                 jsonBody.put("password", editTextPassword.getText().toString());
                 jsonBody.put("contact", editTextPhoneNumber.getText().toString());
-                jsonBody.put("category","F");
+                switch (phoneStatus) {
+                    case Constants.FEATURE_PHONE:
+                        jsonBody.put("category", "P");
+                        break;
+                    case Constants.NO_PHONE:
+                        jsonBody.put("category", "N");
+                        break;
+                    default:
+                        jsonBody.put("category","F");
+                }
                 Log.e("url",url);
                 Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
                     @Override
@@ -131,6 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
                 JsonObjectRequest registrationDetailsValidationRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody, responseListener, errorListener);
                 VolleySingleton.getInstance(RegisterActivity.this).addToRequestQueue(registrationDetailsValidationRequest);
             } catch (JSONException e) {
+                Toast.makeText(RegisterActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
                 e.printStackTrace();
                 dialog.dismiss();
             }
@@ -141,9 +155,16 @@ public class RegisterActivity extends AppCompatActivity {
         if(ResponseStatusCodeHandler.isSuccessful(registrationDetailsValidationResponse.getStatuscode())) {
             //Move on to the next activity
             dialog.dismiss();
-            Log.e("Success","Hello");
-            Intent intent = new Intent(RegisterActivity.this, VerifyOTPActivity.class);
-            intent.putExtra("phoneNumber", editTextPhoneNumber.getText().toString());
+            Intent intent;
+            if(phoneStatus == Constants.NO_PHONE) {
+                SharedPreferenceUtils.clearUserData(RegisterActivity.this, false);
+                SharedPreferenceUtils.setToken(RegisterActivity.this, registrationDetailsValidationResponse.getToken());
+                intent = new Intent(RegisterActivity.this, UserDetailsActivity.class);
+            } else {
+                intent = new Intent(RegisterActivity.this, VerifyOTPActivity.class);
+                intent.putExtra("phoneNumber", editTextPhoneNumber.getText().toString());
+            }
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
             textViewErrorMessage.setText(ResponseStatusCodeHandler.getMessage(registrationDetailsValidationResponse.getStatuscode()));
@@ -152,16 +173,19 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean checkInput() {
-        if(editTextPhoneNumber.getText().toString().isEmpty()) {
+        if(editTextPhoneNumber.getText().toString().isEmpty() && !SharedPreferenceUtils.isLeader(RegisterActivity.this)) {
             textViewErrorMessage.setText("Phone number can't be empty");
+            dialog.dismiss();
             return false;
         }
         if(editTextUserName.getText().toString().isEmpty()) {
             textViewErrorMessage.setText("User name can't be empty");
+            dialog.dismiss();
             return false;
         }
         if(editTextPassword.getText().toString().isEmpty()) {
             textViewErrorMessage.setText("Password can't be empty");
+            dialog.dismiss();
             return false;
         }
         return true;
@@ -170,6 +194,7 @@ public class RegisterActivity extends AppCompatActivity {
     public void moveToLoginActivity(View view) {
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
 }

@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaos.view.PinView;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.OTPValidationResponse;
+import com.example.ruralcaravan.Utilities.Constants;
 import com.example.ruralcaravan.Utilities.SharedPreferenceUtils;
 import com.example.ruralcaravan.Utilities.VolleySingleton;
 import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
@@ -111,6 +112,7 @@ public class VerifyOTPActivity extends AppCompatActivity {
         if (ResponseStatusCodeHandler.isSuccessful(otpValidationResponse.getStatuscode())) {
             SharedPreferenceUtils.setToken(VerifyOTPActivity.this, otpValidationResponse.getToken());
             Intent intent = new Intent(VerifyOTPActivity.this, UserDetailsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
             textViewErrorMessage.setText(ResponseStatusCodeHandler.getMessage(otpValidationResponse.getStatuscode()));

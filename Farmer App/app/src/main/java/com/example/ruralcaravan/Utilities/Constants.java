@@ -26,4 +26,7 @@ public class Constants {
     public static final int SUBSCRIBED_PLANS = 1;
     public static final String KEY_PRODUCT_NAME = "productName";
     public static final String LEADER = "L";
+    public static final int SMART_PHONE = 0;
+    public static final int FEATURE_PHONE = 1;
+    public static final int NO_PHONE = 2;
 }

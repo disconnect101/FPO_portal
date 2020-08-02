@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -65,6 +66,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         textViewErrorMessage = findViewById(R.id.textViewErrorMessage);
         districts = new ArrayList<>();
         villages = new ArrayList<>();
+
         String getLocationListUrl = getResources().getString(R.string.base_end_point_ip) + "villages/";
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
@@ -77,7 +79,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                textViewErrorMessage.setText("SERVER error");
+                textViewErrorMessage.setText(getString(R.string.server_error));
                 dialog.dismiss();
             }
         };
@@ -215,14 +217,65 @@ public class UserDetailsActivity extends AppCompatActivity {
     private void handlePostUserDataResponse(JSONObject response) {
         try {
             if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
-                Intent intent = new Intent(UserDetailsActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                dialog.dismiss();
-                startActivity(intent);
+                SharedPreferenceUtils.clearUserInformation(UserDetailsActivity.this);
+                if(SharedPreferenceUtils.isLeader(UserDetailsActivity.this)) {
+                    addFarmer();
+                } else {
+                    Intent intent = new Intent(UserDetailsActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    dialog.dismiss();
+                    startActivity(intent);
+                }
             } else {
                 textViewErrorMessage.setText(ResponseStatusCodeHandler.getMessage(response.getString("statuscode")));
                 dialog.dismiss();
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addFarmer() {
+        String addFarmerUnderLeaderUrl = getString(R.string.base_end_point_ip) + "leaderaccess/add/";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("farmertoken", SharedPreferenceUtils.getToken(UserDetailsActivity.this));
+            Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
+                            Toast.makeText(UserDetailsActivity.this, getString(R.string.farmer_added_successfully), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(UserDetailsActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            dialog.dismiss();
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(UserDetailsActivity.this, ResponseStatusCodeHandler.getMessage(response.getString("statuscode")), Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                    } catch (JSONException e) {
+                        Toast.makeText(UserDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
+                    }
+                }
+            };
+            Response.ErrorListener errorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(UserDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
+                }
+            };
+            JsonObjectRequest addFarmerUnderLeaderRequest = new JsonObjectRequest(Request.Method.POST, addFarmerUnderLeaderUrl, jsonObject, responseListener, errorListener) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String,String> params = new HashMap<>();
+                    params.put("Authorization", "Token " + SharedPreferenceUtils.getLeaderToken(UserDetailsActivity.this));
+                    return params;
+                }
+            };
+            VolleySingleton.getInstance(UserDetailsActivity.this).addToRequestQueue(addFarmerUnderLeaderRequest);
         } catch (JSONException e) {
             e.printStackTrace();
         }

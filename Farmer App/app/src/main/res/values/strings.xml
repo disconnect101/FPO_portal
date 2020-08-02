@@ -42,8 +42,8 @@
     <string name="otp_verification">OTP\nVerification</string>
     <string name="OTP">OTP</string>
     <string name="verification">Verification</string>
-    <string name="base_end_point_ip">http://192.168.43.132:8000/farmer/api/</string>
-    <string name="socket_address">http://192.168.43.132:8000</string>
+    <string name="base_end_point_ip">http://207.46.228.104:8000/farmer/api/</string>
+    <string name="socket_address">http://207.46.228.104:8000</string>
     <string name="register">Register</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
@@ -106,4 +106,5 @@
     <string name="feature_phone">Feature Phone</string>
     <string name="no_phone">No Phone</string>
     <string name="select_phone_status">Select phone status</string>
+    <string name="farmer_added_successfully">Farmer added successfully</string>
 </resources>

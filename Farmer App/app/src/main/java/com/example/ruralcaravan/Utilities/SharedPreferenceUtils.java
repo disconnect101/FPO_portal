@@ -86,4 +86,11 @@ public class SharedPreferenceUtils {
         return !(jsonUserString.equals(Constants.DEFAULT_STRING));
     }
 
+    public static void clearUserInformation(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getApplicationContext().getPackageName(), Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove(Constants.KEY_USER);
+        editor.commit();
+    }
+
 }

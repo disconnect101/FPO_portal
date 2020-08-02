@@ -48,7 +48,7 @@ public class LeaderAccessActivity extends AppCompatActivity implements LeaderAcc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_leader_access_activity);
+        setContentView(R.layout.activity_leader_access);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
