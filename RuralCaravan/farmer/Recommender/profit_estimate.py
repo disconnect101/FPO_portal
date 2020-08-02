@@ -24,6 +24,9 @@ class Recommender:
             farmer = produce.owner
             investment = Orders.objects.filter(buyer=farmer, date__year=year, is_paid=True).annotate(total=Sum('price'))
             landarea = FarmerCropMap.objects.filter(farmer=farmer, crop=produce.crop, date__year=year).first().landarea
+
+            if investment.count()==0:
+                continue
             produceRecord = [investment.first().total, landarea]
             for crop in self.crops:
                 if crop.get('crop__code') == produce.crop.code:
@@ -31,6 +34,8 @@ class Recommender:
                 else:
                     produceRecord.append(0)
 
+            if not produce.land:
+                continue
             for soil in self.soils:
                 if soil.get('land__soil') == produce.land.soil:
                     produceRecord.append(1)
