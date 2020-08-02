@@ -7,7 +7,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
 from django.contrib import messages
 from .forms import FarmerForm, leader_add_farmerForm, ProduceForm, FPOLedgerForm, TransactionForm, OrdersForm, LandForm, \
-    BankForm
+    BankForm, farmerCropMapForm
 from .forms import LeaderForm
 from .forms import UserProfileForm
 from farmer.models import *
@@ -839,6 +839,16 @@ def land_add_farmer(request,id):
     context['form'] = form
     context['users'] = UserProfile.objects.all()
     return render(request, 'members/addland.html', context)
+
+
+def plan_add_farmer(request,id):
+    context = {}
+    form = farmerCropMapForm(request.POST or None, files=request.FILES)
+    if form.is_valid():
+        context["form"] = form
+        crop = form.cleaned_data['crop']
+
+
 # def order(request):
 #   return render(request, "members/farmer_profile.html")
 # def leader_profile(request):
