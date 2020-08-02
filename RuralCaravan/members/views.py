@@ -14,7 +14,10 @@ from farmer.models import *
 from django.db.models import Q
 import random
 
-
+from fpo.get_production_prediction import predict_production
+from .stats import *
+from fpo.statisticalanalysis import *
+from datetime import datetime
 
 # Create your views here.
 
@@ -117,6 +120,45 @@ def detail_farmer(request, id):
     context["orders"] = Orders.objects.filter(buyer = context["data"].user)
     context["landdetails"] = Land.objects.filter(owner=context["data"].user)
     context["bankdetails"] = BankDetails.objects.filter(user=context["data"].user)
+
+    staticalanalysis = stats(context["data"])
+    # Crops
+    cropdata = staticalanalysis.getCropWiseProduce()
+    context['crops_data'] = cropdata.get('productions')
+    context['crops_labels'] = cropdata.get('crops')
+
+    # Crop Production By Years
+    crops_by_years_data = staticalanalysis.getCropProductionByYear()
+    print(f'\n\nThis is the data\n\n{crops_by_years_data}\n\n')
+
+    for crop in crops_by_years_data:
+        data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
+        prediction = predict_production(data)
+        print(prediction)
+        crop['years'].append(f'{prediction[0]} (Prediction)')
+        crop['data'].append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
+
+    context['crop_selector_options'] = [x['name'] for x in crops_by_years_data]
+
+    context['crops_by_years_data'] = crops_by_years_data
+
+    # Profits Per Crop
+    crops_profits_by_years_data = staticalanalysis.getCropProfitsByYear()
+    print(f'\n\nThis is the data\n\n{crops_profits_by_years_data}\n\n')
+
+
+    for crop in crops_profits_by_years_data:
+        data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
+        print()
+        print(f'Data->>{data}')
+        print()
+        prediction = predict_production(data)
+        crop['years'].append(f'{prediction[0]} (Prediction)')
+        crop['data'].append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
+
+    context['crop_price_selector_options'] = [x['name'] for x in crops_profits_by_years_data]
+
+    context['crops_profits_by_years_data'] = crops_profits_by_years_data
     return render(request, "members/farmer_profile.html", context) 
 
 
@@ -432,7 +474,10 @@ def add_FPOLedger(request):
             print(e.amount)
             cost = (e.amount / total) * price
             e.income += cost
+            e.amount -= (e.amount / total)*(e.amount)
             e.save()
+            if e.amount <= 0.0:
+                e.delete()
             owner = e.owner
             last_amount = 0.0
             if ew_transaction.objects.count() > 0:

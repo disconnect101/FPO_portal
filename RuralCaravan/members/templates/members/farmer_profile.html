@@ -17,6 +17,8 @@
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css" crossorigin="anonymous"></link>
 <style>
 /*body {font-family: Arial;}*/
 
@@ -457,6 +459,37 @@ th,td{
     </table>
         </div>
     </div>
+    <hr>
+    <div class="container">
+<div class="row" style="margin-top: 1rem;">
+            <div class="col-6 mt-4">
+                <h3 style="text-align: center;" class="green-text">Production By Crop</h3>
+                <hr class="mb-4" style="width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
+                <div class="form-group">
+                    <label for="cropSelector" style="color: #4caf50;"><strong>Select Crop</strong></label>
+                    <select class="form-control" style="border: 1px solid #4caf50; color: #4caf50;" id="cropSelector">
+                        {% for option in crop_selector_options %}
+                        <option style="color: #4caf50;">{{option}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <canvas id="productionByCrop" width="80" height="100"></canvas>
+            </div>
+            <div class="col-6 mt-4">
+                <h3 style="text-align: center;" class="green-text">Amount Per Crop</h3>
+                <hr class="mb-4" style="width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
+                <div class="form-group">
+                    <label for="cropPriceSelector" style="color: #4caf50;"><strong>Select Crop</strong></label>
+                    <select class="form-control" style="border: 1px solid #4caf50; color: #4caf50;" id="cropPriceSelector">
+                        {% for option in crop_price_selector_options %}
+                        <option style="color: #4caf50;">{{option}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <canvas id="amountPerCrop" width="80" height="100"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
 <div id="land_details" class="tabcontent">
     <div class="row" style="margin-top:1%">
@@ -599,6 +632,136 @@ document.getElementById("defaultOpen").click();
                 }
             });
 });
+</script>
+<script>
+
+    // Production By Crop
+    var cropByYears = {{ crops_by_years_data|safe }};
+
+    var crops = [];
+    for(let i = 0; i < cropByYears.length; i++){
+        crops.push(cropByYears[i].name);
+    }
+
+    var cropData = cropByYears[0].data;
+    var cropYears = cropByYears[0].years;
+
+    var ctxProductionByCrop = document.getElementById('productionByCrop').getContext('2d');
+    var productionByCrop = new Chart(ctxProductionByCrop, {
+        type: 'bar',
+        data: {
+        labels: cropYears,
+        datasets: [{
+            label: 'Crop Production By Year (In Quintals)',
+            data: cropData,
+            backgroundColor: [
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(78, 205, 196, 0.2)',
+                'rgba(255, 107, 107, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 206, 86, 1)',
+                'rgba(78, 205, 196, 1)',
+                'rgba(255, 107, 107, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+        options: {
+             scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+        }
+    });
+
+    // For selecting the crop from the dropdown menu
+    document.querySelector('#cropSelector').addEventListener('change', function() {
+        var cropName = document.querySelector('#cropSelector').value;
+        var cropIndex = crops.indexOf(cropName);
+        cropData = cropByYears[cropIndex].data;
+        cropYears = cropByYears[cropIndex].years;
+        productionByCrop.data.datasets[0].data = cropData;
+        productionByCrop.data.labels = cropYears;
+        productionByCrop.update();
+    });
+
+
+
+    // Amount Per Crop
+    var cropByAmount = {{ crops_profits_by_years_data|safe }};
+
+    var cropsNames = [];
+    for(let i = 0; i < cropByAmount.length; i++){
+        cropsNames.push(cropByAmount[i].name);
+    }
+
+    var cropPriceData = cropByAmount[0].data;
+    var cropPriceYears = cropByAmount[0].years;
+
+    var ctxAmountPerCrop = document.getElementById('amountPerCrop').getContext('2d');
+    var amountPerCrop = new Chart(ctxAmountPerCrop, {
+        type: 'bar',
+        data: {
+        labels: cropPriceYears,
+        datasets: [{
+            label: 'Selling Price For Every Crop By Year (in Lacs)',
+            data: cropPriceData,
+            backgroundColor: [
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(78, 205, 196, 0.2)',
+                'rgba(255, 107, 107, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 206, 86, 1)',
+                'rgba(78, 205, 196, 1)',
+                'rgba(255, 107, 107, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+        options: {
+             scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+        }
+    });
+
+    // For selecting the crop from the dropdown menu
+    document.querySelector('#cropPriceSelector').addEventListener('change', function() {
+        var cropName = document.querySelector('#cropPriceSelector').value;
+        var cropIndex = cropsNames.indexOf(cropName);
+        cropPriceData = cropByAmount[cropIndex].data;
+        cropPriceYears = cropByAmount[cropIndex].years;
+        amountPerCrop.data.datasets[0].data = cropPriceData;
+        amountPerCrop.data.labels = cropPriceYears;
+        amountPerCrop.update();
+    });
+
+
 </script>
 </body>
 </html>
