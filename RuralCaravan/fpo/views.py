@@ -741,8 +741,8 @@ def fpo_statistics(request):
 
     context['num_farmers'] = num_farmers
     context['num_villages'] = num_villages
-    context['avg_production'] = avg_production_every_year
-    context['avg_profits'] = avg_profits_every_year
+    context['avg_production'] = round(avg_production_every_year, 2)
+    context['avg_profits'] = round(avg_profits_every_year, 2)
 
 
     # Communication Channels
