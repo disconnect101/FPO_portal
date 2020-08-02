@@ -184,7 +184,7 @@ th,td{
 <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
          <span><a href="{% url 'add_transaction' %}" class="btn btn-primary">Add New Transaction</a></span>
         <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
-    <table
+    <table id="tbldisplay"
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
             <thead>
                 <th>Ref No.</th>
@@ -202,7 +202,7 @@ th,td{
                     <td>{{entry.user.username}}</td>
                     <td>{{entry.amount}}</td>
                     <td>{{entry.date}}</td>
-                    <td class="editable" contenteditable="true">{{entry.description}}</td>
+                    <td>{{entry.description}}</td>
                     <td><p data-placement="top" data-toggle="tooltip" title="Delete Entry"><a href="transaction/delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt"></i></a></p></td>
              </tr>
         {% endfor %}
