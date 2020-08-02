@@ -88,6 +88,7 @@ th {
 th,td{
     padding:0.3%;
     padding-left:1%
+    padding-right:1%
 }
     </style>
 </head>
@@ -190,19 +191,19 @@ th,td{
 
 </div>
     <div id="unpaid_orders" class="tabcontent">
-        <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
+        <div class="col-md-12" style="padding-left:2%; margin-top:25px;">
         <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
     <table
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
             <thead>
-                <th>S No.</th>
+                <th>Order ID</th>
                 <th>Buyer</th>
                 <th>Date</th>
                  <th>Type of Payment</th>
                  <th>Item</th>
                 <th>Quantity</th>
                 <th>Total Price</th>
-                 <th>Payment Action</th>
+                 <th>Payment Status</th>
                 <th>Delivery Status</th>
                 <th>Delete Record</th>
 
@@ -218,7 +219,7 @@ th,td{
                     <td>{{entry.item.name}}</td>
                     <td>{{entry.quantity}}</td>
                     <td>{{entry.price}}</td>
-                 <td><p data-placement="top" data-toggle="tooltip" title="Not Paid"><button type="button" class="btn-primary"><a href="paid/{{entry.id}}" style="color:white" class="confirm-paid">Payment Done</a></button></p></td>
+                 <td><p data-placement="top" data-toggle="tooltip">Unpaid<br><button type="button" class="btn-primary"><a href="paid/{{entry.id}}" style="color:white" class="confirm-paid">Change Status</a></button></p></td>
                  {% if entry.is_delivered %}
                   <td>Delivered</td>
                  {% else %}
@@ -242,14 +243,14 @@ th,td{
     <table
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
             <thead>
-                <th>S No.</th>
+                <th>Order ID</th>
                 <th>Buyer</th>
                 <th>Date</th>
                  <th>Type of Payment</th>
                  <th>Item</th>
                 <th>Quantity</th>
                 <th>Total Price</th>
-                <th>Is Delivered</th>
+                <th>Delivery Status</th>
                 <th>Delete Record</th>
              </thead>
             <tbody>

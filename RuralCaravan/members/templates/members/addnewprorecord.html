@@ -226,8 +226,8 @@
                      <select name="owner" required id="id_owner" class="form-control" >
                        <option value="" selected>---------</option>
 
-                      {% for user in users %}
-                         <option value="{{user.id}}" >{{user.username}}</option>
+                      {% for farmer in farmers %}
+                         <option value="{{farmer.id}}" >{{farmer.user.username}}</option>
                       {% endfor %}
 
                     </select>
