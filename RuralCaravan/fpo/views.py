@@ -168,24 +168,6 @@ def error_404_view(request, exception):
 def error_500_view(request):
     return render('fpo/500.html')
 
-
-        # Right now it will pass only one singular meeting object for all cases. 
-##### POPULATE DATABASE
-def populate_farmers(request):
-
-    for _ in range(0):
-        village = random.choice(['Konkan', 'Pune', 'Nashik', 'Aurangabad', 'Amravati'])
-
-        farmer = Farmer(first_name=f.first_name(), last_name=f.last_name(), aadhar=str(f.random_number(12)), contact=str(f.random_number(10)), village=village, district='Mumbai', pin=str(f.random_number(6)))
-
-        farmer.save()
-    
-    return HttpResponse('Thanks')
-
-
-
-#### Changes made to this function
-
 # This method will mark all the tokens as rsvped
 def mark_rsvp(request):
     if request.method == 'POST':
@@ -441,7 +423,7 @@ def detail_meetings(request, id):
         temp_farmers_by_locality = []
         special_attention_villages = []
         for locality in farmers_by_locality:
-            if locality['engagement'] < 20 and len(special_attention_villages) <= 5:
+            if len(special_attention_villages) <= 5 and locality['engagement'] < 20:
                 special_attention_villages.append(locality)
             else:
                 temp_farmers_by_locality.append(locality)
@@ -701,7 +683,7 @@ def govtschemes_single(request, id):
     temp_farmers_by_locality = []
     special_attention_villages = []
     for locality in farmers_by_locality:
-        if locality['engagement'] < 20 and len(special_attention_villages) <= 5:
+        if len(special_attention_villages) <= 5 and locality['engagement'] < 20:
             special_attention_villages.append(locality)
         else:
             temp_farmers_by_locality.append(locality)
@@ -709,7 +691,6 @@ def govtschemes_single(request, id):
     farmers_by_locality = temp_farmers_by_locality
     special_attention_villages = sorted(special_attention_villages, key=lambda x: len(x['farmers']), reverse=True)
 
-    special_attention_villages = sorted(special_attention_villages, key=lambda x: x['locality_name'])
     farmers_by_locality = sorted(farmers_by_locality, key=lambda x: x['locality_name'])
 
     for locality in farmers_by_locality:
