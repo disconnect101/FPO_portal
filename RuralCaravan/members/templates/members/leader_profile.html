@@ -254,8 +254,8 @@ th,td{
     </div>
   </nav>
 <main style="padding-top: 5em;min-height: 90%;">
-<h3 style="padding-left: 2%;">Viewing {{data.first_name}}{{' '}}{{data.last_name}}'s Profile:</h3>
-
+<!---<h3 style="padding-left: 2%;">Viewing {{data.first_name}}{{' '}}{{data.last_name}}'s Profile:</h3>--->
+    <h3 style="text-align: center;padding-top:1%" class="green-text mt-0 mb-3">Viewing {{data.first_name}}{{' '}}{{data.last_name}}'s Profile:</h3>
 
 <div class="tab">
   <button class="tablinks" onclick="openCity(event, 'personal_details')" id="defaultOpen" style="padding-left: 2%;color:white">Personal Details</button>
@@ -400,7 +400,7 @@ th,td{
 <div id="balance_sheet" class="tabcontent">
     <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
         <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
-    <table
+    <table id="tbldisplay"
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
         <thead>
          <th>Ref no.</th>
@@ -463,6 +463,18 @@ function openCity(evt, Name) {
   evt.currentTarget.className += " active";
 }
 document.getElementById("defaultOpen").click();
+</script>
+<script language="JavaScript">
+         $(document).ready(function () {
+ $("#tbldisplay td:nth-child(3)").each(function () {
+                if (parseInt($(this).text(), 10) < 0) {
+                    $(this).parent("tr").css("background-color", "orange");
+                }
+                else{
+                    $(this).parent("tr").css("background-color", "Lightgreen");
+                }
+            });
+});
 </script>
 </body>
 </html>

@@ -43,12 +43,12 @@ def addfarmer(request):
         return Response(statuscode('20'))
 
     try:
-        farmerusername = request.data.get('farmerusername')
+        farmertoken = request.data.get('farmertoken')
     except:
         return Response(statuscode('"farmerusername" argument missing'))
     try:
-        farmer = UserProfile.objects.get(username=farmerusername)
-        Leader.objects.get(user=user).farmers.add(farmer)
+        token = Token.objects.get(key=farmertoken)
+        Leader.objects.get(user=user).farmers.add(token.user)
     except:
        return Response(statuscode('DB error or username invalid'))
 

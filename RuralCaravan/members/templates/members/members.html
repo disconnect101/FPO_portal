@@ -111,7 +111,9 @@ th {
 }
 th,td{
     padding:0.3%;
-    padding-left:1%
+    padding-left:1%;
+    padding-right:1%;
+    text-align:center;
 }
     </style>
 </head>
@@ -208,19 +210,21 @@ th,td{
   <!--Main layout-->
   <main style="padding-top:5em;min-height:95%;font-family:Arial">
 
-    <h3 style="padding-left: 2%;">Choose an option to view details</h3>
-
+    <!---<h3 style="padding-left: 2%;">Choose an option to view details</h3>--->
+      <h1 style="text-align: center;padding-top:1%" class="green-text mt-0 mb-3">Current Members</h1>
+    <hr style="margin: auto; width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
+    <br>
     <div class="tab">
       <button class="tablinks" onclick="openCity(event, 'farmer')" id="defaultOpen" style="padding-left: 2%;color:white">Farmers</button>
       <button class="tablinks" onclick="openCity(event, 'leader')" style="color:white">Leaders</button>
     </div>
 
     <div id="farmer" class="tabcontent">
-        <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
+        <div class="col-md-12" style="padding-left:3%; margin-top:25px;">
         <span><a href="{% url 'add_farmer' %}" class="btn btn-primary">Add New Farmer</a></span>
             <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
         <table
-            class="table1 table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+            class="table1 table-striped table-bordered display" width="100%" style="margin-top: 20px">
                 <thead>
 
                     <th>ID</th>
@@ -229,6 +233,7 @@ th,td{
                     <th>Contact number</th>
                     <th>Village</th>
                     <th>District</th>
+                    <th>View Profile</th>
                     <th>Edit</th>
                     <th>Delete</th>
                  </thead>
@@ -239,13 +244,14 @@ th,td{
           <tr>
 
               <td>{{ farmer.id}}</td>
-              <td><a href="view_farmer/{{farmer.id}}">{{ farmer.first_name }}{{' '}}{{ farmer.last_name}}</a></td>
+              <td>{{ farmer.first_name }}{{' '}}{{ farmer.last_name}}</td>
               <td>{{ farmer.user.username }}</td>
               <td>{{ farmer.contact }}</td>
               <td>{{ farmer.village }}</td>
               <td>{{ farmer.district }}</td>
               <!-- <td>farmer.Pin</td> -->
-              <td><p data-placement="top" data-toggle="tooltip" title="Edit Farmer Details"><a href="edit_farmer/{{ farmer.id }}" ><i class="fas fa-pencil-alt"></i></a></p></td>
+              <td align="center"><p data-placement="top" data-toggle="tooltip" title="View Farmer Details"><a href="view_farmer/{{ farmer.id }}" ><i class="fas fa-eye blue-text"></i></a></p></td>
+              <td><p data-placement="top" data-toggle="tooltip" title="Edit Farmer Details"><a href="edit_farmer/{{ farmer.id }}" ><i class="fas fa-pencil-alt "></i></a></p></td>
               <td><p data-placement="top" data-toggle="tooltip" title="Delete Farmer Details"><a href="delete_farmer/{{ farmer.id }}" class="confirm-delete"><i class="fas fa-trash-alt"></i></a></p></td>
 
           </tr>
@@ -260,7 +266,7 @@ th,td{
     </div>
 
     <div id="leader" class="tabcontent">
-        <div class="col-md-11" style="padding-left:5%; margin-top:25px;margin-bottom: 50px;">
+        <div class="col-md-12" style="padding-left:3%; margin-top:25px;margin-bottom: 50px;">
              <span><a href="{% url 'add_leader' %}" class="btn btn-primary">Add New Leader</a></span>
             <div class="table-responsive" style="margin-top:25px;">
         <table
@@ -273,6 +279,7 @@ th,td{
                     <th>Contact number</th>
                     <th>Village</th>
                     <th>District</th>
+                    <th>View Profile</th>
                     <th>Edit</th>
                     <th>Delete</th>
                  </thead>
@@ -281,11 +288,12 @@ th,td{
             <tr>
 
                 <td>{{leader.id}}</td>
-                <td><a href="view_leader/{{leader.id}}">{{ leader.first_name }}{{' '}}{{ leader.last_name}}</a></td>
+                <td>{{ leader.first_name }}{{' '}}{{ leader.last_name}}</td>
                 <td>{{ leader.user.username }}</td>
                 <td>{{ leader.contact }}</td>
                 <td>{{ leader.village }}</td>
                 <td>{{ leader.district }}</td>
+                <td><p data-placement="top" data-toggle="tooltip" title="View Leader Details"><a href="view_leader/{{leader.id}}" ><i class="fas fa-eye"></i></a></p></td>
                 <td><p data-placement="top" data-toggle="tooltip" title="Edit Leader Details"><a href="edit_leader/{{leader.id}}" ><i class="fas fa-pencil-alt"></i></a></p></td>
                 <td><p data-placement="top" data-toggle="tooltip" title="Delete Leader Record"><a href="delete_leader/{{leader.id}}" class="confirm-delete"><i class="fas fa-trash-alt"></i></a></p></td>
             </tr>

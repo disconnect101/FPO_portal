@@ -441,11 +441,13 @@ def add_FPOLedger(request):
                     last_amount = last.currrent_amount
                 else:
                     last_amount = 0
+
             num = ew_transaction.objects.all().count() + 1
             year = datetime.now().year
             refno = "REF" + str(year) + str(random.randint(100, 999)) + str(num)
             # print(refno)
             p = ew_transaction.objects.create(refno=refno, user=owner, amount=cost, currrent_amount=last_amount + cost, description='crop sold')
+
         # form_u.save()
         return redirect('/members/member_page/fpoledger')
 

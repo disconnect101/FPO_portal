@@ -48,7 +48,6 @@ class Recommender:
 
 
     def trainModel(self, data):
-
         cols = []
         cols = ['Investments', 'Landarea']
 
@@ -94,7 +93,6 @@ class Recommender:
 
 
     def predict(self, farmerData, liveCropPlans):
-
         if not self.linearRegressionModel:
             raise Exception("Model not Trained")
 

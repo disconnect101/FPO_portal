@@ -91,8 +91,15 @@ def kart(request):
                 'statuscode': '12'
             })
 
+        totalamount = 0
+        for kartItem in kart:
+            productID = kartItem.get('item_id')
+            rate = Products.objects.get(id=productID).rate
+            totalamount += rate*kartItem.get('quantity')
+
         kartList = {
-            'data': list(kart)
+            'data': list(kart),
+            'total': totalamount
         }
         return Response(kartList)
 
