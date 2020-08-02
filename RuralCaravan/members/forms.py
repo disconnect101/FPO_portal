@@ -57,7 +57,7 @@ class LeaderForm(forms.ModelForm):
             "pin",
             "photo",
             "profession",
-            "farmers",
+            #"farmers",
         ]
 
 
@@ -136,7 +136,17 @@ class OrdersForm(forms.ModelForm):
         model = Orders
 
         # specify fields to be used
-        fields = '__all__'
+        fields = [
+            "type",            
+            "item",             
+            "buyer",         
+            "quantity",             
+            "is_paid",             
+            "is_delivered", 
+            "date" ,           
+            
+
+        ]
 
 
 class LandForm(forms.ModelForm):
@@ -157,3 +167,8 @@ class BankForm(forms.ModelForm):
 
         # specify fields to be used
         fields = '__all__'
+
+
+class farmerCropMapForm(forms.Form):
+    # create meta class
+    crop = forms.CharField(max_length=100)

@@ -43,12 +43,12 @@
 
 /* Change background color of buttons on hover */
 .tab button:hover {
-  background-color: #ddd;
+  background-color:Lightgreen;
 }
 
 /* Create an active/current tablink class */
 .tab button.active {
-  background-color: blueviolet;
+    background-color:#75c178;
 }
 
 /* Style the tab content */
@@ -370,7 +370,7 @@ th,td{
 <tbody>
      {% for entry in transactions %}
      <tr>
-        <td>{{entry.id}}</td>
+        <td>{{forloop.counter}}</td>
         <td>{{entry.date}}</td>
         <td>{{entry.amount}}</td>
         <td class="editable" contenteditable="true">{{entry.currrent_amount}}</td>
@@ -402,7 +402,7 @@ th,td{
     <tbody>
       {% for order in orders %}
         <tr>
-            <td>{{order.id}}</td>
+            <td>{{forloop.counter}}</td>
             <td>{{order.type}}</td>
             <td>{{order.item.name}}</td>
             <td>{{order.quantity}}</td>

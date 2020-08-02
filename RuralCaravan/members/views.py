@@ -7,7 +7,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
 from django.contrib import messages
 from .forms import FarmerForm, leader_add_farmerForm, ProduceForm, FPOLedgerForm, TransactionForm, OrdersForm, LandForm, \
-    BankForm
+    BankForm, farmerCropMapForm
 from .forms import LeaderForm
 from .forms import UserProfileForm
 from farmer.models import *
@@ -18,6 +18,8 @@ from fpo.get_production_prediction import predict_production
 from .stats import *
 from fpo.statisticalanalysis import *
 from datetime import datetime
+from django.db.models import ProtectedError
+from django.contrib import messages
 
 # Create your views here.
 
@@ -65,15 +67,26 @@ def delete_farmer(request, id):
   
     # fetch the object related to passed id 
     obj = get_object_or_404(Farmer, id = id) 
-  
-  
+    print(obj.user.id)
+    obj1 = get_object_or_404(UserProfile, id = obj.user.id) 
+    print(obj1)
+    try:
+        obj1.delete() 
+        messages.success(request, 'Farmer Deleted Successfully.')       
+    except ProtectedError:
+        messages.error(request, 'Cannot delete this farmer')
+        return redirect("/members/member_page/")
+        
+
+    # obj1.delete() 
+    # obj.delete() 
     if request.method =="POST": 
         # delete object 
-        obj.delete() 
+        
         # after deleting redirect to  
         # home page 
         return redirect("/members/member_page/")
-    obj.delete()
+    # obj.delete()
     return redirect("/members/member_page/")
    # return render(request, "members/members.html", context)
 
@@ -194,16 +207,28 @@ def delete_leader(request, id):
     context ={} 
   
     # fetch the object related to passed id 
+    
     obj = get_object_or_404(Leader, id = id) 
+    print(obj.user.id)
+    obj1 = get_object_or_404(UserProfile, id = obj.user.id) 
+    print(obj1)
+
+    # obj1.delete() 
+    try:
+        obj1.delete()   
+        messages.success(request, 'Leader Deleted Successfully.')     
+        # messages.success(request, _("Product deleted"))
+    except ProtectedError:
+        messages.error(request, 'Cannot delete this leader')
+        return redirect("/members/member_page/")
   
-  
-    if request.method =="POST": 
-        # delete object 
-        obj.delete() 
-        # after deleting redirect to  
-        # home page 
-        return redirect("/fpo/member_page/")
-    obj.delete()
+    # if request.method =="POST": 
+    #     # delete object 
+    #     obj.delete() 
+    #     # after deleting redirect to  
+    #     # home page 
+    #     return redirect("/fpo/member_page/")
+    # obj.delete()
     return redirect("/members/member_page/")
   
     #return render(request, "members/delete_leader.html", context)
@@ -742,9 +767,9 @@ def orders_delete(request, id):
         obj.delete()
         # after deleting redirect to
         # home page
-        return redirect("/member/member_page/orders")
+        return redirect("/members/member_page/orders")
 
-    return render(request, "members/orders.html", context)
+    return redirect('/members/member_page/orders')
 
 
 def orders_add(request):
@@ -753,13 +778,22 @@ def orders_add(request):
     }
     form = OrdersForm(request.POST or None)
     if form.is_valid():
-        form.save()
+        type = form.cleaned_data['type']
+        item = form.cleaned_data['item']
+        buyer = form.cleaned_data['buyer']
+        quantity = form.cleaned_data['quantity']
+        is_paid = form.cleaned_data['is_paid']
+        is_delivered = form.cleaned_data['is_delivered']
+        rate = item.rate
+        price = rate*quantity
+        p = Orders.objects.create(type=type, item=item, buyer=buyer, quantity=quantity, is_paid=is_paid, is_delivered=is_delivered, rate=rate, price=price)
+        # form.save()
         return redirect('/members/member_page/orders')
 
     context['form'] = form
     context['farmers'] = Farmer.objects.all()
     context['items'] = Products.objects.all()
-    return render(request, 'members/addneworder.html', context)
+    return render(request, 'members/addneworder.html', context)#addneworder
 
 
 def orders_edit(request, id):
@@ -805,6 +839,16 @@ def land_add_farmer(request,id):
     context['form'] = form
     context['users'] = UserProfile.objects.all()
     return render(request, 'members/addland.html', context)
+
+
+def plan_add_farmer(request,id):
+    context = {}
+    form = farmerCropMapForm(request.POST or None, files=request.FILES)
+    if form.is_valid():
+        context["form"] = form
+        crop = form.cleaned_data['crop']
+
+
 # def order(request):
 #   return render(request, "members/farmer_profile.html")
 # def leader_profile(request):
