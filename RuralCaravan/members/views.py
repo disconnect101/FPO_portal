@@ -474,6 +474,7 @@ def add_FPOLedger(request):
             print(e.amount)
             cost = (e.amount / total) * price
             e.income += cost
+            e.amount -= (e.amount / total)
             e.save()
             owner = e.owner
             last_amount = 0.0
