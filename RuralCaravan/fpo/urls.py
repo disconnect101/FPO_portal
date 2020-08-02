@@ -30,7 +30,6 @@ urlpatterns = [
 
 
     path('redeem/', views.redeem, name="redeem"),
-    path('populate_farmers/', views.populate_farmers, name='populate_farmers'),
     path('mark_rsvp/', views.mark_rsvp, name='mark_rsvp'),
     path('mark_attendance/', views.mark_attendance, name='mark_attendance'),
     path('mark_redeemed/', views.mark_redeemed, name='mark_redeemed'),
