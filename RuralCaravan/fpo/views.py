@@ -1291,7 +1291,19 @@ def products_detail(request, id):
 
     return render(request, "fpo/product_detail.html",context={'products': products})
 
+def products_toggle(request,id):
+    # dictionary for initial data with  
+    # field names as keys 
+    context ={} 
+  
+    # fetch the object related to passed id 
+    obj = get_object_or_404(Products, id = id) 
+  
+  
+    obj.available^=True
+    obj.save()
 
+    return redirect("/fpo/products")
 #Orders
 @login_required
 def orders_view(request):

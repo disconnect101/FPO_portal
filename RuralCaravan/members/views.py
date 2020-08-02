@@ -12,6 +12,8 @@ from .forms import LeaderForm
 from .forms import UserProfileForm
 from farmer.models import *
 from django.db.models import Q
+import random
+
 
 
 # Create your views here.
@@ -423,12 +425,21 @@ def add_FPOLedger(request):
         for e in sub:
             print(e.amount)
             cost = (e.amount / total) * price
+            e.income += cost
+            e.save()
             owner = e.owner
             last_amount = 0.0
             if ew_transaction.objects.count() > 0:
                 last = ew_transaction.objects.filter(user=owner).last()
-                last_amount = last.currrent_amount
-            p = ew_transaction.objects.create(user=owner, amount=cost, currrent_amount=last_amount + cost, description='crop sold')
+                if last:
+                    last_amount = last.currrent_amount
+                else:
+                    last_amount = 0
+            num = ew_transaction.objects.all().count() + 1
+            year = datetime.now().year
+            refno = "REF" + str(year) + str(random.randint(100, 999)) + str(num)
+            # print(refno)
+            p = ew_transaction.objects.create(refno=refno, user=owner, amount=cost, currrent_amount=last_amount + cost, description='crop sold')
         # form_u.save()
         return redirect('/members/member_page/fpoledger')
 
@@ -477,7 +488,7 @@ def add_Produce(request):
         return redirect('/members/member_page/produce')
 
     context['form'] = form
-    context['users'] = UserProfile.objects.all()
+    context['farmers'] = Farmer.objects.all()
     context['crops'] = Crops.objects.all()
 
     # context['form_u']=form
@@ -549,7 +560,12 @@ def add_transaction(request):
         else:
             last_amount = 0
         currrent_amount = last_amount + amount
-        p = ew_transaction.objects.create(user=user, amount=amount, currrent_amount=currrent_amount,
+        num = ew_transaction.objects.all().count() + 1
+        year = datetime.now().year
+        refno = "REF" + str(year) + str(random.randint(100, 999)) + str(num)
+        # print(refno)
+        # print(hello)
+        p = ew_transaction.objects.create(refno=refno, user=user, amount=amount, currrent_amount=currrent_amount,
                                           description=description)
         # form.save()
         # form_u.save()
@@ -687,7 +703,7 @@ def orders_add(request):
         return redirect('/members/member_page/orders')
 
     context['form'] = form
-    context['users'] = UserProfile.objects.all()
+    context['farmers'] = Farmer.objects.all()
     context['items'] = Products.objects.all()
     return render(request, 'members/addneworder.html', context)
 

@@ -213,17 +213,11 @@
                      <select name="buyer" required id="id_buyer" class="form-control" >
                        <option value="" selected>-----------</option>
 
-                      {% for user in users %}
-                         <option value="{{user.id}}" >{{user.username}}</option>
+                      {% for farmer in farmers %}
+                         <option value="{{farmer.id}}" >{{farmer.user.username}}</option>
                       {% endfor %}
 
                     </select>
-                  </div>
-
-                     <div class="md-form">
-                    <i class="fas fa-rupee-sign prefix green-text"></i>
-                    <input type="number" class="form-control" name="price" step="any" required id="id_price">
-                    <label for="id_price">Enter Price</label>
                   </div>
 
                     <div class="md-form">
@@ -238,7 +232,16 @@
                     <label for="id_quantity">Enter Quantity</label>
                   </div>
 
+                      <div class="md-form">
+                    <i class="fas fa-rupee-sign prefix green-text"></i>
+                    <input type="number" class="form-control" name="price" step="any" required id="id_price">
+                    <label for="id_price">Enter Total Price</label>
+                  </div>
 
+                    <div class="md-form">
+                    <i class="fas fa-calendar-alt prefix green-text"></i>
+                    <input type="date" class="form-control" name="date"  required id="id_date">
+                  </div>
 
                      <div class="md-form">
                     <i class="fas fa-check-circle prefix green-text"></i>
