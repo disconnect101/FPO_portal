@@ -48,7 +48,7 @@
 
 /* Create an active/current tablink class */
 .tab button.active {
-    background-color:gray;
+    background-color:#75c178;
 }
 
 /* Style the tab content */
@@ -117,6 +117,7 @@ th,td{
 }
 
     </style>
+
 </head>
 
 <body>
@@ -223,13 +224,23 @@ th,td{
 
     <div id="farmer" class="tabcontent">
         <div class="col-md-12" style="padding-left:3%; margin-top:25px;">
+                  {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
         <span><a href="{% url 'add_farmer' %}" class="btn btn-primary">Add New Farmer</a></span>
             <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
         <table
             class="table1 table-striped table-bordered display" width="100%" style="margin-top: 20px">
                 <thead>
 
-                    <th>ID</th>
+                    <th>S No.</th>
                     <th>Name</th>
                     <th>Username</th>
                     <th>Contact number</th>
@@ -245,7 +256,7 @@ th,td{
           {% for farmer in farmers %}
           <tr>
 
-              <td>{{ farmer.id}}</td>
+              <td>{{ forloop.counter}}</td>
               <td>{{ farmer.first_name }}{{' '}}{{ farmer.last_name}}</td>
               <td>{{ farmer.user.username }}</td>
               <td>{{ farmer.contact }}</td>
@@ -265,10 +276,21 @@ th,td{
         </table>
             </div>
         </div>
+
     </div>
 
     <div id="leader" class="tabcontent">
         <div class="col-md-12" style="padding-left:3%; margin-top:25px;margin-bottom: 50px;">
+                  {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
              <span><a href="{% url 'add_leader' %}" class="btn btn-primary">Add New Leader</a></span>
             <div class="table-responsive" style="margin-top:25px;">
         <table
@@ -289,7 +311,7 @@ th,td{
             {%for leader in leaders %}
             <tr>
 
-                <td>{{leader.id}}</td>
+                <td>{{forloop.counter}}</td>
                 <td>{{ leader.first_name }}{{' '}}{{ leader.last_name}}</td>
                 <td>{{ leader.user.username }}</td>
                 <td>{{ leader.contact }}</td>
@@ -298,6 +320,7 @@ th,td{
                 <td><p data-placement="top" data-toggle="tooltip" title="View Leader Details"><a href="view_leader/{{leader.id}}" ><i class="fas fa-eye"></i></a></p></td>
                 <td><p data-placement="top" data-toggle="tooltip" title="Edit Leader Details"><a href="edit_leader/{{leader.id}}" ><i class="fas fa-pencil-alt"></i></a></p></td>
                 <td><p data-placement="top" data-toggle="tooltip" title="Delete Leader Record"><a href="delete_leader/{{leader.id}}" class="confirm-delete"><i class="fas fa-trash-alt"></i></a></p></td>
+
             </tr>
            {% endfor %}
 
@@ -306,6 +329,7 @@ th,td{
         </table>
             </div>
         </div>
+
     </div>
 </main>
    <!--Footer-->
