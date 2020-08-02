@@ -10,4 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <TextView
+        android:id="@+id/textViewNoUpcomingMeetings"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_upcoming_meetings"
+        android:textSize="40sp"
+        android:visibility="gone"/>
+
 </FrameLayout>

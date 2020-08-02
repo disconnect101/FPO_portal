@@ -6,7 +6,7 @@
     tools:context=".Fragments.YourCartFragment">
 
     <TextView
-        android:id="@+id/textViewSummary"
+        android:id="@+id/textViewTotal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
@@ -17,7 +17,7 @@
         android:id="@+id/proceedToBuy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewSummary"
+        android:layout_below="@+id/textViewTotal"
         android:textSize="20sp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
@@ -31,5 +31,15 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/proceedToBuy"
         android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/textViewEmptyCartMessage"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="40sp"
+        android:text="@string/no_items_added_to_cart"
+        android:visibility="gone"/>
 
 </RelativeLayout>

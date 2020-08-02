@@ -56,11 +56,39 @@ public class SharedPreferenceUtils {
         return user;
     }
 
-    public static void clearUserData(Context context) {
+    public static void clearUserData(Context context, boolean clearLeaderAccess) {
         SharedPreferences preferences = context.getSharedPreferences(context.getApplicationContext().getPackageName(), Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove(Constants.KEY_STATE);
         editor.remove(Constants.KEY_TOKEN);
+        editor.remove(Constants.KEY_USER);
+        if(clearLeaderAccess) {
+            editor.remove(Constants.KEY_LEADER_TOKEN);
+        }
+        editor.commit();
+    }
+
+    public static void setLeaderToken(Context context, String leaderToken) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getApplicationContext().getPackageName(), Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Constants.KEY_LEADER_TOKEN, leaderToken);
+        editor.commit();
+    }
+
+    public static String getLeaderToken(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getApplicationContext().getPackageName(), Activity.MODE_PRIVATE);
+        return preferences.getString(Constants.KEY_LEADER_TOKEN, Constants.DEFAULT_STRING);
+    }
+
+    public static boolean isLeader(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getApplicationContext().getPackageName(), Activity.MODE_PRIVATE);
+        String jsonUserString = preferences.getString(Constants.KEY_LEADER_TOKEN, Constants.DEFAULT_STRING);
+        return !(jsonUserString.equals(Constants.DEFAULT_STRING));
+    }
+
+    public static void clearUserInformation(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getApplicationContext().getPackageName(), Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
         editor.remove(Constants.KEY_USER);
         editor.commit();
     }

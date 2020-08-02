@@ -133,8 +133,4 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Cart
     public interface OnQuantityIncreaseListener {
         void onQuantityIncreased(String cartId, TextView view, Button buttonDecrease, Button buttonIncrease);
     }
-
-    public void buyItems(View view) {
-
-    }
 }

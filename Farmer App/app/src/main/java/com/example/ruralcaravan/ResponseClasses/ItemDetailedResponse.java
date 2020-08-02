@@ -23,6 +23,9 @@ public class ItemDetailedResponse {
     @SerializedName("image")
     @Expose
     private String image;
+    @SerializedName("available")
+    @Expose
+    private Boolean available;
 
     public Integer getId() {
         return id;
@@ -72,6 +75,14 @@ public class ItemDetailedResponse {
         this.image = image;
     }
 
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
+    }
+
     @Override
     public String toString() {
         return "ItemDetailedResponse{" +
@@ -81,6 +92,7 @@ public class ItemDetailedResponse {
                 ", rate=" + rate +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
+                ", available=" + available +
                 '}';
     }
 }

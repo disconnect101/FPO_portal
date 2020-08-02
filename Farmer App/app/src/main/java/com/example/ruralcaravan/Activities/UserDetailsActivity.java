@@ -3,6 +3,7 @@ package com.example.ruralcaravan.Activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,6 +37,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
+
 public class UserDetailsActivity extends AppCompatActivity {
 
     private TextInputEditText editTextFirstName;
@@ -45,6 +50,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     private ArrayList<String> villages;
     private JSONObject locationResponse;
     private TextView textViewErrorMessage;
+    private ACProgressFlower dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,20 +66,31 @@ public class UserDetailsActivity extends AppCompatActivity {
         textViewErrorMessage = findViewById(R.id.textViewErrorMessage);
         districts = new ArrayList<>();
         villages = new ArrayList<>();
+
         String getLocationListUrl = getResources().getString(R.string.base_end_point_ip) + "villages/";
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 locationResponse = response;
                 handleLocationListResponse(response);
+                dialog.dismiss();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                textViewErrorMessage.setText("SERVER error");
+                textViewErrorMessage.setText(getString(R.string.server_error));
+                dialog.dismiss();
             }
         };
+
+        dialog = new ACProgressFlower.Builder(UserDetailsActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         JsonObjectRequest locationListRequest = new JsonObjectRequest(Request.Method.GET, getLocationListUrl, null, responseListener, errorListener){
             @Override
             public Map<String, String> getHeaders() {
@@ -153,6 +170,14 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     public void moveToMainActivity(View view) {
         //TODO: Check the inputs
+
+        dialog = new ACProgressFlower.Builder(UserDetailsActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         String postUserDataUrl = getResources().getString(R.string.base_end_point_ip) + "userdata/";
         JSONObject jsonBody = new JSONObject();
         try {
@@ -169,7 +194,8 @@ public class UserDetailsActivity extends AppCompatActivity {
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    textViewErrorMessage.setText("SERVER Error");
+                    textViewErrorMessage.setText(getString(R.string.server_error));
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest postUserDetails = new JsonObjectRequest(Request.Method.POST, postUserDataUrl, jsonBody, responseListener, errorListener){
@@ -184,18 +210,72 @@ public class UserDetailsActivity extends AppCompatActivity {
         } catch (JSONException e) {
             textViewErrorMessage.setText(e.toString());
             e.printStackTrace();
+            dialog.dismiss();
         }
     }
 
     private void handlePostUserDataResponse(JSONObject response) {
         try {
             if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
-                Intent intent = new Intent(UserDetailsActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                SharedPreferenceUtils.clearUserInformation(UserDetailsActivity.this);
+                if(SharedPreferenceUtils.isLeader(UserDetailsActivity.this)) {
+                    addFarmer();
+                } else {
+                    Intent intent = new Intent(UserDetailsActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    dialog.dismiss();
+                    startActivity(intent);
+                }
             } else {
                 textViewErrorMessage.setText(ResponseStatusCodeHandler.getMessage(response.getString("statuscode")));
+                dialog.dismiss();
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addFarmer() {
+        String addFarmerUnderLeaderUrl = getString(R.string.base_end_point_ip) + "leaderaccess/add/";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("farmertoken", SharedPreferenceUtils.getToken(UserDetailsActivity.this));
+            Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
+                            Toast.makeText(UserDetailsActivity.this, getString(R.string.farmer_added_successfully), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(UserDetailsActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            dialog.dismiss();
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(UserDetailsActivity.this, ResponseStatusCodeHandler.getMessage(response.getString("statuscode")), Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                    } catch (JSONException e) {
+                        Toast.makeText(UserDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
+                    }
+                }
+            };
+            Response.ErrorListener errorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(UserDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
+                }
+            };
+            JsonObjectRequest addFarmerUnderLeaderRequest = new JsonObjectRequest(Request.Method.POST, addFarmerUnderLeaderUrl, jsonObject, responseListener, errorListener) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String,String> params = new HashMap<>();
+                    params.put("Authorization", "Token " + SharedPreferenceUtils.getLeaderToken(UserDetailsActivity.this));
+                    return params;
+                }
+            };
+            VolleySingleton.getInstance(UserDetailsActivity.this).addToRequestQueue(addFarmerUnderLeaderRequest);
         } catch (JSONException e) {
             e.printStackTrace();
         }

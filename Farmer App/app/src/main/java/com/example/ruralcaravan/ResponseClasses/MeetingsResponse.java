@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class MeetingsResponse {
 
+    @SerializedName("id")
+    @Expose
+    private Integer id;
     @SerializedName("organiser")
     @Expose
     private String organiser;
@@ -26,6 +29,17 @@ public class MeetingsResponse {
     @SerializedName("photo")
     @Expose
     private String photo;
+    @SerializedName("meetingtoken")
+    @Expose
+    private String meetingtoken;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getOrganiser() {
         return organiser;
@@ -83,16 +97,12 @@ public class MeetingsResponse {
         this.photo = photo;
     }
 
-    @Override
-    public String toString() {
-        return "MeetingsResponse{" +
-                "organiser='" + organiser + '\'' +
-                ", agenda='" + agenda + '\'' +
-                ", venue='" + venue + '\'' +
-                ", date='" + date + '\'' +
-                ", time='" + time + '\'' +
-                ", description='" + description + '\'' +
-                ", photo='" + photo + '\'' +
-                '}';
+    public String getMeetingtoken() {
+        return meetingtoken;
     }
+
+    public void setMeetingtoken(String meetingtoken) {
+        this.meetingtoken = meetingtoken;
+    }
+
 }

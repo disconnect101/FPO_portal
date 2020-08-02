@@ -1,10 +1,16 @@
 package com.example.ruralcaravan.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,15 +36,27 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
+
 public class ListItemsActivity extends AppCompatActivity {
 
     private RecyclerView listItemsRecyclerView;
     private ArrayList<ItemsResponse> catalogueAdapterArrayList;
+    private ACProgressFlower dialog;
+    private TextView textViewEmptyList;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_items);
+
+        textViewEmptyList = findViewById(R.id.textViewEmptyList);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         listItemsRecyclerView = findViewById(R.id.listItemsRecyclerView);
         listItemsRecyclerView.setHasFixedSize(true);
@@ -55,18 +73,23 @@ public class ListItemsActivity extends AppCompatActivity {
         try { switch (whatToList) {
                 case Constants.LIST_SEED:
                     jsonBody.put("category", "SED");
+                    getSupportActionBar().setTitle("Seeds");
                     break;
                 case Constants.LIST_FERTILIZER:
                     jsonBody.put("category", "FER");
+                    getSupportActionBar().setTitle("Fertilisers");
                     break;
                 case Constants.LIST_PESTICIDES:
                     jsonBody.put("category", "PES");
+                    getSupportActionBar().setTitle("Pesticides");
                     break;
                 case Constants.LIST_EQUIPMENTS:
                     jsonBody.put("category", "EQP");
+                    getSupportActionBar().setTitle("Equipments");
                     break;
                 case Constants.LIST_OTHERS:
                     jsonBody.put("category", "OTH");
+                    getSupportActionBar().setTitle("Others");
                     break;
             }
         } catch (JSONException e) {
@@ -82,18 +105,27 @@ public class ListItemsActivity extends AppCompatActivity {
                         Gson gson = gsonBuilder.create();
                         ItemsResponse[] itemsResponses = gson.fromJson(response.getJSONArray("data").toString(), ItemsResponse[].class);
                         handleItemsResponse(itemsResponses);
+                        dialog.dismiss();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    dialog.dismiss();
                 }
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast.makeText(ListItemsActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
             }
         };
+        dialog = new ACProgressFlower.Builder(ListItemsActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
         JsonObjectRequest itemsListRequest = new JsonObjectRequest(Request.Method.POST, itemsUrl, jsonBody, responseListener, errorListener){
             public Map<String, String> getHeaders() {
                 Map<String,String> params = new HashMap<>();
@@ -105,8 +137,21 @@ public class ListItemsActivity extends AppCompatActivity {
     }
 
     private void handleItemsResponse(ItemsResponse[] response) {
-        catalogueAdapterArrayList.clear();
-        catalogueAdapterArrayList.addAll(Arrays.asList(response));
-        listItemsRecyclerView.getAdapter().notifyDataSetChanged();
+        if(response.length == 0) {
+            textViewEmptyList.setVisibility(View.VISIBLE);
+        } else {
+            textViewEmptyList.setVisibility(View.GONE);
+            catalogueAdapterArrayList.clear();
+            catalogueAdapterArrayList.addAll(Arrays.asList(response));
+            listItemsRecyclerView.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

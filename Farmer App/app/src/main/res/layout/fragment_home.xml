@@ -22,7 +22,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewEWallet"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="160dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1">
 
@@ -34,18 +34,20 @@
                         android:id="@+id/eWalletImage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/eWallet"
+                        android:contentDescription="@string/balanceSheet"
                         android:padding="15dp"
-                        android:src="@drawable/app_logo" />
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_home_wallet" />
 
                     <TextView
-                        android:id="@+id/textViewEWallet"
+                        android:id="@+id/textViewBalanceSheet"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:paddingBottom="10dp"
-                        android:text="@string/eWallet" />
+                        android:text="@string/balanceSheet"
+                        android:textStyle="bold"/>
 
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
@@ -53,13 +55,13 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewCatalogue"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="160dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1">
 
                 <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                     <ImageView
                         android:id="@+id/catalogueImage"
@@ -67,7 +69,8 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/catalogue"
                         android:padding="15dp"
-                        android:src="@drawable/app_logo" />
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_home_catalogue" />
 
                     <TextView
                         android:id="@+id/textViewCatalogue"
@@ -76,7 +79,8 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:paddingBottom="10dp"
-                        android:text="@string/catalogue" />
+                        android:text="@string/catalogue"
+                        android:textStyle="bold"/>
 
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
@@ -92,7 +96,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewMeetings"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="160dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1">
 
@@ -104,9 +108,10 @@
                         android:id="@+id/meetingsImage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/eWallet"
+                        android:contentDescription="@string/balanceSheet"
                         android:padding="15dp"
-                        android:src="@drawable/app_logo" />
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_home_meetings"/>
 
                     <TextView
                         android:id="@+id/textViewMeetings"
@@ -115,6 +120,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:paddingBottom="10dp"
+                        android:textStyle="bold"
                         android:text="@string/meetings" />
 
                 </RelativeLayout>
@@ -123,13 +129,13 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewNews"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="160dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1">
 
                 <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                     <ImageView
                         android:id="@+id/newsImage"
@@ -137,7 +143,8 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/catalogue"
                         android:padding="15dp"
-                        android:src="@drawable/app_logo" />
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_home_news" />
 
                     <TextView
                         android:id="@+id/textViewNews"
@@ -146,6 +153,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:paddingBottom="10dp"
+                        android:textStyle="bold"
                         android:text="@string/news" />
 
                 </RelativeLayout>
@@ -162,7 +170,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewYourOrders"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="160dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1">
 
@@ -174,9 +182,10 @@
                         android:id="@+id/yourOrdersImage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/eWallet"
+                        android:contentDescription="@string/balanceSheet"
                         android:padding="15dp"
-                        android:src="@drawable/app_logo" />
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_home_your_orders" />
 
                     <TextView
                         android:id="@+id/textViewYourOrders"
@@ -185,6 +194,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:paddingBottom="10dp"
+                        android:textStyle="bold"
                         android:text="@string/yourOrders" />
 
                 </RelativeLayout>
@@ -193,13 +203,13 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewYourCart"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="160dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1">
 
                 <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                     <ImageView
                         android:id="@+id/yourCart"
@@ -207,7 +217,8 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/yourCart"
                         android:padding="15dp"
-                        android:src="@drawable/app_logo" />
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_home_your_cart" />
 
                     <TextView
                         android:id="@+id/textViewCart"
@@ -216,6 +227,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:paddingBottom="10dp"
+                        android:textStyle="bold"
                         android:text="@string/yourCart" />
 
                 </RelativeLayout>
@@ -246,7 +258,8 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/weather"
                         android:padding="15dp"
-                        android:src="@drawable/app_logo" />
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_home_weather" />
 
                     <TextView
                         android:id="@+id/textViewWeather"
@@ -255,6 +268,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:paddingBottom="10dp"
+                        android:textStyle="bold"
                         android:text="@string/weather" />
 
                 </RelativeLayout>
@@ -268,8 +282,8 @@
                 android:layout_weight="1">
 
                 <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                     <ImageView
                         android:id="@+id/plansImage"
@@ -277,7 +291,8 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/catalogue"
                         android:padding="15dp"
-                        android:src="@drawable/app_logo" />
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_home_plans" />
 
                     <TextView
                         android:id="@+id/textViewPlans"
@@ -286,6 +301,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:paddingBottom="10dp"
+                        android:textStyle="bold"
                         android:text="@string/plans" />
 
                 </RelativeLayout>

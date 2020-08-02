@@ -40,4 +40,13 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/linearLayoutOptions"/>
 
+    <TextView
+        android:id="@+id/textViewNoOrdersMessage"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="40sp"
+        android:visibility="gone"/>
+
 </RelativeLayout>

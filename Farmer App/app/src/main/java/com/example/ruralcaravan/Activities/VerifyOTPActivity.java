@@ -3,11 +3,13 @@ package com.example.ruralcaravan.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -16,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaos.view.PinView;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.OTPValidationResponse;
+import com.example.ruralcaravan.Utilities.Constants;
 import com.example.ruralcaravan.Utilities.SharedPreferenceUtils;
 import com.example.ruralcaravan.Utilities.VolleySingleton;
 import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
@@ -25,12 +28,16 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
+
 public class VerifyOTPActivity extends AppCompatActivity {
 
     private PinView pinViewOTP;
     private TextView textViewOTPDescriptionText;
     private TextView textViewErrorMessage;
     private String phoneNumber;
+    private ACProgressFlower dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +62,12 @@ public class VerifyOTPActivity extends AppCompatActivity {
 
     public void verifyCodeButtonPressed(View view) {
         textViewErrorMessage.setText("");
+        dialog = new ACProgressFlower.Builder(VerifyOTPActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
         String otp = pinViewOTP.getText().toString();
         if (otp.length() == 6) {
             String verifyOTPUrl = getResources().getString(R.string.base_end_point_ip) + "register/OTP/";
@@ -71,6 +84,7 @@ public class VerifyOTPActivity extends AppCompatActivity {
                         Gson gson = gsonBuilder.create();
                         OTPValidationResponse otpValidationResponse = gson.fromJson(response.toString(), OTPValidationResponse.class);
                         handleOTPValidation(otpValidationResponse);
+                        dialog.dismiss();
                     }
                 };
                 Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -78,6 +92,7 @@ public class VerifyOTPActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         textViewErrorMessage.setText("Unable to connect with server");
                         Log.e("Error", error.toString());
+                        dialog.dismiss();
                     }
                 };
                 Log.e("json", String.valueOf(jsonBody));
@@ -85,7 +100,11 @@ public class VerifyOTPActivity extends AppCompatActivity {
                 VolleySingleton.getInstance(VerifyOTPActivity.this).addToRequestQueue(otpValidationRequest);
             } catch (JSONException e) {
                 e.printStackTrace();
+                dialog.dismiss();
             }
+        } else {
+            textViewErrorMessage.setText(getString(R.string.enter_6_digit_OTP));
+            dialog.dismiss();
         }
     }
 
@@ -93,6 +112,7 @@ public class VerifyOTPActivity extends AppCompatActivity {
         if (ResponseStatusCodeHandler.isSuccessful(otpValidationResponse.getStatuscode())) {
             SharedPreferenceUtils.setToken(VerifyOTPActivity.this, otpValidationResponse.getToken());
             Intent intent = new Intent(VerifyOTPActivity.this, UserDetailsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
             textViewErrorMessage.setText(ResponseStatusCodeHandler.getMessage(otpValidationResponse.getStatuscode()));

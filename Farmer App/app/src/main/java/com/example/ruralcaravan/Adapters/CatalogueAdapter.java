@@ -52,6 +52,7 @@ public class CatalogueAdapter extends RecyclerView.Adapter<CatalogueAdapter.Cata
             public void onClick(View v) {
                 Intent intent = new Intent(context, ItemDetailsActivity.class);
                 intent.putExtra(Constants.KEY_PRODUCT_ID, item.getId());
+                intent.putExtra(Constants.KEY_PRODUCT_NAME, item.getName());
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 context.startActivity(intent);
             }
