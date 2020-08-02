@@ -1307,8 +1307,24 @@ def products_toggle(request, id):
 @login_required
 def products_detail(request, id):
     products = get_object_or_404(Products,id=id)
+    current_year = datetime.datetime.now().year
+    previous_year_orders = Orders.objects.filter(item=products, date__year=current_year-1)
+    
+    products_by_villages = {}
+    for order in previous_year_orders:
+        farmer = Farmer.objects.get(user=order.buyer)
+        if farmer.village in products_by_villages.keys():
+            products_by_villages[farmer.village] += order.quantity
+        else:
+            products_by_villages[farmer.village] = order.quantity
 
-    return render(request, "fpo/product_detail.html",context={'products': products})
+    villages = []
+    amount = []
+    for k, v in products_by_villages.items():
+        villages.append(k)
+        amount.append(v)
+
+    return render(request, "fpo/product_detail.html",context={'products': products, 'villages': villages, 'amount':amount})
 
 def products_toggle(request,id):
     # dictionary for initial data with  
