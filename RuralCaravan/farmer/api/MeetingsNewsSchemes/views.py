@@ -26,8 +26,8 @@ def meetings(request):
 @permission_classes((IsAuthenticated, ))
 def rsvpMeeting(request):
     user = request.user
-    meetingToken = request.data.get('meetingtoken')
 
+    meetingToken = request.data.get('meetingtoken')
     token = MeetingToken.objects.get(token_number=meetingToken)
     token.has_rsvped = True
     token.save()
