@@ -25,6 +25,7 @@ urlpatterns = [
 
     path('member_page/view_farmer/<id>/bank/', views.bank_add_farmer, name='bank_add_farmer'),
     path('member_page/view_farmer/<id>/land/', views.land_add_farmer, name='land_add_farmer'),
+    path('member_page/view_farmer/<id>/plan/', views.plan_add_farmer, name='plan_add_farmer'),
 
     path('member_page/fpoledger', views.FPOLedger_page, name='FPOLedger'),
     path('member_page/fpoledger/add', views.add_FPOLedger, name = 'add_FPOLedger'),
