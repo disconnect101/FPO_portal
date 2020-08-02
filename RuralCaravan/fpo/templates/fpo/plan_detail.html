@@ -200,10 +200,10 @@ img{
           <!-- Grid row -->
       <div class="row">
           <div class="col-12">
-             <!-- <div class="text-center">
+              <div class="text-center">
                   <i class="fas fa-seedling fa-4x mb-2 green-text" style="opacity: 0.2"></i>
               </div>
-              <p style="text-align: center; opacity: 0.2" class="mb-0"><strong>MORE INFORMATION</strong></p>-->
+              <p style="text-align: center; opacity: 0.2" class="mb-0"><strong>MORE INFORMATION</strong></p>
               <h1 style="text-align: center;" class="green-text mt-0 mb-3">Plan Details</h1>
               <hr style="margin: auto; width: 6rem; border: 2px solid #4aa327; border-radius: 20rem;">
               <br>
@@ -350,13 +350,55 @@ img{
       </div>
 
 
-      <div class="row" style="margin-top: 4rem;">
+      <div class="row" style="margin:4rem auto;">
         <div class="col-12">
-          <h1 style="text-align: center;" class="green-text mb-4">Subscribers By Village</h1>
+          <h1 style="text-align: center;" class="green-text mb-4">Subscribers By Villages</h1>
           <hr class="mb-4" style="width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
           <canvas id="myChart" width="100" height="60"></canvas>
         </div>
       </div>
+      
+      {% if subscribers_by_villages %}
+      <p style="text-align: left; opacity: 0.2" class="mb-0 mt-4"><strong>BY VILLAGES</strong></p>
+      <h1 class="green-text">Subscribers</h1>
+      <hr style="margin: 0; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
+      {% for village in subscribers_by_villages %}
+      <div class="row">
+          <button class="btn btn-outline-success mb-4 mt-4" style="border-color:{% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important; color:{% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important" type="button" data-toggle="collapse" data-target="#village{{village.locality_id}}" aria-expanded="false" aria-controls="village{{village.locality_id}}">
+                <h4><i class="fas fa-map-marker-alt"></i> {{village.locality_name}}</h4>
+            </button>
+      </div>
+          <div class="collapse" id="village{{village.locality_id}}"> 
+              <h4><strong class="green-text">Reach At</strong> +919999999991</h4>
+              <div class="mt-2">
+                  <span style="font-size: 1.2rem; border: 1px solid {% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important; padding: 0.2rem 0.8rem; border-radius: 0.2rem; color:{% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important"><strong>Past Engagement {{village.engagement}}%</strong></span>
+              </div>
+              <div class="row mt-4">
+              {% for token in village.farmers %}
+                  <div class="col-lg-3 col-md-4 mb-4">
+                      <div class="card">
+                          <div class="card-body">
+                              <h5 class="card-title green-text">{{token.farmer}}</h5>
+                              <h6 class="card-subtitle mb-2 text-muted">{{token.locality}}</h6>
+                              <a href="#" class="card-link">
+                                  {% if token.smartphone_type == "Smartphone" %}
+                                  <i class="fas fa-mobile fa-2x float-right green-text" ></i>
+                                  {% elif token.smartphone_type == "Featurephone" %}
+                                  <i class="fas fa-phone fa-2x float-right green-text" ></i>
+                                  {% else %}
+                                  <i class="fas fa-phone-slash fa-2x float-right green-text"></i>
+                                  {% endif %}
+                              </a>
+                          </div>
+                      </div>
+                  </div>
+              {% endfor %}
+          </div>
+          </div>
+      {% endfor %}
+      {% endif %}
+      </div>
+      
       </section>
       {% endblock content %}
     </div>

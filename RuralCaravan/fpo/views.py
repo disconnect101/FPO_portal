@@ -1018,6 +1018,8 @@ def plans_detail(request, id):
     plans = get_object_or_404(Crops,id=id)
     farmers = FarmerCropMap.objects.filter(crop=plans)
     farmers = [Farmer.objects.get(user=x.farmer) for x in farmers]
+    temp_farmers = farmers
+
     farmers_by_villages = {}
     for farmer in farmers:
         if farmer.village in farmers_by_villages.keys():
@@ -1048,7 +1050,44 @@ def plans_detail(request, id):
     for village, total in produces_by_villages.items():
         produces_villages.append(village)
         produces_amount.append(total)
+
+
+    farmers = []
+    Phone_Type = ['Smartphone', 'Featurephone', 'NoSmartphone']
+    for farmer in temp_farmers:
+        communication_type = farmer.user.category
+        if communication_type == 'F':
+            communication_type = Phone_Type[0]
+        elif communication_type == 'P':
+            communication_type = Phone_Type[1]
+        else:
+            communication_type = Phone_Type[2]
+        farmers.append({
+            "id": farmer.id,
+            "farmer": f'{farmer.first_name} {farmer.last_name}',
+            "engagement": farmer.engagement,
+            "locality": farmer.village,
+            "smartphone_type": communication_type
+        })
+    subscribers_by_villages = []
+    for farmer in farmers:
+        placed = False
+        for subscriber_village in subscribers_by_villages:
+            if subscriber_village['locality_name'] == farmer['locality']:
+                subscriber_village['farmers'].append(farmer)
+                subscriber_village['farmers'] = sorted(subscriber_village['farmers'], key=lambda x: x['farmer'])
+                placed = True
+        if not placed:
+            subscribers_by_villages.append({
+                'locality_id': random.randint(10000, 99999),
+                'locality_name': farmer['locality'],
+                'farmers': [farmer]
+            })
     
+    for subscriber_village in subscribers_by_villages:
+        engagement_score = round(sum(x['engagement'] for x in subscriber_village['farmers'])/len(subscriber_village), 2)*100
+        subscriber_village['engagement'] = engagement_score
+
     produces_amount_percentages = [round(x/sum(produces_amount), 2)*100 for x in produces_amount]
     context = {
         'plans': plans, 
@@ -1056,7 +1095,8 @@ def plans_detail(request, id):
         'villages': villages,
         'village_total': village_total,
         'produce_villages': produces_villages,
-        'produce_amount_percentages': produces_amount_percentages
+        'produce_amount_percentages': produces_amount_percentages,
+        'subscribers_by_villages': subscribers_by_villages
     }
 
     return render(request, "fpo/plan_detail.html",context)
