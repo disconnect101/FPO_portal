@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.conf import settings
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.utils import timezone
@@ -275,6 +275,19 @@ class ew_transaction(models.Model):
     def __str__(self):
         return self.refno
 
+@receiver(pre_save, sender='farmer.ew_transaction')
+def updateEwallet(sender, instance=None, **kwargs):
+    user = instance.user
+    try:
+        ewallet = Ewallet.objects.get(user=user)
+    except:
+        raise Exception('Could retrieve E-wallet')
+    ewallet.amount += instance.amount
+    try:
+        ewallet.save()
+    except:
+        raise Exception('Could not update E-wallet')
+
 @receiver(post_save, sender='farmer.ew_transaction')
 def send_sms_conf(sender, instance=None, created=False, **kwargs):
     if created:
@@ -282,7 +295,10 @@ def send_sms_conf(sender, instance=None, created=False, **kwargs):
             message = "Your E-wallet has been credited with Rs." + str(instance.amount)
         else:
             message = "Your E-wallet has been debited for Rs." + str(instance.amount)
-        send_to = str(instance.user.contact_set.first().number)
+        if not instance.user.category=='N':
+            send_to = str(instance.user.contact_set.first().number)
+        else:
+            return
         try:
             sms.send_message( '+91'+send_to, sms.TWILIO_NUMBER, message)
         except:

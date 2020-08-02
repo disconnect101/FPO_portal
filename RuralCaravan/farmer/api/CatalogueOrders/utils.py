@@ -17,11 +17,11 @@ def generateRefno():
 def makeTransaction(user, amount, description):
     try:
         ewallet = Ewallet.objects.get(user=user)
-        ewallet.amount -= amount
+        #ewallet.amount -= amount
     except:
         raise Exception('16')
 
-    if ewallet.amount<0:
+    if ewallet.amount-amount<0:
         raise Exception("17")
 
     refno = generateRefno()
@@ -30,7 +30,7 @@ def makeTransaction(user, amount, description):
                           amount=-1*amount,
                           description=description)
     try:
-        ewallet.save()
+        #ewallet.save()
         ew_t.save()
     except Exception as e:
         raise Exception(e)

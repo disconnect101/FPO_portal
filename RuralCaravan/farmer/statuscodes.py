@@ -22,4 +22,6 @@ status_codes = [
     ('20', 'Unauthorized Access'),
     ('21', 'arguments missing')
     ('22', 'no Entry in farmer table')
+    ('23', 'no meetingtoken found')
+    ('24', 'no matching meetingtoken could be found')
 ]
