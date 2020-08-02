@@ -110,4 +110,7 @@
     <string name="total">Total</string>
     <string name="available_balance">Available Balance</string>
     <string name="no_transactions">No transactions</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="accepted">Accepted</string>
 </resources>

@@ -29,4 +29,5 @@ public class Constants {
     public static final int SMART_PHONE = 0;
     public static final int FEATURE_PHONE = 1;
     public static final int NO_PHONE = 2;
+    public static final String MEETING_ACCEPTED_CODE = "at";
 }
