@@ -369,7 +369,7 @@ th,td{
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
         <thead>
 
-            <th>ID</th>
+            <th>S.no.</th>
             <th>Name</th>
             <th>Username</th>
             <th>Village</th>
@@ -381,7 +381,7 @@ th,td{
 
     <tr>
 
-        <td>{{farmer.id}}</td>
+        <td>{{forloop.counter}}</td>
         <td><a href="{% url 'members' %}view_farmer/{{farmer.id}}">{{ farmer.first_name }}{{' '}}{{ farmer.last_name}}</a></td>
 
         <td>{{ farmer.user.username }}</td>
@@ -413,7 +413,7 @@ th,td{
 <tbody>
     {% for entry in transactions %}
      <tr>
-        <td>{{entry.id}}</td>
+        <td>{{entry.refno}}</td>
         <td>{{entry.date}}</td>
         <td>{{entry.amount}}</td>
         <td>{{entry.currrent_amount}}</td>
