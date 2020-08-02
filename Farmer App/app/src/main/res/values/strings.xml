@@ -107,4 +107,5 @@
     <string name="no_phone">No Phone</string>
     <string name="select_phone_status">Select phone status</string>
     <string name="farmer_added_successfully">Farmer added successfully</string>
+    <string name="total">Total</string>
 </resources>

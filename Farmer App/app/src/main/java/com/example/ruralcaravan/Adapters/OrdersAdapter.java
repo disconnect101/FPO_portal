@@ -106,7 +106,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
             imageViewOrder = itemView.findViewById(R.id.imageViewOrder);
             cardViewOrder = itemView.findViewById(R.id.cardViewOrder);
             textViewIsPaid = itemView.findViewById(R.id.textViewIsPaid);
-            textViewAmount = itemView.findViewById(R.id.textViewSummary);
+            textViewAmount = itemView.findViewById(R.id.textViewTotal);
             textViewRate = itemView.findViewById(R.id.textViewRate);
             textViewQuantity = itemView.findViewById(R.id.textViewQuantity);
             linearLayoutPaymentStatus = itemView.findViewById(R.id.linearLayoutPaymentStatus);

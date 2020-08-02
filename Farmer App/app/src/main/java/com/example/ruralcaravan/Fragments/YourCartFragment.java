@@ -53,10 +53,10 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
     private CartItemsResponse[] cartItems;
     private TextView proceedToBuy;
     private int paymentMode;
-    private String amount;
     private ACProgressFlower dialog;
-    private TextView textViewSummary;
+    private TextView textViewTotal;
     private TextView textViewEmptyCartMessage;
+    private String total;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,8 +76,7 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
         proceedToBuy = rootView.findViewById(R.id.proceedToBuy);
         textViewEmptyCartMessage = rootView.findViewById(R.id.textViewEmptyCartMessage);
 
-        //TODO: Update the summary
-        textViewSummary = rootView.findViewWithTag(R.id.textViewSummary);
+        textViewTotal = rootView.findViewById(R.id.textViewTotal);
 
         recyclerViewCart = rootView.findViewById(R.id.recyclerViewCart);
         recyclerViewCart.setHasFixedSize(true);
@@ -93,8 +92,8 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
             public void onClick(View v) {
                 new AlertDialog.Builder(getActivity())
                         .setTitle(getString(R.string.confirm_order))
-                        //TODO: Add amount here
-                        .setMessage(getString(R.string.confirm_order_message) + "\n\n" + getString(R.string.amount) + ": \u20B9")
+                        //TODO: Add total here
+                        .setMessage(getString(R.string.confirm_order_message) + "\n\n" + getString(R.string.amount) + ": \u20B9" + total)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 choosePaymentMethod();
@@ -106,7 +105,7 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                 }
             });
 
-        String cartItemsUrl = getResources().getString(R.string.base_end_point_ip) + "kart/";
+        String cartItemsUrl = getString(R.string.base_end_point_ip) + "kart/";
         Log.e("cartItemsUrl", cartItemsUrl);
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
@@ -123,6 +122,8 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                         dialog.dismiss();
                     } else {
                         textViewEmptyCartMessage.setVisibility(View.GONE);
+                        total = response.getString("total");
+                        textViewTotal.setText(getString(R.string.total) + " \u20B9" + total);
                         handleResponse(cartItems);
                     }
                 } catch (JSONException e) {
@@ -137,6 +138,7 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
                 Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
             }
         };
         JsonObjectRequest cartItemsRequest = new JsonObjectRequest(Request.Method.GET, cartItemsUrl, null, responseListener, errorListener){
@@ -400,6 +402,11 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                         CFAlertDialog.Builder builder = new CFAlertDialog.Builder(getActivity());
                         builder.setDialogStyle(CFAlertDialog.CFAlertStyle.BOTTOM_SHEET);
                         if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
+                            cartItemsAdapterArrayList.clear();
+                            recyclerViewCart.getAdapter().notifyDataSetChanged();
+                            textViewTotal.setVisibility(View.GONE);
+                            proceedToBuy.setVisibility(View.GONE);
+                            textViewEmptyCartMessage.setVisibility(View.VISIBLE);
                             builder.setMessage(getString(R.string.order_successful));
                         } else {
                             builder.setMessage(ResponseStatusCodeHandler.getMessage(response.getString("statuscode")));
