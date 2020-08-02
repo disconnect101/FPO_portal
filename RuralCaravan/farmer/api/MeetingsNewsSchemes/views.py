@@ -22,7 +22,10 @@ def meetings(request):
             meetingtoken = MeetingToken.objects.get(farmer=farmer, meeting_id=meeting.get('id'))
         except:
             return Response(statuscode('Meeting token for meetingID : ' + str(meeting.get('id'))  + ' couldn\'t be found'))
-        meeting.update( { 'meetingtoken': meetingtoken.token_number } )
+        if meetingtoken.has_rsvped:
+            meeting.update({'meetingtoken': 'at'})
+        else:
+            meeting.update( { 'meetingtoken': meetingtoken.token_number } )
         meetingsList.append(meeting)
 
     data = { 'data': meetingsList }
