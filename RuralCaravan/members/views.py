@@ -474,8 +474,10 @@ def add_FPOLedger(request):
             print(e.amount)
             cost = (e.amount / total) * price
             e.income += cost
-            e.amount -= (e.amount / total)
+            e.amount -= (e.amount / total)*(e.amount)
             e.save()
+            if e.amount <= 0.0:
+                e.delete()
             owner = e.owner
             last_amount = 0.0
             if ew_transaction.objects.count() > 0:
