@@ -152,28 +152,36 @@
 
 
   <!--Main layout-->
-  <main style="padding-top:10%">
+  <main style="padding-top:6rem;">
     <div class="container" >
 
 
         <!--Section: Main features & Quick Start-->
       <section style="padding-bottom:5%;margin-top:2em;">
-
+        <div class="row">
+        <div class="col-12">
+          <div style="text-align: center;">
+            <i class="fas fa-shopping-basket fa-5x green-text mb-3" style="opacity: 0.2"></i>
+          </div>
+          <h3 class="h3 text-center mb-4" >Products</h3>
+          <hr style="margin: auto; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
+        </div>
+      </div>
 
         <!--Grid row-->
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-          <li class="nav-item">
-            <a class="btn btn-green"  data-toggle="tab" href="#available" role="tab" aria-controls="products"
+        <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin: 2rem auto; border:none;">
+          <li class="nav-item mx-auto">
+            <a class="btn btn-outline-green"  data-toggle="tab" href="#available" role="tab" aria-controls="products" style="font-size: 1.2rem;"
               aria-selected="true">AVAILABLE PRODUCTS</a>
           </li>
-            <li class="nav-item">
-            <a class="btn btn-orange"  data-toggle="tab" href="#unavailable" role="tab" aria-controls="inactive"
+            <li class="nav-item mx-auto">
+            <a class="btn btn-outline-orange"  data-toggle="tab" href="#unavailable" role="tab" aria-controls="inactive" style="font-size: 1.2rem;"
               aria-selected="false">UNAVAILABLE PRODUCTS</a>
           </li>
 
-          <li class="nav-item">
-            <a class="btn btn-blue"  data-toggle="tab" href="#add" role="tab" aria-controls="add"
-              aria-selected="false">ADD A NEW PRODUCT</a>
+          <li class="nav-item mx-auto">
+            <a class="btn btn-outline-blue"  data-toggle="tab" href="#add" role="tab" aria-controls="add"
+              aria-selected="false" style="font-size: 1.2rem;">ADD A NEW PRODUCT</a>
           </li>
       </ul>
 <div class="tab-content" id="myTabContent">
