@@ -168,24 +168,6 @@ def error_404_view(request, exception):
 def error_500_view(request):
     return render('fpo/500.html')
 
-
-        # Right now it will pass only one singular meeting object for all cases. 
-##### POPULATE DATABASE
-def populate_farmers(request):
-
-    for _ in range(0):
-        village = random.choice(['Konkan', 'Pune', 'Nashik', 'Aurangabad', 'Amravati'])
-
-        farmer = Farmer(first_name=f.first_name(), last_name=f.last_name(), aadhar=str(f.random_number(12)), contact=str(f.random_number(10)), village=village, district='Mumbai', pin=str(f.random_number(6)))
-
-        farmer.save()
-    
-    return HttpResponse('Thanks')
-
-
-
-#### Changes made to this function
-
 # This method will mark all the tokens as rsvped
 def mark_rsvp(request):
     if request.method == 'POST':
@@ -441,7 +423,7 @@ def detail_meetings(request, id):
         temp_farmers_by_locality = []
         special_attention_villages = []
         for locality in farmers_by_locality:
-            if locality['engagement'] < 20 and len(special_attention_villages) <= 5:
+            if len(special_attention_villages) <= 5 and locality['engagement'] < 20:
                 special_attention_villages.append(locality)
             else:
                 temp_farmers_by_locality.append(locality)
@@ -701,7 +683,7 @@ def govtschemes_single(request, id):
     temp_farmers_by_locality = []
     special_attention_villages = []
     for locality in farmers_by_locality:
-        if locality['engagement'] < 20 and len(special_attention_villages) <= 5:
+        if len(special_attention_villages) <= 5 and locality['engagement'] < 20:
             special_attention_villages.append(locality)
         else:
             temp_farmers_by_locality.append(locality)
@@ -709,7 +691,6 @@ def govtschemes_single(request, id):
     farmers_by_locality = temp_farmers_by_locality
     special_attention_villages = sorted(special_attention_villages, key=lambda x: len(x['farmers']), reverse=True)
 
-    special_attention_villages = sorted(special_attention_villages, key=lambda x: x['locality_name'])
     farmers_by_locality = sorted(farmers_by_locality, key=lambda x: x['locality_name'])
 
     for locality in farmers_by_locality:
@@ -778,7 +759,16 @@ def fpo_statistics(request):
         elif communication_channels_labels[i] == 'N':
             communication_channels_labels[i] = 'Farmers with No Phones'
 
+    if len(communication_channels_labels) < 3:
+        if 'Farmers with Smartphones' not in communication_channels_labels:
+            communication_channels_labels.append('Farmers with Smartphones')
+        if 'Farmers with Feature Phones' not in communication_channels_labels:
+            communication_channels_labels.append('Farmers with Feature Phones')
+        if 'Farmers with No Phones' not in communication_channels_labels:
+            communication_channels_labels.append('Farmers with No Phones')
+
     context['communication_channels_labels'] = communication_channels_labels 
+
     
     # Farmers by Leaders
     leaders = Leader.objects.all()
@@ -1306,9 +1296,55 @@ def products_toggle(request, id):
 
 @login_required
 def products_detail(request, id):
+    context = {}
     products = get_object_or_404(Products,id=id)
+    context['products'] = products
+    current_year = datetime.datetime.now().year
+    previous_orders = Orders.objects.filter(item=products)
+    previous_year_orders = previous_orders.filter(date__year=current_year-1)
+    
+    orders_by_years = {}
+    for order in previous_orders:
+        if order.date.year in orders_by_years.keys():
+            orders_by_years[order.date.year] += order.quantity
+        else:
+            orders_by_years[order.date.year] = order.quantity
+    
+    Years = []
+    Amount = []
 
-    return render(request, "fpo/product_detail.html",context={'products': products})
+    for k, v in orders_by_years.items():
+        Years.append(k)
+        Amount.append(v)
+
+    data = {'Production': Amount, 'Year': Years}
+    
+    prediction = predict_production(data)
+    
+    Years.append(f'{prediction[0]} (Prediction)')
+    Amount.append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
+
+    context['years'] = Years
+    context['year_amounts'] = Amount
+
+    products_by_villages = {}
+    for order in previous_year_orders:
+        farmer = Farmer.objects.get(user=order.buyer)
+        if farmer.village in products_by_villages.keys():
+            products_by_villages[farmer.village] += order.quantity
+        else:
+            products_by_villages[farmer.village] = order.quantity
+
+    villages = []
+    amount = []
+    for k, v in products_by_villages.items():
+        villages.append(k)
+        amount.append(v)
+    
+    context['villages'] = villages
+    context['amount'] = amount
+
+    return render(request, "fpo/product_detail.html",context)
 
 def products_toggle(request,id):
     # dictionary for initial data with  

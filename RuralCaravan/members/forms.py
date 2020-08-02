@@ -57,7 +57,7 @@ class LeaderForm(forms.ModelForm):
             "pin",
             "photo",
             "profession",
-            "farmers",
+            #"farmers",
         ]
 
 

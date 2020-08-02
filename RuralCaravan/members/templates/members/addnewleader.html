@@ -186,8 +186,9 @@
                        <option value="" selected>---------</option>
 
                       {% for user in users %}
+                         {% if user.category == "L" %}
                          <option value="{{user.id}}" >{{user.username}}</option>
-
+                         {% endif %}
                       {% endfor %}
 
                     </select>
@@ -245,20 +246,7 @@
                     <label for="id_photo">Photo</label>
                      <input type="file"   name="photo" accept="image/*"  id="id_photo" style="padding-left:10%;padding-bottom:2%">
                   </div>
-                   <div class="md-form">
-                    <i class="far fa-user-circle prefix green-text"></i>
 
-                    <label for="id_farmers">Select Farmer(s)</label>
-                     <br><br>
-                     <select name="farmers"  class="form-control" required id="id_farmers" multiple>
-
-                        {% for farmer in farmers %}
-                         <option value="{{farmer.id}}" >{{farmer.user.username}}{{'-'}}{{farmer.first_name}}</option>
-
-                        {% endfor %}
-
-                     </select>
-                  </div>
 
                   <div class="text-center">
                     <button class="btn btn-green" onclick="checkLength()">ADD</button>
