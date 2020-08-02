@@ -778,7 +778,16 @@ def fpo_statistics(request):
         elif communication_channels_labels[i] == 'N':
             communication_channels_labels[i] = 'Farmers with No Phones'
 
+    if len(communication_channels_labels) < 3:
+        if 'Farmers with Smartphones' not in communication_channels_labels:
+            communication_channels_labels.append('Farmers with Smartphones')
+        if 'Farmers with Feature Phones' not in communication_channels_labels:
+            communication_channels_labels.append('Farmers with Feature Phones')
+        if 'Farmers with No Phones' not in communication_channels_labels:
+            communication_channels_labels.append('Farmers with No Phones')
+
     context['communication_channels_labels'] = communication_channels_labels 
+
     
     # Farmers by Leaders
     leaders = Leader.objects.all()
