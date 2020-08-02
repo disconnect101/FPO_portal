@@ -38,39 +38,39 @@ def cropplan(request, cropID=0):
                                                                                                     'live',
                                                                                                     'image',
                                                                                                     'subscribers')
-
+        unsubscribedCropList = list(crops)
         #### Recommendation System starts......
-        try:
-            unsubscribedCropList = list(crops)
-            investments = Orders.objects.values('date__year').annotate(investment=Sum('price'))
-            investmentSum = 0
-            for investment in investments:
-                investmentSum += investment.get('investment')
-            avgInvestment = investmentSum/investments.count()
+        """
+        
+        investments = Orders.objects.values('date__year').annotate(investment=Sum('price'))
+        investmentSum = 0
+        for investment in investments:
+            investmentSum += investment.get('investment')
+        avgInvestment = investmentSum/investments.count()
 
-            land = Land.objects.filter(owner=user)
-            landarea = land.aggregate(avglandarea=Avg('area'))
-            soil = land.first().soil
+        land = Land.objects.filter(owner=user)
+        landarea = land.aggregate(avglandarea=Avg('area'))
+        soil = land.first().soil
 
-            farmerData = {
-                'investment': avgInvestment,
-                'landarea': landarea.get('avglandarea'),
-                'soil': soil
-            }
-            recommender = Recommender()
-            recommender.trainModel(recommender.gatherData())
-            estimatedProfits = recommender.predict(farmerData, unsubscribedCropList)
+        farmerData = {
+            'investment': avgInvestment,
+            'landarea': landarea.get('avglandarea'),
+            'soil': soil
+        }
+        recommender = Recommender()
+        recommender.trainModel(recommender.gatherData())
+        estimatedProfits = recommender.predict(farmerData, unsubscribedCropList)
 
-            cropEstProfit = []
-            i = 0
-            for estprofit in estimatedProfits:
-                unsubscribedCropList[i].update({'estimatedProfit': estprofit})
-                i+=1
-        except:
-            pass
+        cropEstProfit = []
+        i = 0
+        for estprofit in estimatedProfits:
+            unsubscribedCropList[i].update({'estimatedProfit': estprofit})
+            i+=1
             #cropEstProfit.append(cropProfit)
-
+        """
         #### Recommendation System ends......
+        for temp in unsubscribedCropList:
+            temp.update({'estimatedProfit': 0})
 
 
         data = {
