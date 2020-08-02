@@ -130,8 +130,10 @@ def add_farmer(request):
     if form.is_valid():
         aadhar = form.cleaned_data['aadhar']
         contact = form.cleaned_data['contact']
+        user = form.cleaned_data['user']
         if len(aadhar) != 12 or len(contact) != 10:
             return redirect('/members/member_page/add_farmer')
+        p = Contact.objects.create(user=user, number=contact, verification_status=True)
         form.save() 
         return redirect('/members/member_page')
           
@@ -226,8 +228,11 @@ def add_leader(request):
     if form.is_valid():
         aadhar = form.cleaned_data['aadhar']
         contact = form.cleaned_data['contact']
+        user = form.cleaned_data['user']
         if len(aadhar) != 12 or len(contact) != 10:
             return redirect('/members/member_page/add_farmer')
+
+        p = Contact.objects.create(user=user, number=contact, verification_status=True)
         form.save()
         return redirect('/members/member_page')
 
@@ -248,6 +253,7 @@ def add_user(request):
 
     if form.is_valid():
         user = form.save()
+        # p = Contact.objects.create(user=, number=, verification_status=True)
         # password = form.cleaned_data['password']
         user.set_password(user.password)
         user.save()
