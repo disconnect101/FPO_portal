@@ -238,6 +238,7 @@ class Orders(models.Model):
 class Produce(models.Model):
     crop = models.ForeignKey(Crops, on_delete=models.PROTECT)
     amount = models.FloatField()
+    amountsold = models.FloatField(default=0)
     date = models.DateTimeField(default=timezone.now)
     land = models.ForeignKey(Land, models.SET_NULL, null=True, blank=True)
     quality = models.BooleanField()
@@ -357,3 +358,7 @@ class MeetingToken(models.Model):
     meeting = models.ForeignKey(Meetings, on_delete=models.CASCADE)
     # The farmer for which the token was created
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return str(self.farmer.first_name) + str(self.meeting.agenda)
