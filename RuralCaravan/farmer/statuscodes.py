@@ -24,4 +24,5 @@ status_codes = [
     ('22', 'no Entry in farmer table')
     ('23', 'no meetingtoken found')
     ('24', 'no matching meetingtoken could be found')
+    ('25', 'not enough data to predict, register your land at FPO if not done already')
 ]

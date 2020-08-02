@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from farmer.models import Meetings, MeetingToken, Farmer
+from farmer.models import Meetings, MeetingToken, Farmer, Govt
 from rest_framework.response import Response
 from datetime import datetime
 from farmer.api.utils import statuscode
@@ -50,6 +50,19 @@ def rsvpMeeting(request):
 
     return Response(statuscode('0'))
 
+
+@api_view(['GET', ])
+@permission_classes((IsAuthenticated, ))
+def govtSchemes(request):
+    try:
+        govtSchemes = Govt.objects.all().values()
+    except:
+        return Response(statuscode('12'))
+
+    data = {
+        'data': govtSchemes
+    }
+    return Response(statuscode('0', data))
 
 
 

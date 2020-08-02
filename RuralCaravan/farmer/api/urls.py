@@ -20,6 +20,7 @@ urlpatterns = [
     path('kart/delete/', catalogue.kartdelete, name='kartdelete'),
     path('order/', catalogue.order, name='order'),
     path('meetings/', notice.meetings, name='meetings'),
+    path('govt/', notice.govtSchemes, name='addfarmerdownline'),
     path('meetings/rsvp/', notice.rsvpMeeting, name='meetings'),
     path('crops/<int:cropID>/', crops.cropplan, name='cropplan'),
     path('cropproducts/<int:cropID>/', crops.cropproducts, name='cropproducts'),

@@ -12,7 +12,7 @@ from farmer.Recommender.profit_estimate import Recommender
 from django.db.models import Sum, Avg
 
 
-@api_view(['GET', ])
+@api_view(['POST', ])
 @permission_classes((IsAuthenticated, ))
 def cropplan(request, cropID=0):
 
@@ -39,45 +39,63 @@ def cropplan(request, cropID=0):
                                                                                                     'image',
                                                                                                     'subscribers')
         unsubscribedCropList = list(crops)
-        #### Recommendation System starts......
-        """
-        
-        investments = Orders.objects.values('date__year').annotate(investment=Sum('price'))
-        investmentSum = 0
-        for investment in investments:
-            investmentSum += investment.get('investment')
-        avgInvestment = investmentSum/investments.count()
+        recommendationFailed = False
+        recommendation = request.data.get('recommendation')
 
-        land = Land.objects.filter(owner=user)
-        landarea = land.aggregate(avglandarea=Avg('area'))
-        soil = land.first().soil
 
-        farmerData = {
-            'investment': avgInvestment,
-            'landarea': landarea.get('avglandarea'),
-            'soil': soil
-        }
-        recommender = Recommender()
-        recommender.trainModel(recommender.gatherData())
-        estimatedProfits = recommender.predict(farmerData, unsubscribedCropList)
+        if recommendation=='1':
+            try:
+                #### Recommendation System starts......
 
-        cropEstProfit = []
-        i = 0
-        for estprofit in estimatedProfits:
-            unsubscribedCropList[i].update({'estimatedProfit': estprofit})
-            i+=1
-            #cropEstProfit.append(cropProfit)
-        """
-        #### Recommendation System ends......
-        for temp in unsubscribedCropList:
-            temp.update({'estimatedProfit': 0})
+                investments = Orders.objects.values('date__year').annotate(investment=Sum('price'))
+                investmentSum = 0
 
+                for investment in investments:
+                    investmentSum += investment.get('investment')
+                if investments.count()==0:
+                    raise Exception("not enough investments to predict")
+
+                avgInvestment = investmentSum/investments.count()
+
+                land = Land.objects.filter(owner=user)
+                if land.count()==0:
+                    raise Exception("No Land to predict profit for")
+
+                landarea = land.aggregate(avglandarea=Avg('area'))
+                soil = land.first().soil
+
+                farmerData = {
+                    'investment': avgInvestment,
+                    'landarea': landarea.get('avglandarea'),
+                    'soil': soil
+                }
+                recommender = Recommender()
+                recommender.trainModel(recommender.gatherData())
+                estimatedProfits = recommender.predict(farmerData, unsubscribedCropList)
+
+                cropEstProfit = []
+                i = 0
+                for estprofit in estimatedProfits:
+                    unsubscribedCropList[i].update({'estimatedProfit': estprofit})
+                    i+=1
+
+                #### Recommendation System ends......
+            except Exception as e:
+                recommendationFailed = True
+                for temp in unsubscribedCropList:
+                    temp.update({'estimatedProfit': 0})
+
+        else:
+            for temp in unsubscribedCropList:
+                temp.update({'estimatedProfit': 0})
 
         data = {
             'subscriptions': subscriptions,
             'not_subscribed': unsubscribedCropList,
             #'not_subscribed': cropEstProfit,
         }
+        if recommendationFailed:
+            return Response(statuscode('25', data))
         return Response(statuscode('0', data))
 
     else:
