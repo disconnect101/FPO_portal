@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -25,7 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ruralcaravan.Fragments.CatalogueCategoryFragment;
-import com.example.ruralcaravan.Fragments.EWalletFragment;
+import com.example.ruralcaravan.Fragments.BalanceSheetFragment;
 import com.example.ruralcaravan.Fragments.HomeFragment;
 import com.example.ruralcaravan.Fragments.ListPlansFragment;
 import com.example.ruralcaravan.Fragments.MeetingsFragment;
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     private void selectDrawerItem(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.eWallet:
-                switchToNewFragment(EWalletFragment.class, menuItem);
+                switchToNewFragment(BalanceSheetFragment.class, menuItem);
                 break;
             case R.id.catalogue:
                 switchToNewFragment(CatalogueCategoryFragment.class, menuItem);

@@ -108,4 +108,6 @@
     <string name="select_phone_status">Select phone status</string>
     <string name="farmer_added_successfully">Farmer added successfully</string>
     <string name="total">Total</string>
+    <string name="available_balance">Available Balance</string>
+    <string name="no_transactions">No transactions</string>
 </resources>

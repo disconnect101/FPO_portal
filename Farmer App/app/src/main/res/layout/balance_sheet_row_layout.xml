@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layout_marginTop="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <ImageView
+            android:id="@+id/imageViewTransaction"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/app_logo"
+            android:layout_weight="2"
+            android:layout_gravity="center_vertical"/>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="6">
+
+            <TextView
+                android:id="@+id/textViewTransactionDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="transaction description"/>
+
+            <TextView
+                android:id="@+id/textViewReferenceNumber"
+                android:layout_below="@+id/textViewTransactionDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="reference number"/>
+
+            <TextView
+                android:id="@+id/textViewTime"
+                android:layout_below="@+id/textViewReferenceNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="time"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textViewAmount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="2"
+            android:paddingRight="10dp"
+            android:textStyle="bold"
+            android:text="amount"
+            android:textAlignment="textEnd"
+            android:textSize="15sp"/>
+
+    </LinearLayout>
+    
+</androidx.cardview.widget.CardView>

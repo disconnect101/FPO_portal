@@ -64,7 +64,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         int menuItemId;
         switch(v.getId()) {
             case R.id.cardViewEWallet:
-                fragment = new EWalletFragment();
+                fragment = new BalanceSheetFragment();
                 menuItemId = R.id.eWallet;
                 break;
             case R.id.cardViewCatalogue:

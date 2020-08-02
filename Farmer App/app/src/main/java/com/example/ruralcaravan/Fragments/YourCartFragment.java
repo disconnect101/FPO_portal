@@ -92,7 +92,6 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
             public void onClick(View v) {
                 new AlertDialog.Builder(getActivity())
                         .setTitle(getString(R.string.confirm_order))
-                        //TODO: Add total here
                         .setMessage(getString(R.string.confirm_order_message) + "\n\n" + getString(R.string.amount) + ": \u20B9" + total)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
