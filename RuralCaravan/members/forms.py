@@ -123,7 +123,6 @@ class TransactionForm(forms.ModelForm):
 
         # specify fields to be used
         fields = [
-            "refno",
             "user",
             "amount",
             "description"
