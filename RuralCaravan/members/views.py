@@ -427,7 +427,11 @@ def add_FPOLedger(request):
             last_amount = 0.0
             if ew_transaction.objects.count() > 0:
                 last = ew_transaction.objects.filter(user=owner).last()
-                last_amount = last.currrent_amount
+                if last:
+                    last_amount = last.currrent_amount
+                else:
+                    last_amount = 0
+
             p = ew_transaction.objects.create(user=owner, amount=cost, currrent_amount=last_amount + cost, description='crop sold')
         # form_u.save()
         return redirect('/members/member_page/fpoledger')
@@ -477,7 +481,7 @@ def add_Produce(request):
         return redirect('/members/member_page/produce')
 
     context['form'] = form
-    context['users'] = UserProfile.objects.all()
+    context['farmers'] = Farmer.objects.all()
     context['crops'] = Crops.objects.all()
 
     # context['form_u']=form
@@ -687,7 +691,7 @@ def orders_add(request):
         return redirect('/members/member_page/orders')
 
     context['form'] = form
-    context['users'] = UserProfile.objects.all()
+    context['farmers'] = Farmer.objects.all()
     context['items'] = Products.objects.all()
     return render(request, 'members/addneworder.html', context)
 

@@ -112,7 +112,7 @@ th,td{
 
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}">Home
               <span class="sr-only">(current)</span>
             </a>
@@ -137,27 +137,27 @@ th,td{
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
             <li class="nav-item">
-            <a href="{% url 'add_user' %}" class="nav-link" >
+            <a href="{% url 'add_user' %}" class="nav-link" data-toggle="tooltip" title="Add New User">
              <i class="fas fa-user-plus"></i>
             </a>
           </li>
-             <li class="nav-item">
-            <a href="{% url 'transaction'%}" class="nav-link" >
+             <li class="nav-item active">
+            <a href="{% url 'transaction'%}" class="nav-link" data-toggle="tooltip" title="Transactions">
              <i class="fas fa-rupee-sign"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'orders' %}" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" data-toggle="tooltip" title="Orders">
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
              <li class="nav-item">
-            <a href="{% url 'products' %}" class="nav-link" >
+            <a href="{% url 'products' %}" class="nav-link" data-toggle="tooltip" title="Products">
              <i class="fas fa-shopping-basket"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'fpo_statistics' %}" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" data-toggle="tooltip" title="Statistics">
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
@@ -184,7 +184,7 @@ th,td{
 <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
          <span><a href="{% url 'add_transaction' %}" class="btn btn-primary">Add New Transaction</a></span>
         <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
-    <table
+    <table id="tbldisplay"
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
             <thead>
                 <th>Ref No.</th>
@@ -202,7 +202,7 @@ th,td{
                     <td>{{entry.user.username}}</td>
                     <td>{{entry.amount}}</td>
                     <td>{{entry.date}}</td>
-                    <td class="editable" contenteditable="true">{{entry.description}}</td>
+                    <td>{{entry.description}}</td>
                     <td><p data-placement="top" data-toggle="tooltip" title="Delete Entry"><a href="transaction/delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt"></i></a></p></td>
              </tr>
         {% endfor %}

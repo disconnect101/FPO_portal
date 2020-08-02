@@ -80,7 +80,7 @@
 
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}">Home
               <span class="sr-only">(current)</span>
             </a>
@@ -105,27 +105,27 @@
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
             <li class="nav-item">
-            <a href="{% url 'add_user' %}" class="nav-link" >
+            <a href="{% url 'add_user' %}" class="nav-link" data-toggle="tooltip" title="Add New User">
              <i class="fas fa-user-plus"></i>
             </a>
           </li>
              <li class="nav-item">
-            <a href="{% url 'transaction'%}" class="nav-link" >
+            <a href="{% url 'transaction'%}" class="nav-link" data-toggle="tooltip" title="Transactions">
              <i class="fas fa-rupee-sign"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'orders' %}" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" data-toggle="tooltip" title="Orders">
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
-             <li class="nav-item">
-            <a href="{% url 'products' %}" class="nav-link" >
+             <li class="nav-item active">
+            <a href="{% url 'products' %}" class="nav-link" data-toggle="tooltip" title="Products">
              <i class="fas fa-shopping-basket"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'fpo_statistics' %}" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" data-toggle="tooltip" title="Statistics">
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
@@ -179,10 +179,10 @@
                 <th class="th-sm">PRODUCT NAME
 
                 </th>
-                <th class="th-sm">CROP NAME
+                <th class="th-sm">CATEGORY
 
                 </th>
-                <th class="th-sm">CATEGORY
+                <th class="th-sm">RATE
 
                 </th>
                  </th>
@@ -205,8 +205,9 @@
               <tr>
 
                 <td>{{prod.name}}</td>
-                <td>{{prod.associated_crop.name}}</td>
-                <td>{{prod.category}}</td>
+                  <td>{{prod.category}}</td>
+                <td>{{prod.rate}}</td>
+
                   <td><a href="detail/{{ prod.id }}"><p style="text-align:center"><i class="fas fa-eye purple-text"></i></p></a></td>
 
                 <td><a href="update/{{ prod.id }}"><p style="text-align:center"><i class="fas fa-edit blue-text"></i></p></a></td>

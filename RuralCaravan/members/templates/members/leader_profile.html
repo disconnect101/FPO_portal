@@ -187,7 +187,7 @@ th,td{
 
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}">Home
               <span class="sr-only">(current)</span>
             </a>
@@ -212,31 +212,31 @@ th,td{
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
             <li class="nav-item">
-            <a href="{% url 'add_user' %}" class="nav-link" >
+            <a href="{% url 'add_user' %}" class="nav-link" data-toggle="tooltip" title="Add New User">
              <i class="fas fa-user-plus"></i>
             </a>
           </li>
              <li class="nav-item">
-            <a href="{% url 'transaction'%}" class="nav-link" >
+            <a href="{% url 'transaction'%}" class="nav-link" data-toggle="tooltip" title="Transactions">
              <i class="fas fa-rupee-sign"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'orders' %}" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" data-toggle="tooltip" title="Orders">
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
              <li class="nav-item">
-            <a href="{% url 'products' %}" class="nav-link" >
+            <a href="{% url 'products' %}" class="nav-link" data-toggle="tooltip" title="Products">
              <i class="fas fa-shopping-basket"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'fpo_statistics' %}" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" data-toggle="tooltip" title="Statistics">
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a href="{% url 'members' %}" class="nav-link border border-light rounded"
              >
               <i class="fas fa-user"></i>Members
@@ -384,7 +384,7 @@ th,td{
         <td>{{farmer.id}}</td>
         <td><a href="{% url 'members' %}view_farmer/{{farmer.id}}">{{ farmer.first_name }}{{' '}}{{ farmer.last_name}}</a></td>
 
-        <td><{{ farmer.user.username }}/td>
+        <td>{{ farmer.user.username }}</td>
 
         <td>{{farmer.village}}</td>
         <td>{{farmer.contact}}</td>
@@ -464,6 +464,5 @@ function openCity(evt, Name) {
 }
 document.getElementById("defaultOpen").click();
 </script>
-
 </body>
 </html>

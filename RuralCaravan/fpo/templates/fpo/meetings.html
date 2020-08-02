@@ -95,12 +95,12 @@
 
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
           <li class="nav-item">
@@ -120,27 +120,27 @@
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
             <li class="nav-item">
-            <a href="{% url 'add_user' %}" class="nav-link" >
+            <a href="{% url 'add_user' %}" class="nav-link" data-toggle="tooltip" title="Add New User">
              <i class="fas fa-user-plus"></i>
             </a>
           </li>
              <li class="nav-item">
-            <a href="{% url 'transaction'%}" class="nav-link" >
+            <a href="{% url 'transaction'%}" class="nav-link" data-toggle="tooltip" title="Transactions">
              <i class="fas fa-rupee-sign"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'orders' %}" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" data-toggle="tooltip" title="Orders">
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
              <li class="nav-item">
-            <a href="{% url 'products' %}" class="nav-link" >
+            <a href="{% url 'products' %}" class="nav-link" data-toggle="tooltip" title="Products">
              <i class="fas fa-shopping-basket"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'fpo_statistics' %}" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" data-toggle="tooltip" title="Statistics">
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
@@ -205,7 +205,7 @@
                           <strong>Date:</strong> {{gov.date}}&nbsp;&nbsp;
                           <strong>Time:</strong> {{gov.time}}
                         </h6>
-                        <p class="card-text"> {{ gov.description|truncatechars:200 }} </p>
+                        <p class="card-text"> {{ gov.description|safe|truncatechars:200 }} </p>
                         <a href="update/{{ gov.id }}" class="card-link"><span class="cardBodyEdit" style="border: 1px solid blue;border-radius: 0.2rem; padding: 0.2rem 0.6rem;">Edit</span></a>
                         <a href="delete/{{ gov.id }}" class="card-link ml-4" onclick="return confirm('Are you sure you want to delete this item?');"><span class="cardBodyDelete" style="border: 1px solid red;border-radius: 0.2rem; padding: 0.2rem 0.6rem; color: red;">Delete</span></a>
                         <a href="{% url 'fpo-detail_meetings' gov.id %}" class="card-link float-right green-text"><i class="fas fa-arrow-right fa-2x"></i></a>
@@ -275,19 +275,19 @@
                   <div class="md-form">
 				  <i class="fas fa-calendar-alt prefix green-text"></i>
 
-                    <input type="text" name="date"  class="form-control" size="10" required id="id_date" >
-                    <label class="required" for="id_date">Enter Date in this format (YYYY-MM-DD)</label>
+                    <input type="date" name="date"  class="form-control" size="10" required id="id_date" >
+                    <label class="required" for="id_date">Enter Date</label>
                   </div>
                   <div class="md-form">
 				  <i class="far fa-clock prefix green-text"></i>
 
-                    <input type="text" name="time"  class="form-control"  size="8" required id="id_time">
-                    <label class="required" for="id_time">Enter Time in this format (HH:MM:SS)</label>
+                    <input type="time" name="time"  class="form-control"  size="8" required id="id_time">
+                    <label class="required" for="id_time"></label>
                   </div>
 
 
                   <div class="md-form">
-                    <div class="mb-2">
+                    <div class="mb-4">
                     <i class="fas fa-clipboard green-text fa-2x mr-2"></i>
                     <span style="font-size: 1.2rem; font-weight: 400; opacity: 0.5">Enter Description</span>
                     </div>

@@ -20,6 +20,7 @@ from django.db.models import Count, Q
 from .sms import send_message as Send_Text_Message
 from .get_production_prediction import predict_production
 from fpo.statisticalanalysis import *
+import datetime
 # Create your views here.
 
 posts = [
@@ -876,8 +877,9 @@ def fpo_statistics(request):
     for crop in crops_by_years_data:
         data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
         prediction = predict_production(data)
+        print(prediction)
         crop['years'].append(f'{prediction[0]} (Prediction)')
-        crop['data'].append(round(prediction[1], 2))
+        crop['data'].append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
 
     context['crop_selector_options'] = [x['name'] for x in crops_by_years_data]
 
@@ -912,7 +914,7 @@ def fpo_statistics(request):
         print()
         prediction = predict_production(data)
         crop['years'].append(f'{prediction[0]} (Prediction)')
-        crop['data'].append(round(prediction[1], 2))
+        crop['data'].append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
 
     context['crop_price_selector_options'] = [x['name'] for x in crops_profits_by_years_data]
 
@@ -1014,8 +1016,50 @@ def plans_toggle(request,id):
 @login_required
 def plans_detail(request, id):
     plans = get_object_or_404(Crops,id=id)
+    farmers = FarmerCropMap.objects.filter(crop=plans)
+    farmers = [Farmer.objects.get(user=x.farmer) for x in farmers]
+    farmers_by_villages = {}
+    for farmer in farmers:
+        if farmer.village in farmers_by_villages.keys():
+            farmers_by_villages[farmer.village] += 1
+        else:
+            farmers_by_villages[farmer.village] = 1
 
-    return render(request, "fpo/plan_detail.html",context={'plans': plans})
+    villages = []
+    village_total = []
+    for village, total in farmers_by_villages.items():
+        villages.append(village)
+        village_total.append(total)
+    
+    products = plans.products.all()
+
+    current_year = datetime.datetime.now().year
+    produces = Produce.objects.filter(crop=plans, date__year=current_year-1)
+    farmers = [Farmer.objects.get(user=x.owner) for x in produces]
+    produces_villages = []
+    produces_amount = []
+    produces_by_villages = {}
+    for produce, farmer in zip(produces, farmers):
+        if farmer.village in produces_by_villages.keys():
+            produces_by_villages[farmer.village] += produce.amount
+        else:
+            produces_by_villages[farmer.village] = produce.amount
+    
+    for village, total in produces_by_villages.items():
+        produces_villages.append(village)
+        produces_amount.append(total)
+    
+    produces_amount_percentages = [round(x/sum(produces_amount), 2)*100 for x in produces_amount]
+    context = {
+        'plans': plans, 
+        'products': products,
+        'villages': villages,
+        'village_total': village_total,
+        'produce_villages': produces_villages,
+        'produce_amount_percentages': produces_amount_percentages
+    }
+
+    return render(request, "fpo/plan_detail.html",context)
 	
 @login_required	
 def plans_update(request, id): 
@@ -1190,7 +1234,7 @@ def products_update(request, id):
     obj = get_object_or_404(Products, id=id)
 
     # pass the object as instance in form
-    form = ProductsForm(request.POST or None, instance=obj)#, request.FILES
+    form = ProductsForm(request.POST,request.FILES or None, instance=obj)#, request.FILES
 
     if form.is_valid():
         form.save()

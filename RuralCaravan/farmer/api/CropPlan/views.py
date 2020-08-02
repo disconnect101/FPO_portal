@@ -2,12 +2,14 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from farmer.api.utils import statuscode
-from farmer.models import Crops, FarmerCropMap, Farmer, UserProfile
+from farmer.models import Crops, FarmerCropMap, Farmer, UserProfile, Orders, Land
 from farmer.api.serializers import CropSerializer
 import json
 from django.core import serializers
 from django.forms.models import model_to_dict
 from farmer.SMSservice import sms
+from farmer.Recommender.profit_estimate import Recommender
+from django.db.models import Sum, Avg
 
 
 @api_view(['GET', ])
@@ -36,11 +38,43 @@ def cropplan(request, cropID=0):
                                                                                                     'live',
                                                                                                     'image',
                                                                                                     'subscribers')
+
+        #### Recommendation System starts......
+
         unsubscribedCropList = list(crops)
+        investments = Orders.objects.values('date__year').annotate(investment=Sum('price'))
+        investmentSum = 0
+        for investment in investments:
+            investmentSum += investment.get('investment')
+        avgInvestment = investmentSum/investments.count()
+
+        land = Land.objects.filter(owner=user)
+        landarea = land.aggregate(avglandarea=Avg('area'))
+        soil = land.first().soil
+
+        farmerData = {
+            'investment': avgInvestment,
+            'landarea': landarea.get('avglandarea'),
+            'soil': soil
+        }
+        recommender = Recommender()
+        recommender.trainModel(recommender.gatherData())
+        estimatedProfits = recommender.predict(farmerData, unsubscribedCropList)
+
+        cropEstProfit = []
+        i = 0
+        for estprofit in estimatedProfits:
+            unsubscribedCropList[i].update({'estimatedProfit': estprofit})
+            i+=1
+            #cropEstProfit.append(cropProfit)
+
+        #### Recommendation System ends......
+
 
         data = {
             'subscriptions': subscriptions,
             'not_subscribed': unsubscribedCropList,
+            #'not_subscribed': cropEstProfit,
         }
         return Response(statuscode('0', data))
 
