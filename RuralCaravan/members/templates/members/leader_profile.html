@@ -286,7 +286,7 @@ th,td{
                             </div><!-- /.col -->
 
                             <div class="col-xs-12 col-sm-9" style="margin-top:5px;">
-                                <h4 style="color: blue;margin-left: 15px;">
+                                <h4 style="margin-left: 15px;" class="green-text mt-0 mb-3">
                                     <span class="middle">{{data.first_name}}{{' '}}{{data.last_name}}</span>
 
 
@@ -350,7 +350,7 @@ th,td{
 </div>
 <div id="farmer_list" class="tabcontent">
     <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
-         <h4>Add A Farmer Under {{ data.first_name }}{{' '}}{{ data.last_name}}</h4>
+         <h4 class="green-text mt-0 mb-3">Add A Farmer Under {{ data.first_name }}{{' '}}{{ data.last_name}}</h4>
         <!----action="{% url 'members'%}view_leader/{{data.id}}/add/--->
          <form method="POST" enctype="multipart/form-data" action="{% url 'members'%}view_leader/{{data.id}}/add/">{% csrf_token %}
              <!-----{{form}}-->
@@ -363,7 +363,7 @@ th,td{
              <button type="submit" value="Submit" class="btn btn-primary">ADD</button>
          </form>
         <hr>
-        <h4>Existing Farmers Under {{ data.first_name }}{{' '}}{{ data.last_name}}</h4>
+        <h4 class="green-text mt-0 mb-3">Existing Farmers Under {{ data.first_name }}{{' '}}{{ data.last_name}}</h4>
         <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
     <table
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
@@ -399,6 +399,7 @@ th,td{
 </div>
 <div id="balance_sheet" class="tabcontent">
     <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
+       <h3 class="green-text mt-0 mb-3">Balance Sheet:</h3>
         <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
     <table id="tbldisplay"
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">

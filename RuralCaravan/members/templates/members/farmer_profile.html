@@ -296,7 +296,7 @@ th,td{
                             </div><!-- /.col -->
 
                             <div class="col-xs-12 col-sm-9" style="margin-top:5px;">
-                                <h4 style="color: blue;margin-left: 15px;">
+                                <h4 style="margin-left: 15px;" class="green-text mt-0 mb-3">
                                     <span class="middle">{{data.first_name}}{{' '}}{{data.last_name}}</span>
 
 
@@ -355,6 +355,7 @@ th,td{
 </div>
 <div id="balance_sheet" class="tabcontent">
     <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
+        <h3 class="green-text mt-0 mb-3">Balance Sheet:</h3>
          <!----<span><a href="addnewtransaction.html" class="btn btn-primary">Add New Transaction</a></span>--->
         <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
     <table id="tbldisplay"
@@ -385,8 +386,9 @@ th,td{
 </div>
 <div id="orders" class="tabcontent">
     <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
+       <h3 class="green-text mt-0 mb-3">Orders Placed:</h3>
             <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
-    <table
+    <table id="ordrdisplay"
         class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
             <thead>
                 <th>S no.</th>
@@ -424,7 +426,9 @@ th,td{
     </div>
 </div>
 <div id="prev_record" class="tabcontent">
+
     <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
+        <h3 class="green-text mt-0 mb-3">Produce</h3>
          <!---<span><a href="{% url 'home'%}view_farmer/{{data.id}}/produce/add" class="btn btn-primary">Add New Record</a></span>--->
         <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
     <table
@@ -495,7 +499,7 @@ th,td{
     <div class="row" style="margin-top:1%">
 
         <div class="col-xs-12 col-sm-9">
-            <h4 style="color: blue;margin-left: 15px;">
+            <h4 style="margin-left: 15px;" class="green-text mt-0 mb-3">
                 <span class="middle">Land Details</span>
             </h4>
             {% for entry in landdetails %}
@@ -540,7 +544,7 @@ th,td{
     <div class="row" style="margin-top:1%">
 
         <div class="col-xs-12 col-sm-9">
-            <h4 style="color: blue;margin-left: 15px;">
+            <h4 style="margin-left: 15px;" class="green-text mt-0 mb-3">
                 <span class="middle">Bank Details</span>
             </h4>
             {% for entry in bankdetails %}
@@ -625,6 +629,18 @@ document.getElementById("defaultOpen").click();
          $(document).ready(function () {
  $("#tbldisplay td:nth-child(3)").each(function () {
                 if (parseInt($(this).text(), 10) < 0) {
+                    $(this).parent("tr").css("background-color", "orange");
+                }
+                else{
+                    $(this).parent("tr").css("background-color", "Lightgreen");
+                }
+            });
+});
+</script>
+    <script language="JavaScript">
+         $(document).ready(function () {
+ $("#ordrdisplay td:nth-child(6)").each(function () {
+                if ($(this).text() == "Incomplete") {
                     $(this).parent("tr").css("background-color", "orange");
                 }
                 else{
