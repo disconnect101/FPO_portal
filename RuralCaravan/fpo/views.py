@@ -1274,7 +1274,7 @@ def products_update(request, id):
     obj = get_object_or_404(Products, id=id)
 
     # pass the object as instance in form
-    form = ProductsForm(request.POST,request.FILES or None, instance=obj)#, request.FILES
+    form = ProductsForm(request.POST or None, request.FILES or None, instance = obj)#, request.FILES
 
     if form.is_valid():
         form.save()
@@ -1284,6 +1284,25 @@ def products_update(request, id):
     context["form"] = form
 
     return render(request, "fpo/update_products.html", context) #update_products
+
+@login_required
+def products_toggle(request, id):
+    # dictionary for initial data with
+    # field names as keys
+    context = {}
+
+    # fetch the object related to passed id
+    obj = get_object_or_404(Products, id=id)
+
+    obj.available ^= True
+    obj.save()
+
+    return redirect("/fpo/products")
+
+
+
+
+
 
 @login_required
 def products_detail(request, id):

@@ -50,9 +50,7 @@
                   background:#295e10!important;
               }
           }
-img{
-    border-radius:50%;
-}
+
 .counter-box {
     display: block;
     background: #f6f6f6;
@@ -200,10 +198,7 @@ img{
           <!-- Grid row -->
       <div class="row">
           <div class="col-12">
-              <div class="text-center">
-                  <i class="fas fa-seedling fa-4x mb-2 green-text" style="opacity: 0.2"></i>
-              </div>
-              <p style="text-align: center; opacity: 0.2" class="mb-0"><strong>MORE INFORMATION</strong></p>
+
               <h1 style="text-align: center;" class="green-text mt-0 mb-3">Plan Details</h1>
               <hr style="margin: auto; width: 6rem; border: 2px solid #4aa327; border-radius: 20rem;">
               <br>
@@ -216,9 +211,9 @@ img{
 
 
                         {% if plans.image %}
-                          <center><img src="{{plans.image.url}}"  /></center>
+                          <center><img src="{{plans.image.url}}" height="200px" width="200px" /></center>
                           {% else %}
-                         <center><img src="{% static 'img/download.png'%}" /></center>
+                         <center><img src="{% static 'img/download.png'%}" height="200px" width="200px"/></center>
                           {% endif %}
 
 

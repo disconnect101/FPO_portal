@@ -52,9 +52,7 @@
           }
 
 
-img {
-  border-radius: 50%;
-}
+
 footer {
   position: fixed;
   left: 0;
@@ -195,9 +193,9 @@ footer {
 
 
                         {% if products.image %}
-                          <center><img src="{{products.image.url}}" width="400em" height="300em"/></center>
+                          <center><img src="{{products.image.url}}" width="280px" height="280px"/></center>
                           {% else %}
-                         <center><img src="{% static 'img/download.png'%}" /></center>
+                         <center><img src="{% static 'img/download.png'%}" width="280px" height="280px" /></center>
                           {% endif %}
 
 
@@ -214,11 +212,23 @@ footer {
 
             <!--Card content-->
             <div class="card-body">
-                <p><strong>PRODUCT NAME:</strong>{{products.name}}</p>
-                <p><strong>ASSOCIATED CROP:</strong>{{products.associated_crop}}</p>
-                <p><strong>PRODUCT CATEGORY:</strong>{{products.category }}</p>
-                <p><strong>RATE:</strong>{{products.rate}}</p>
-                <p><strong>DESCRIPTION:</strong>{{products.description|safe}}</p>
+                <p><b class="green-text">PRODUCT NAME:</b>{{products.name}}</p>
+
+                <p><b class="green-text">PRODUCT CATEGORY:</b>{{products.category }}</p>
+                <p><b class="green-text">PRICE:</b>{{products.rate}}</p>
+                 <p><b class="green-text">STATUS:</b>
+                     {% if products.available %}
+                           <strong class="blue-text"> AVAILABLE</strong>
+                    {% else %}
+                           <strong class="orange-text"> UNAVAILABLE</strong>
+                    {% endif %}
+
+
+
+
+
+                 </p>
+                <p><b class="green-text">DESCRIPTION:</b>{{products.description|safe}}</p>
 
 
 

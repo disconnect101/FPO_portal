@@ -1,5 +1,6 @@
 {% load static %}
-{% load crispy_forms_tags %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -162,17 +163,21 @@
         <!--Grid row-->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
-            <a class="btn btn-green"  data-toggle="tab" href="#products" role="tab" aria-controls="products"
-              aria-selected="true">PRODUCTS</a>
+            <a class="btn btn-green"  data-toggle="tab" href="#available" role="tab" aria-controls="products"
+              aria-selected="true">AVAILABLE PRODUCTS</a>
+          </li>
+            <li class="nav-item">
+            <a class="btn btn-orange"  data-toggle="tab" href="#unavailable" role="tab" aria-controls="inactive"
+              aria-selected="false">UNAVAILABLE PRODUCTS</a>
           </li>
 
           <li class="nav-item">
-            <a class="btn btn-blue" id="contact-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add"
+            <a class="btn btn-blue"  data-toggle="tab" href="#add" role="tab" aria-controls="add"
               aria-selected="false">ADD A NEW PRODUCT</a>
           </li>
       </ul>
 <div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products" >
+  <div class="tab-pane fade show active" id="available" role="tabpanel" aria-labelledby="products" >
      <table id="dtBasicExample1" class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
             <thead class="green lighten-4 " >
               <tr>
@@ -186,41 +191,78 @@
 
                 </th>
                  </th>
-                  <th class="th-sm">VIEW DETAILS
+                  <th class="th-sm">ACTIONS
 
                 </th>
 
-                 <th class="th-sm">EDIT PRODUCT
 
-
-                <th class="th-sm">DELETE PRODUCT
-
-                </th>
               </tr>
             </thead>
             <tbody>
-             {% block contentproduct %}
+             {% block contentavail%}
               {% for prod in products%}
+              {% if prod.available %}
 
               <tr>
 
-                <td>{{prod.name}}</td>
-                  <td>{{prod.category}}</td>
-                <td>{{prod.rate}}</td>
+                <td style="text-transform: uppercase;">{{prod.name}}</td>
+                  <td style="text-transform: uppercase;">{{prod.category}}</td>
+                <td style="text-transform: uppercase;">{{prod.rate}}</td>
 
-                  <td><a href="detail/{{ prod.id }}"><p style="text-align:center"><i class="fas fa-eye purple-text"></i></p></a></td>
+                  <td><p style="text-align:center"><a href="detail/{{ prod.id }}" title="View Details"><i class="fas fa-eye purple-text" style="margin-right:2rem;" ></i></a>
 
-                <td><a href="update/{{ prod.id }}"><p style="text-align:center"><i class="fas fa-edit blue-text"></i></p></a></td>
+                <a href="update/{{ prod.id }}" title="Edit Product"><i class="fas fa-edit blue-text" style="margin-right:2rem;"></i></a>
 
-                <td><a href="delete/{{ prod.id }}" onclick="return confirm('Are you sure you want to delete this product?');"><p style="text-align:center"><i class="fas fa-trash-alt red-text"></i></p></a></td>
-
+                <a href="toggle/{{ prod.id }}" onclick="return confirm('Are you sure you want to make this product unavailable?');" title="Make it unavailable"><i class="fas fa-ban red-text"></i></a>  </p></td>
+                {% endif %}
                 {% endfor %}
-      {% endblock contentproduct %}
+      {% endblock contentavail %}
               </tr>
             </tbody></table>
   </div>
+     <div class="tab-pane fade show " id="unavailable" role="tabpanel" aria-labelledby="products" >
+     <table id="dtBasicExample2" class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
+            <thead class="red lighten-4 " >
+              <tr>
+                <th class="th-sm">PRODUCT NAME
 
-  <div class="tab-pane fade" id="add" role="tabpanel" aria-labelledby="contact-tab">
+                </th>
+                <th class="th-sm">CATEGORY
+
+                </th>
+                <th class="th-sm">RATE
+
+                </th>
+                 </th>
+                  <th class="th-sm">ACTIONS
+
+                </th>
+
+
+              </tr>
+            </thead>
+            <tbody>
+             {% block contentunavail%}
+              {% for prod in products%}
+             {% if not prod.available %}
+
+              <tr>
+
+                <td style="text-transform: uppercase;">{{prod.name}}</td>
+                  <td style="text-transform: uppercase;">{{prod.category}}</td>
+                <td style="text-transform: uppercase;">{{prod.rate}}</td>
+
+                  <td><p style="text-align:center"><a href="detail/{{ prod.id }}" title="View Details"><i class="fas fa-eye purple-text" style="margin-right:2rem;" ></i></a>
+
+                <a href="update/{{ prod.id }}" title="Edit Product"><i class="fas fa-edit blue-text" style="margin-right:2rem;"></i></a>
+                      <a href="toggle/{{ prod.id }}" onclick="return confirm('Are you sure you want to make this product available?');" title="Make it available"><i class="fas fa-check green-text"></i></a></p></td>
+                    {% endif %}
+                {% endfor %}
+      {% endblock contentunavail %}
+              </tr>
+            </tbody></table>
+  </div>
+<div class="tab-pane fade" id="add" role="tabpanel" aria-labelledby="contact-tab">
     <div class="col-lg-12 col-md-12">
 			<!--Card-->
             <div class="card">
@@ -233,14 +275,59 @@
                    <form method="POST" enctype="multipart/form-data">
                        {% csrf_token %}
                        {{form.media}}
+                       <div class="md-form">
+				  <i class="fas fa-shopping-bag prefix green-text"></i>
 
-                        {{ form|crispy }}
+                    <input type="text"  class="form-control" name="name"  required id="id_name">
+                           <label class="required" for="id_name">Enter Product Name</label>
+                  </div>
+
+                  <div class="md-form">
+				  <i class="fas fa-rupee-sign prefix green-text"></i>
+                      <input type="number" class="form-control" name="rate"  required id="id_rate">
+                    <label class="required" for="id_rate">Enter Price</label>
+                  </div>
+
+                  <div class="md-form">
+                      <div>
+                      <p><b>Enter Description:</b></p>
+                      </div>
+
+                    <textarea  type="text"  class="md-textarea" name="description" cols="40" rows="10" required id="id_description"></textarea>
+
+
+
+                </div>
+
+                       <div class="form-row field-image">
+                        <div>
+                          <label for="id_image"><b>Upload Image:</b></label>
+                          <input type="file" name="image" accept="image/*" id="id_image">
+                        </div>
+
+                        </div>
+
+                         <div >
+                              <p><b>Category:</b>
+                                {{form.category}}</p>
+                         </div>
+                       <div>
+
+
+                        <input type="checkbox" name="available" id="id_available" checked readonly>
+                        <label  for="id_available"><strong>Add as an available product</strong></label>
+
+
+                        </div>
+
+
                          <div class="text-center">
                             <button class="btn btn-green" type="submit" value="Submit">ADD</button>
 
                           </div>
                    </form>
                </div>
+
                 <!-- Form -->
 
               </div>
@@ -251,10 +338,8 @@
           <!--/Grid column-->
 
   </div>
-</div>
 
 </div>
-
 
 
       </section>
@@ -294,7 +379,19 @@ $(document).ready(function () {
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [2,3,4,5]
+  targets: [2,3]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
+});
+</script>
+  <script>
+$(document).ready(function () {
+ $('#dtBasicExample2').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [2,3]
   }]
 });
   $('.dataTables_length').addClass('bs-select');
@@ -307,10 +404,38 @@ $(document).ready(function () {
     // Animations initialization
     new WOW().init();
   </script>
-<script>
-        CKEDITOR.replace('guidance');
+      <!-- Initializations -->
+  <script type="text/javascript">
+    // Animations initialization
+    {% comment %} new WOW().init(); {% endcomment %}
+    var toolbarGroups = [
+        { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+        { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+        { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+        { name: 'forms', groups: [ 'forms' ] },
+        '/',
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+        { name: 'links', groups: [ 'links' ] },
+        { name: 'insert', groups: [ 'insert' ] },
+        { name: 'styles', groups: [ 'styles' ] },
+        { name: 'colors', groups: [ 'colors' ] },
+        { name: 'tools', groups: [ 'tools' ] },
+        { name: 'others', groups: [ 'others' ] },
+        { name: 'about', groups: [ 'about' ] }
+      ];
 
- </script>
+      var removeButtons = 'Source,Save,Templates,NewPage,Preview,Print,Cut,Copy,Redo,Undo,Paste,PasteText,PasteFromWord,Find,SelectAll,Replace,Scayt,Form,Checkbox,Radio,Textarea,TextField,Select,Button,ImageButton,HiddenField,CopyFormatting,RemoveFormat,CreateDiv,BidiLtr,BidiRtl,Language,Anchor,Unlink,Image,Flash,HorizontalRule,Table,Smiley,PageBreak,SpecialChar,Iframe,About,Maximize,ShowBlocks';
+
+
+
+    CKEDITOR.replace('description', {
+      toolbar: 'Basic',
+      uiColor: '#295e10',
+      toolbarGroups,
+      removeButtons
+    });
+    </script>
 </body>
 
 </html>
