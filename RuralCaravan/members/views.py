@@ -17,7 +17,7 @@ import random
 from fpo.get_production_prediction import predict_production
 from .stats import *
 from fpo.statisticalanalysis import *
-import datetime
+from datetime import datetime
 
 # Create your views here.
 
