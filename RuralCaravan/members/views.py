@@ -18,6 +18,8 @@ from fpo.get_production_prediction import predict_production
 from .stats import *
 from fpo.statisticalanalysis import *
 from datetime import datetime
+from django.db.models import ProtectedError
+from django.contrib import messages
 
 # Create your views here.
 
@@ -65,15 +67,26 @@ def delete_farmer(request, id):
   
     # fetch the object related to passed id 
     obj = get_object_or_404(Farmer, id = id) 
-  
-  
+    print(obj.user.id)
+    obj1 = get_object_or_404(UserProfile, id = obj.user.id) 
+    print(obj1)
+    try:
+        obj1.delete() 
+        messages.success(request, 'Farmer Deleted Successfully.')       
+    except ProtectedError:
+        messages.error(request, 'Cannot delete this farmer')
+        return redirect("/members/member_page/")
+        
+
+    # obj1.delete() 
+    # obj.delete() 
     if request.method =="POST": 
         # delete object 
-        obj.delete() 
+        
         # after deleting redirect to  
         # home page 
         return redirect("/members/member_page/")
-    obj.delete()
+    # obj.delete()
     return redirect("/members/member_page/")
    # return render(request, "members/members.html", context)
 
@@ -194,16 +207,28 @@ def delete_leader(request, id):
     context ={} 
   
     # fetch the object related to passed id 
+    
     obj = get_object_or_404(Leader, id = id) 
+    print(obj.user.id)
+    obj1 = get_object_or_404(UserProfile, id = obj.user.id) 
+    print(obj1)
+
+    # obj1.delete() 
+    try:
+        obj1.delete()   
+        messages.success(request, 'Leader Deleted Successfully.')     
+        # messages.success(request, _("Product deleted"))
+    except ProtectedError:
+        messages.error(request, 'Cannot delete this leader')
+        return redirect("/members/member_page/")
   
-  
-    if request.method =="POST": 
-        # delete object 
-        obj.delete() 
-        # after deleting redirect to  
-        # home page 
-        return redirect("/fpo/member_page/")
-    obj.delete()
+    # if request.method =="POST": 
+    #     # delete object 
+    #     obj.delete() 
+    #     # after deleting redirect to  
+    #     # home page 
+    #     return redirect("/fpo/member_page/")
+    # obj.delete()
     return redirect("/members/member_page/")
   
     #return render(request, "members/delete_leader.html", context)
