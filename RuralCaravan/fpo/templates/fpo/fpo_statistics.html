@@ -95,6 +95,53 @@
           border: 1px solid #4caf50;
       }
 
+.counter-box {
+    display: block;
+    background: #f6f6f6;
+    padding: 40px 20px 37px;
+    text-align: center
+}
+
+.counter-box p {
+    margin: 5px 0 0;
+    padding: 0;
+    color: #909090;
+    font-size: 18px;
+    font-weight: 500
+}
+
+.counter-box i {
+    font-size: 60px;
+    margin: 0 0 15px;
+    color: #d2d2d2
+}
+
+.counter {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: #666;
+    line-height: 28px
+}
+.profit{
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: #666;
+    line-height: 28px
+
+}
+
+.counter-box.colored {
+    background: #3acf87
+}
+
+.counter-box.colored p,
+.counter-box.colored i,
+.counter-box.colored .counter {
+    color: #fff
+}
+
     </style>
 </head>
 
@@ -204,40 +251,33 @@
                 <br>
             </div>
         </div>
-        <div class="row">
-            <div class="col-3">
-                <div class="card" style="background-color: #4caf50;">
-                <div class="card-body">
-                    <h2 class="text-center mb-0" style="color: white;">{{num_farmers}}</h2>
-                    <p class="text-center mb-0"><strong style="color: white;">FARMERS</strong></p>
-                </div>
-                </div>
+         <div class="row" style="margin: 4rem auto;">
+        <div class="four col-md-3">
+            <div class="counter-box colored"> <i class="fas fa-users"></i> <span class="counter">{{num_farmers}}</span>
+                <p>FARMERS</p>
             </div>
-            <div class="col-3">
-                <div class="card" style="background-color: #4caf50;">
-                <div class="card-body">
-                    <h2 class="text-center mb-0" style="color: white;">{{num_villages}}</h2>
-                    <p class="text-center mb-0"><strong style="color: white;">VILLAGES</strong></p>
-                </div>
-                </div>
+        </div>
+        <div class="four col-md-3">
+            <div class="counter-box colored"> <i class="fas fa-home"></i> <span class="counter">{{num_villages}}</span>
+                <p>VILLAGES</p>
             </div>
-            <div class="col-3">
-                <div class="card" style="background-color: #4caf50;">
-                <div class="card-body">
-                    <h2 class="text-center mb-0" style="color: white;">{{avg_production}}</h2>
-                    <p class="text-center mb-0"><strong style="color: white;">QT. PRODUCTION</strong></p>
-                </div>
-                </div>
+        </div>
+        <div class="four col-md-3">
+            <div class="counter-box colored"> <i class="fas fa-weight-hanging"></i> <span class="counter">{{avg_production}}</span>
+                <p>QT. PRODUCTION</p>
             </div>
-            <div class="col-3">
-                <div class="card" style="background-color: #4caf50;">
-                <div class="card-body">
-                    <h2 class="text-center mb-0" style="color: white;">₹ {{avg_profits}}L</h2>
-                    <p class="text-center mb-0"><strong style="color: white;">PROFITS</strong></p>
-                </div>
-                </div>
+        </div>
+             <div class="four col-md-3">
+            <div class="counter-box colored"> <i class="fas fa-money-bill"></i> <span class="profit" style="color:white;">₹ {{avg_profits}}L</span>
+                <p>PROFITS</p>
             </div>
-        </div>   
+        </div>
+
+    </div>
+
+
+
+
         <div class="row" style="margin-top: 4rem;">
             <div class="col-6">
                 <h1 style="text-align: center;" class="green-text mb-4">Communcation Channels</h1>
@@ -742,6 +782,24 @@
 
 
   </script>
+<script>
+ $(document).ready(function() {
+
+$('.counter').each(function () {
+$(this).prop('Counter',0).animate({
+Counter: $(this).text()
+}, {
+duration: 4000,
+easing: 'swing',
+step: function (now) {
+$(this).text(Math.ceil(now));
+}
+});
+});
+
+});
+
+</script>
 </body>
 
 </html>
