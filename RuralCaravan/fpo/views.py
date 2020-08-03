@@ -550,6 +550,11 @@ def govtschemes_view(request):
     form = GovtForm(request.POST or None) 
     if form.is_valid(): 
         form.save() 
+        message_body = f'Government Scheme Alert: {request.POST["name"]}. Contact the FPO for further details. Call: 9892629763'
+        farmers = Farmer.objects.all()
+        for farmer in farmers:
+            if farmer.user.category != 'N':
+                Send_Text_Message(f'+91{farmer.contact}', message_body=message_body)
         return redirect('/fpo/govtschemes')
           
     # Code for pagination

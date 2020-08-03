@@ -314,53 +314,6 @@
   <script type="text/javascript">
     // Animations initialization
     //new WOW().init();
-
-    document.querySelector('#add_govt_scheme').addEventListener('submit', function() {
-      var schemeName = document.querySelector('#form3').value;
-      var message_body = `Government Scheme Alert: ${schemeName}. Contact the FPO for further details.`; 
-      let data = {
-                "message_body": message_body
-            }
-        let url = `${window.location.origin}/fpo/send_message/`;
-            function getCookie(name) {
-                let cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    const cookies = document.cookie.split(';');
-                    for (let i = 0; i < cookies.length; i++) {
-                        const cookie = cookies[i].trim();
-                        // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
-            const csrftoken = getCookie('csrftoken');
-            
-            const json_data = JSON.stringify(data);
-
-            const headers = {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                "X-CSRFToken": csrftoken
-            }
-            
-            fetch(url, {method: 'post', headers: headers, body: json_data})
-                .then(function(response) {
-                    if(response.status===200){
-                        response.json().then(function(data){
-                            console.log(data);
-                        })
-                    }
-                })
-                .catch(function(err) {
-                    console.log('The errror is', err);
-                });
-    });
-
-
   </script>
 </body>
 
