@@ -13,15 +13,17 @@ class StatisticalAnalysis:
     def getAvgProduction(self):
         years = self.productionYearWise.values('date__year').distinct().count()
         total = sum(production.get('amount') for production in self.productionYearWise )
-
+        if years==0:
+            return 0
         return total/years
 
 
     def getAvgProfit(self):
         years = self.productionYearWise.values('date__year').distinct().count()
         total = sum(production.get('income') for production in self.productionYearWise)
-
-        return total / years
+        if years==0:
+            return 0
+        return total/years
 
 
 
