@@ -475,7 +475,7 @@ def meetings_view(request):
         # Creating the tokens for meetings
         farmers = Farmer.objects.all()
         for farmer in farmers:
-            token = MeetingToken(token_number=random.randint(100000,999999), meeting=meeting, farmer=farmer)
+            token = MeetingToken(token_number=random.randint(100000,999999)+farmer.id, meeting=meeting, farmer=farmer)
             token.save()
         return redirect('/fpo/meetings')
 
