@@ -31,9 +31,15 @@ def register(request):
             old_user = check_user.first()
             contact = Contact.objects.filter(user=old_user)
             if contact.count()>0 and contact.first().verification_status==False:
-                old_user.delete()
+                try:
+                    old_user.delete()
+                except:
+                    return Response(statuscode('26'))
             elif contact.count()==0:
-                old_user.delete()
+                try:
+                    old_user.delete()
+                except:
+                    return Response(statuscode('26'))
 
         if serializer.is_valid():
             User = serializer.save()

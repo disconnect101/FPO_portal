@@ -25,4 +25,5 @@ status_codes = [
     ('23', 'no meetingtoken found')
     ('24', 'no matching meetingtoken could be found')
     ('25', 'not enough data to predict, register your land at FPO if not done already')
+    ('26', 'username already taken')
 ]
