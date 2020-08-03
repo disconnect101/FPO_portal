@@ -78,10 +78,6 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Ewallet.objects.create(user=instance)
 
 
-
-
-
-
 class Products(models.Model):
     name = models.CharField(max_length=100)
 
@@ -140,7 +136,7 @@ class Farmer(models.Model):
         return self.user.username + '-' +  self.first_name
 
 @receiver(post_save, sender='farmer.Farmer')
-def create_auth_token(sender, instance=None, created=False, **kwargs):
+def create_meeting_token(sender, instance=None, created=False, **kwargs):
     if created:
         try:
             meetings = Meetings.objects.filter(date__gte=datetime.now().date())
