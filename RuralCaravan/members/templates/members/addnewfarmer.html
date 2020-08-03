@@ -324,7 +324,7 @@
 }
 </script>
 <script>
-var stateObject = {
+/*var stateObject = {
 "district1": { "village1":"",
  "village2":"",
  "village3":"",
@@ -337,7 +337,8 @@ var stateObject = {
  "village8":"",
  "village9":"",
 },
-}
+}*/
+var stateObject = {{stateObject|safe}}
 window.onload = function () {
 var districts = document.getElementById("id_district"),
 villages = document.getElementById("id_village");
