@@ -40,6 +40,20 @@ posts = [
     }
 
 ]
+stateObject = {
+        "district1": {"village1": "",
+                      "village2": "",
+                      "village3": "",
+                      },
+        "district2": {"village4": "",
+                      "village5": "",
+                      "village6": "",
+                      },
+        "district3": {"village7": "",
+                      "village8": "",
+                      "village9": "",
+                      },
+    }
 
 
 def farmer_profile(request):
@@ -116,20 +130,6 @@ def update_farmer(request, id):
   
     # add form dictionary to context 
     context["form"] = form
-    stateObject = {
-        "district1": {"village1": "",
-                      "village2": "",
-                      "village3": "",
-                      },
-        "district2": {"village4": "",
-                      "village5": "",
-                      "village6": "",
-                      },
-        "district3": {"village7": "",
-                      "village8": "",
-                      "village9": "",
-                      },
-    }
     context['stateObject'] = stateObject
     return render(request, "members/editfarmer.html", context)  #editfarmer
 
@@ -209,20 +209,7 @@ def add_farmer(request):
           
     context['form']= form
     context['users'] = UserProfile.objects.all()
-    stateObject = {
-        "district1": {"village1": "",
-                      "village2": "",
-                      "village3": "",
-                      },
-        "district2": {"village4": "",
-                      "village5": "",
-                      "village6": "",
-                      },
-        "district3": {"village7": "",
-                      "village8": "",
-                      "village9": "",
-                      },
-    }
+    
     context['stateObject'] = stateObject
     return render(request, 'members/addnewfarmer.html', context)
 
@@ -285,20 +272,7 @@ def update_leader(request, id):
         return redirect("/members/member_page/")
   
     # add form dictionary to context 
-    stateObject = {
-        "district1": {"village1": "",
-                      "village2": "",
-                      "village3": "",
-                      },
-        "district2": {"village4": "",
-                      "village5": "",
-                      "village6": "",
-                      },
-        "district3": {"village7": "",
-                      "village8": "",
-                      "village9": "",
-                      },
-    }
+   
     context['stateObject'] = stateObject
     return render(request, "members/editleader.html", context)
 
@@ -351,20 +325,7 @@ def add_leader(request):
     context['farmers'] = Farmer.objects.all()
     context['users'] = UserProfile.objects.all()
 
-    stateObject = {
-        "district1": {"village1": "",
-                      "village2": "",
-                      "village3": "",
-                      },
-        "district2": {"village4": "",
-                      "village5": "",
-                      "village6": "",
-                      },
-        "district3": {"village7": "",
-                      "village8": "",
-                      "village9": "",
-                      },
-    }
+    
     context['stateObject'] = stateObject
     return render(request, 'members/addnewleader.html', context)
 
