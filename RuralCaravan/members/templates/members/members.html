@@ -214,9 +214,20 @@ th {
   <main style="padding-top:5em;min-height:95%;font-family:Arial">
 
     <!---<h3 style="padding-left: 2%;">Choose an option to view details</h3>--->
-      <h1 style="text-align: center;padding-top:1%" class="green-text mt-0 mb-3">Current Members</h1>
+     <!---- <h1 style="text-align: center;padding-top:1%" class="green-text mt-0 mb-3">Current Members</h1>
     <hr style="margin: auto; width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
-    <br>
+    <br>---->
+      <div class="row">
+        <div class="col-12">
+          <div style="text-align: center;">
+            <i class="fas fa-users fa-5x green-text mb-3" style="opacity: 0.2"></i>
+          </div>
+          <h3 class="h3 text-center mb-4" >Members</h3>
+          <hr style="margin: auto; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
+            <br>
+        </div>
+      </div>
+
 
     <div class="tab">
       <button class="tablinks nav-link" onclick="openCity(event, 'farmer')" id="defaultOpen" style="padding-left: 2%;color:white">Farmers</button>
@@ -364,7 +375,7 @@ th {
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [2,3]
+  targets: [6,7,8]
   }]
 });
   $('.dataTables_length').addClass('bs-select');
@@ -386,7 +397,7 @@ th {
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [2,3]
+  targets: [6,7,8]
   }]
 });
   $('.dataTables_length').addClass('bs-select');

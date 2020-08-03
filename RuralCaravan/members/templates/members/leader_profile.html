@@ -467,8 +467,8 @@ function openCity(evt, Name) {
 document.getElementById("defaultOpen").click();
 </script>
 <script language="JavaScript">
-         $(document).ready(function () {
- $("#tbldisplay td:nth-child(3)").each(function () {
+
+ $("#baldisplay td:nth-child(3)").each(function () {
                 if (parseInt($(this).text(), 10) < 0) {
                     $(this).parent("tr").css("background-color", "orange");
                 }
@@ -476,7 +476,6 @@ document.getElementById("defaultOpen").click();
                     $(this).parent("tr").css("background-color", "Lightgreen");
                 }
             });
-});
 </script>
 <script>
       $(document).ready(function () {
@@ -484,14 +483,14 @@ document.getElementById("defaultOpen").click();
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [2,3]
+  targets: [4,5]
   }]
 });
 $('#baldisplay').DataTable({
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [2,3]
+  targets: [4,5]
   }]
 });
   $('.dataTables_length').addClass('bs-select');

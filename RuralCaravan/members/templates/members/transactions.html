@@ -256,19 +256,25 @@ th,td{
     //new WOW().init();
   </script>
 <script>
+ $(document).ready(function () {
+ var table = $('#tbldisplay').DataTable();
+var data = table.columns( [2] ).data();
+ if ()
+});
+</script>
+<script>
       $(document).ready(function () {
  $('#tbldisplay').DataTable({
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [2,3]
-  }]
+  targets: [4,5],
+  }],
 });
   $('.dataTables_length').addClass('bs-select');
   });
 </script>
  <script language="JavaScript">
-         $(document).ready(function () {
  $("#tbldisplay td:nth-child(3)").each(function () {
                 if (parseInt($(this).text(), 10) < 0) {
                     $(this).parent("tr").css("background-color", "orange");
@@ -277,7 +283,6 @@ th,td{
                     $(this).parent("tr").css("background-color", "Lightgreen");
                 }
             });
-});
 </script>
   <script>
     $(document).on('click', '.confirm-delete', function(){
