@@ -207,6 +207,30 @@
               <br>
           </div>
       </div>
+
+           <div class="row" style="margin: 4rem auto;">
+        <div class="four col-md-3">
+            <div class="counter-box colored"> <i class="fas fa-thumbs-up"></i> <span class="counter">{{plans.subscribers}}</span>
+                <p>SUBSCRIBERS</p>
+            </div>
+        </div>
+        <div class="four col-md-3">
+            <div class="counter-box"> <i class="fas fa-weight"></i> <span class="counter">{{plans.max_cap}}</span>
+                <p>REQUIREMENT(Kgs)</p>
+            </div>
+        </div>
+        <div class="four col-md-3">
+            <div class="counter-box"> <i class="fa fa-shopping-cart"></i> <span class="counter">{{plans.current_amount}}</span>
+                <p>COLLECTED(Kgs)</p>
+            </div>
+        </div>
+        <div class="four col-md-3">
+            <div class="counter-box"> <i class="fas fa-weight-hanging"></i> <span class="counter">{{plans.weigth_per_land}}</span>
+                <p>WEIGHT PER ACRE(Kgs)</p>
+            </div>
+        </div>
+    </div>
+
           <div class="row wow fadeIn">
 
         <!--Grid column-->
@@ -214,9 +238,9 @@
 
 
                         {% if plans.image %}
-                          <center><img src="{{plans.image.url}}" height="200px" width="200px" /></center>
+                          <center><img src="{{plans.image.url}}" height="280px" width="280px" /></center>
                           {% else %}
-                         <center><img src="{% static 'img/download.png'%}" height="200px" width="200px"/></center>
+                         <center><img src="{% static 'img/download.png'%}" height="280px" width="280px"/></center>
                           {% endif %}
 
 
@@ -229,10 +253,10 @@
         <div class="col-md-6 mb-4">
 
           <!--Card-->
-          <div class="card">
+          <div class="card" style="margin-top:3rem;">
 
             <!--Card content-->
-            <div class="card-body">
+            <div class="card-body" >
 
                 <h5 style="text-align: left;"><strong class="green-text">Plan Code:</strong> {{plans.code}}</h5>
                 <h5 style="text-align: left;"><strong class="green-text">Crop Name:</strong> {{plans.name}}</h5>
@@ -265,28 +289,6 @@
       <!--Grid row-->
 
 
-         <div class="row" style="margin: 4rem auto;">
-        <div class="four col-md-3">
-            <div class="counter-box colored"> <i class="fas fa-thumbs-up"></i> <span class="counter">{{plans.subscribers}}</span>
-                <p>SUBSCRIBERS</p>
-            </div>
-        </div>
-        <div class="four col-md-3">
-            <div class="counter-box"> <i class="fas fa-weight"></i> <span class="counter">{{plans.max_cap}}</span>
-                <p>REQUIREMENT(Kgs)</p>
-            </div>
-        </div>
-        <div class="four col-md-3">
-            <div class="counter-box"> <i class="fa fa-shopping-cart"></i> <span class="counter">{{plans.current_amount}}</span>
-                <p>COLLECTED(Kgs)</p>
-            </div>
-        </div>
-        <div class="four col-md-3">
-            <div class="counter-box"> <i class="fas fa-weight-hanging"></i> <span class="counter">{{plans.weigth_per_land}}</span>
-                <p>WEIGHT PER ACRE(Kgs)</p>
-            </div>
-        </div>
-    </div>
 
 
       <div class="row" style="margin-top: 6rem;">
