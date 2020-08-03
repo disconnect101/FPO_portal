@@ -21,6 +21,7 @@ from .sms import send_message as Send_Text_Message
 from .get_production_prediction import predict_production
 from fpo.statisticalanalysis import *
 import datetime
+from .crop_prediction import get_crop_prediction
 # Create your views here.
 
 posts = [
@@ -950,6 +951,19 @@ def fpo_statistics(request):
 
 
 #...................................................................................................................
+
+@login_required
+def predict_crop(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        nitrogen = data['nitrogen']
+        phosphorous = data['phosphorous']
+        potassium = data['potassium']
+        pH = data['pH']
+        climate = data['climate']
+        temperature = data['temperature']
+        get_crop_names = get_crop_prediction(nitrogen, phosphorous, potassium, pH, temperature, climate)
+        return JsonResponse(get_crop_names, safe=False)
 
 
 @login_required
