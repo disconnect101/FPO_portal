@@ -216,16 +216,22 @@
                     <input type="text" name="contact" value="{{farmer.contact}}" maxlength="10" required id="id_contact" class="form-control">
                     <label for="id_contact">Enter Contact Number</label>
                   </div>
-				  <div class="md-form">
+				    <div class="md-form">
                     <i class="fas fa-map-marker-alt prefix green-text"></i>
-                    <input type="text" required id="id_village" class="form-control" value="{{farmer.village}}" name="village">
-                    <label for="id_village">Enter Village</label>
-                  </div>
-				   <div class="md-form">
+                    <label for="id_district">District:</label>
+                    <br><br>
+                     <select name="district" required id="id_district" class="form-control" size="1">
+                       <option value="" selected="selected">Select District</option>
+                     </select>
+                   </div>
+                    <div class="md-form">
                     <i class="fas fa-map-marker-alt prefix green-text"></i>
-                    <input type="text" required id="id_district" class="form-control" value="{{farmer.district}}" name="district">
-                    <label for="id_district">Enter District</label>
-                  </div>
+                    <label for="id_village">Village:</label>
+                    <br><br>
+                     <select name="village" required id="id_village" class="form-control" size="1">
+                       <option value="" selected="selected" >Select Village</option>
+                     </select>
+                   </div>
                   <div class="md-form">
                     <i class="far fa-user-circle prefix green-text"></i>
                     <input type="number" required id="id_pin" class="form control" style="padding-bottom: 10px;" value="{{farmer.pin}}" name="pin">
@@ -298,8 +304,39 @@
     <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
       <!-- Initializations -->
   <script type="text/javascript">
-    new WOW().init();
+    //new WOW().init();
   </script>
+ <script>
+/*var stateObject = {
+"district1": { "village1":"",
+ "village2":"",
+ "village3":"",
+},
+"district2": { "village4":"",
+"village5":"",
+"village6":"",
+},
+"district3": { "village7":"",
+ "village8":"",
+ "village9":"",
+},
+}*/
+var stateObject = {{stateObject|safe}}
+window.onload = function () {
+var districts = document.getElementById("id_district"),
+villages = document.getElementById("id_village");
+for (var district in stateObject) {
+districts.options[districts.options.length] = new Option(district, district);
+}
+districts.onchange = function () {
+villages.length = 1; // remove all options bar first
+if (this.selectedIndex < 1) return; // done
+for (var vill in stateObject[this.value]) {
+villages.options[villages.options.length] = new Option(vill, vill);
+}
+}
+}
+</script>
 </body>
 
 </html>
