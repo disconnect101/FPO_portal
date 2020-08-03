@@ -108,13 +108,14 @@ footer {
 th {
   background-color: #547e40;
   color: white;
+  text-transform:uppercase;
 }
-th,td{
+/*th,td{
     padding:0.3%;
     padding-left:1%;
     padding-right:1%;
     text-align:center;
-}
+}*/
 
     </style>
 
@@ -237,18 +238,18 @@ th,td{
         <span><a href="{% url 'add_farmer' %}" class="btn btn-primary">Add New Farmer</a></span>
             <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
         <table
-            class="table1 table-striped table-bordered display" width="100%" style="margin-top: 20px">
-                <thead>
+             id="dtBasicExample1" class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
+                <thead class="red lighten-4">
 
-                    <th>S No.</th>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Contact number</th>
-                    <th>Village</th>
-                    <th>District</th>
-                    <th>View Profile</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th class="th-sm">S No.</th>
+                    <th class="th-sm">Name</th>
+                    <th class="th-sm">Username</th>
+                    <th class="th-sm">Contact number</th>
+                    <th class="th-sm">Village</th>
+                    <th class="th-sm">District</th>
+                    <th class="th-sm">View Profile</th>
+                    <th class="th-sm">Edit</th>
+                    <th class="th-sm">Delete</th>
                  </thead>
         <tbody>
 
@@ -264,8 +265,8 @@ th,td{
               <td>{{ farmer.district }}</td>
               <!-- <td>farmer.Pin</td> -->
               <td align="center"><p data-placement="top" data-toggle="tooltip" title="View Farmer Details"><a href="view_farmer/{{ farmer.id }}" ><i class="fas fa-eye blue-text"></i></a></p></td>
-              <td><p data-placement="top" data-toggle="tooltip" title="Edit Farmer Details"><a href="edit_farmer/{{ farmer.id }}" ><i class="fas fa-pencil-alt "></i></a></p></td>
-              <td><p data-placement="top" data-toggle="tooltip" title="Delete Farmer Details"><a href="delete_farmer/{{ farmer.id }}" class="confirm-delete"><i class="fas fa-trash-alt"></i></a></p></td>
+              <td><p data-placement="top" data-toggle="tooltip" title="Edit Farmer Details"><a href="edit_farmer/{{ farmer.id }}" ><i class="fas fa-pencil-alt blue-text"></i></a></p></td>
+              <td><p data-placement="top" data-toggle="tooltip" title="Delete Farmer Details"><a href="delete_farmer/{{ farmer.id }}" class="confirm-delete"><i class="fas fa-trash-alt blue-text"></i></a></p></td>
 
           </tr>
           {% endfor %}
@@ -294,18 +295,18 @@ th,td{
              <span><a href="{% url 'add_leader' %}" class="btn btn-primary">Add New Leader</a></span>
             <div class="table-responsive" style="margin-top:25px;">
         <table
-            class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+            id="dtBasicExample2" class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
                 <thead>
 
-                    <th>S no</th>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Contact number</th>
-                    <th>Village</th>
-                    <th>District</th>
-                    <th>View Profile</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th class="th-sm">S no</th>
+                    <th class="th-sm">Name</th>
+                    <th class="th-sm">Username</th>
+                    <th class="th-sm">Contact number</th>
+                    <th class="th-sm">Village</th>
+                    <th class="th-sm">District</th>
+                    <th class="th-sm">View Profile</th>
+                    <th class="th-sm">Edit</th>
+                    <th class="th-sm">Delete</th>
                  </thead>
         <tbody>
             {%for leader in leaders %}
@@ -317,9 +318,9 @@ th,td{
                 <td>{{ leader.contact }}</td>
                 <td>{{ leader.village }}</td>
                 <td>{{ leader.district }}</td>
-                <td><p data-placement="top" data-toggle="tooltip" title="View Leader Details"><a href="view_leader/{{leader.id}}" ><i class="fas fa-eye"></i></a></p></td>
-                <td><p data-placement="top" data-toggle="tooltip" title="Edit Leader Details"><a href="edit_leader/{{leader.id}}" ><i class="fas fa-pencil-alt"></i></a></p></td>
-                <td><p data-placement="top" data-toggle="tooltip" title="Delete Leader Record"><a href="delete_leader/{{leader.id}}" class="confirm-delete"><i class="fas fa-trash-alt"></i></a></p></td>
+                <td><p data-placement="top" data-toggle="tooltip" title="View Leader Details"><a href="view_leader/{{leader.id}}" ><i class="fas fa-eye blue-text"></i></a></p></td>
+                <td><p data-placement="top" data-toggle="tooltip" title="Edit Leader Details"><a href="edit_leader/{{leader.id}}" ><i class="fas fa-pencil-alt blue-text" ></i></a></p></td>
+                <td><p data-placement="top" data-toggle="tooltip" title="Delete Leader Record"><a href="delete_leader/{{leader.id}}" class="confirm-delete"><i class="fas fa-trash-alt blue-text"></i></a></p></td>
 
             </tr>
            {% endfor %}
@@ -355,7 +356,19 @@ th,td{
       <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
+    //new WOW().init();
+  </script>
+  <script>
+      $(document).ready(function () {
+ $('#dtBasicExample2').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [2,3]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
+});
   </script>
   <script>
     $(document).on('click', '.confirm-delete', function(){
@@ -369,7 +382,14 @@ th,td{
            }
 
         );
-
+        $('#dtBasicExample1').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [2,3]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
     } );
       function openCity(evt, Name) {
   var i, tabcontent, tablinks;

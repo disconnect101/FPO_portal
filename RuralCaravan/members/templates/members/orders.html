@@ -84,6 +84,7 @@ footer {
 th {
   background-color: #547e40;
   color: white;
+  text-transform:uppercase;
 }
 th,td{
     padding:0.3%;
@@ -105,6 +106,7 @@ th,td{
 .dataTables_filter{
   text-align: right;
 }
+
     </style>
 </head>
 <body style="overflow-x: hidden;">
@@ -215,18 +217,18 @@ th,td{
     <div id="unpaid_orders" class="tabcontent">
         <div class="col-md-12" style="padding-left:2%; margin-top:25px;">
         <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
-    <table
-        class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+    <table id="unpaid_id"
+        class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
             <thead>
-                <th>Order ID</th>
-                <th>Buyer</th>
-                <th>Date</th>
+                <th >Order ID</th>
+                <th >Buyer</th>
+                <th >Date</th>
                  <th>Type of Payment</th>
-                 <th>Item</th>
-                <th>Quantity</th>
-                <th>Total Price</th>
-                 <th>Payment Status</th>
-                <th>Delivery Status</th>
+                 <th >Item</th>
+                <th >Quantity</th>
+                <th >Total Price</th>
+                 <th >Payment Status</th>
+                <th >Delivery Status</th>
                 <th>Delete Record</th>
 
              </thead>
@@ -247,7 +249,7 @@ th,td{
                  {% else %}
                  <td><p data-placement="top" data-toggle="tooltip" >Not Delivered<br><button type="button" class="btn-outline-primary"><a href="delivered/{{entry.id}}" style="color:blue">Change Status</a></button></p></td>
                  {% endif %}
-                 <td><p data-placement="top" data-toggle="tooltip" title="Delete Entry"><a href="delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt"></i></a></p></td>
+                 <td><p data-placement="top" data-toggle="tooltip" title="Delete Entry"><a href="delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt blue-text"></i></a></p></td>
              </tr>
             {% endif %}
         {% endfor %}
@@ -262,18 +264,18 @@ th,td{
      <div id="paid_orders" class="tabcontent">
          <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
          <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
-    <table
-        class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+    <table id="paid_id"
+        class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
             <thead>
-                <th>Order ID</th>
-                <th>Buyer</th>
-                <th>Date</th>
-                 <th>Type of Payment</th>
-                 <th>Item</th>
-                <th>Quantity</th>
-                <th>Total Price</th>
-                <th>Delivery Status</th>
-                <th>Delete Record</th>
+                <th class="th-sm">Order ID</th>
+                <th class="th-sm">Buyer</th>
+                <th class="th-sm">Date</th>
+                 <th class="th-sm">Type of Payment</th>
+                 <th class="th-sm">Item</th>
+                <th class="th-sm">Quantity</th>
+                <th class="th-sm">Total Price</th>
+                <th class="th-sm">Delivery Status</th>
+                <th class="th-sm">Delete Record</th>
              </thead>
             <tbody>
         {% for entry in orders %}
@@ -289,9 +291,9 @@ th,td{
                     {% if entry.is_delivered %}
                   <td>Delivered</td>
                  {% else %}
-                 <td><p data-placement="top" data-toggle="tooltip" >Not Delivered<br><button type="button" class="btn-primary"><a href="delivered/{{entry.id}}" style="color:white">Change Status</a></button></p></td>
+                 <td><p data-placement="top" data-toggle="tooltip" >Not Delivered<br><button type="button" class="btn-outline-primary"><a href="delivered/{{entry.id}}" style="color:blue">Change Status</a></button></p></td>
                  {% endif %}
-                 <td><p data-placement="top" data-toggle="tooltip" title="Delete Entry"><a href="delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt"></i></a></p></td>
+                 <td><p data-placement="top" data-toggle="tooltip" title="Delete Entry"><a href="delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt blue-text"></i></a></p></td>
              </tr>
             {% endif %}
         {% endfor %}
@@ -345,6 +347,22 @@ th,td{
            }
 
         );
+         $('#unpaid_id').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [7,8,9]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
+   $('#paid_id').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [7,8]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
     } );
       function openCity(evt, Name) {
   var i, tabcontent, tablinks;

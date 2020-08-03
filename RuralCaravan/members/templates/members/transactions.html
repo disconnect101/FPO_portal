@@ -84,6 +84,7 @@ footer {
 th {
   background-color: #547e40;
   color: white;
+  text-transform:uppercase;
 }
 th,td{
     padding:0.3%;
@@ -204,14 +205,14 @@ th,td{
          <div class="text-right"><a href="{% url 'add_transaction' %}" class="btn btn-outline-success" style="font-size: 1.2rem;">Add New Record</a></div>
         <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
     <table id="tbldisplay"
-        class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+        class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
             <thead>
-                <th>Ref No.</th>
-                 <th>User</th>
-                <th>Amount</th>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Delete Record</th>
+                <th class="th-sm">Ref No.</th>
+                 <th class="th-sm">User</th>
+                <th class="th-sm">Amount</th>
+                <th class="th-sm">Date</th>
+                <th class="th-sm">Description</th>
+                <th class="th-sm">Delete Record</th>
 
              </thead>
             <tbody>
@@ -222,7 +223,7 @@ th,td{
                     <td>{{entry.amount}}</td>
                     <td>{{entry.date}}</td>
                     <td>{{entry.description}}</td>
-                    <td><p data-placement="top" data-toggle="tooltip" title="Delete Entry"><a href="transaction/delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt"></i></a></p></td>
+                    <td><p data-placement="top" data-toggle="tooltip" title="Delete Entry"><a href="transaction/delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt blue-text"></i></a></p></td>
              </tr>
         {% endfor %}
 
@@ -252,8 +253,20 @@ th,td{
       <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
+    //new WOW().init();
   </script>
+<script>
+      $(document).ready(function () {
+ $('#tbldisplay').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [2,3]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
+  });
+</script>
  <script language="JavaScript">
          $(document).ready(function () {
  $("#tbldisplay td:nth-child(3)").each(function () {

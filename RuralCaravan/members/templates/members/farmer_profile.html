@@ -164,6 +164,7 @@ footer {
 th {
   background-color: #547e40;
   color: white;
+  text-transform:uppercase;
 }
 th,td{
     padding:0.3%;
@@ -359,13 +360,13 @@ th,td{
          <!----<span><a href="addnewtransaction.html" class="btn btn-primary">Add New Transaction</a></span>--->
         <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
     <table id="tbldisplay"
-        class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+        class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
         <thead>
-            <th>S no.</th>
-            <th>Date</th>
-            <th>Amount</th>
-            <th>Closing Balance</th>
-            <th>Description</th>
+            <th class="th-sm">S no.</th>
+            <th class="th-sm">Date</th>
+            <th class="th-sm">Amount</th>
+            <th class="th-sm">Closing Balance</th>
+            <th class="th-sm">Description</th>
          </thead>
 <tbody>
      {% for entry in transactions %}
@@ -373,8 +374,8 @@ th,td{
         <td>{{forloop.counter}}</td>
         <td>{{entry.date}}</td>
         <td>{{entry.amount}}</td>
-        <td class="editable" contenteditable="true">{{entry.currrent_amount}}</td>
-        <td class="editable" contenteditable="true">{{entry.description}}</td>
+        <td>{{entry.currrent_amount}}</td>
+        <td>{{entry.description}}</td>
     </tr>
      {% endfor %}
 
@@ -389,15 +390,15 @@ th,td{
        <h3 class="green-text mt-0 mb-3">Orders Placed:</h3>
             <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
     <table id="ordrdisplay"
-        class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+         class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
             <thead>
-                <th>S no.</th>
-                <th>Type of Payment</th>
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Total Price</th>
-                <th>Payment Status</th>
-                <th>Delivery Status</th>
+                <th class="th-sm">S no.</th>
+                <th class="th-sm">Type of Payment</th>
+                <th class="th-sm">Item</th>
+                <th class="th-sm">Quantity</th>
+                <th class="th-sm">Total Price</th>
+                <th class="th-sm">Payment Status</th>
+                <th class="th-sm">Delivery Status</th>
              </thead>
     <tbody>
       {% for order in orders %}
@@ -431,14 +432,14 @@ th,td{
         <h3 class="green-text mt-0 mb-3">Produce</h3>
          <!---<span><a href="{% url 'home'%}view_farmer/{{data.id}}/produce/add" class="btn btn-primary">Add New Record</a></span>--->
         <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
-    <table
-        class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+    <table id="proddisplay"
+        class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
             <thead>
-                <th>Date Added</th>
-                <th>Crop Code</th>
-                <th>Crop Name</th>
-                <th>Produce(in quintals)</th>
-                <th>Quality</th>
+                <th class="th-sm">Date Added</th>
+                <th class="th-sm">Crop Code</th>
+                <th class="th-sm">Crop Name</th>
+                <th class="th-sm">Produce(in quintals)</th>
+                <th class="th-sm">Quality</th>
              </thead>
             <tbody>
         {% for entry in produce%}
@@ -598,7 +599,39 @@ th,td{
   <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
     <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
+   // new WOW().init();
+  </script>
+    <script>
+      $(document).ready(function () {
+ $('#ordrdisplay').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [2,3]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
+  $('#tbldisplay').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [2,3]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
+});
+  </script>
+     <script>
+      $(document).ready(function () {
+ $('#proddisplay').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [2,3]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
+});
   </script>
 <script>
     $(document).ready(function() {
@@ -626,6 +659,7 @@ function openCity(evt, Name) {
 document.getElementById("defaultOpen").click();
 </script>
 <script language="JavaScript">
+
          $(document).ready(function () {
  $("#tbldisplay td:nth-child(3)").each(function () {
                 if (parseInt($(this).text(), 10) < 0) {
@@ -634,19 +668,20 @@ document.getElementById("defaultOpen").click();
                 else{
                     $(this).parent("tr").css("background-color", "Lightgreen");
                 }
-            });
-});
+
+    } );
+       });
 </script>
     <script language="JavaScript">
          $(document).ready(function () {
- $("#ordrdisplay td:nth-child(6)").each(function () {
+ /*$("#ordrdisplay td:nth-child(6)").each(function () {
                 if ($(this).text() == "Incomplete") {
                     $(this).parent("tr").css("background-color", "orange");
                 }
                 else{
                     $(this).parent("tr").css("background-color", "Lightgreen");
                 }
-            });
+            });*/
 });
 </script>
 <script>
@@ -779,5 +814,6 @@ document.getElementById("defaultOpen").click();
 
 
 </script>
+
 </body>
 </html>
