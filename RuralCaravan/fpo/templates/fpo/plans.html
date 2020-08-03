@@ -424,19 +424,19 @@
   <hr style="margin-left: 0;width: 6rem; border: 2px solid lightgray; opacity: 0.6; border-radius: 20rem;">
   <div class="form-row">
     <div class="col">
-      <input required type="text" id="nitrogen" name="nitrogen" class="form-control" placeholder="Nitrogen">
+      <input required type="number" id="nitrogen" name="nitrogen" class="form-control" placeholder="Nitrogen">
     </div>
     <div class="col">
-      <input required type="text" id="phosphorous" name="phosphorous" class="form-control" placeholder="Phosphorous">
+      <input required type="number" id="phosphorous" name="phosphorous" class="form-control" placeholder="Phosphorous">
     </div>
     <div class="col">
-      <input required type="text" id="potassium" name="potassium" class="form-control" placeholder="Potassium">
+      <input required type="number" id="potassium" name="potassium" class="form-control" placeholder="Potassium">
     </div>
     <div class="col">
-      <input required type="text" id="pH" name="pH" class="form-control" placeholder="pH">
+      <input required type="number" step="0.1" id="pH" name="pH" class="form-control" placeholder="pH">
     </div>  
     <div class="col">
-      <input required type="text" id="temperature" name="temperature" class="form-control" placeholder="Temperature">
+      <input required type="number" id="temperature" name="temperature" class="form-control" placeholder="Temperature">
     </div>
     <div class="col">
       <select required name="climate" id="climate" class="form-control">
@@ -453,6 +453,7 @@
 
       <h1 class="green-text mt-4 mb-2">Results</h1>
         <div class="row mt-4" id="resultsRow">
+          <h5 class="ml-3" style="color: lightgray;">No results being displayed</h5>
         </div>
 
 
@@ -597,6 +598,7 @@ $('#dtBasicExample2').DataTable({
               if(response.status===200){
                 var rowHTML = document.querySelector('#resultsRow');
                   response.json().then(function(data){
+                      rowHTML.children[0].remove();
                       for(let i = 0; i < data.length; i++){
                         let climate;
                         if(data[i].climate === 1){
