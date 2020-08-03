@@ -488,22 +488,30 @@ def add_FPOLedger(request):
     # form = FarmerForm(data = request.POST , files=request.FILES)
     form = FPOLedgerForm(data=request.POST, files=request.FILES)
     if form.is_valid():
-        form.save()
-        name = form.cleaned_data['crop']
-        price = form.cleaned_data['price']
+        
+        crop = form.cleaned_data['crop']
+        rate = form.cleaned_data['rate']
+        sold_to = form.cleaned_data['sold_to']
         amount_sold = form.cleaned_data['amount_sold']
-        sub = Produce.objects.filter(crop=name)
+        description = form.cleaned_data['description']        
+        
+        price = rate*amount_sold
+        # form.price = price
+        p = FPOLedger.objects.create(crop=crop, rate=rate, sold_to=sold_to, amount_sold=amount_sold, description=description, price=price)
+        # form.save()
+        # amountsold = form.cleaned_data['amountsold']
+        sub = Produce.objects.filter(crop=crop)
         total = 0.0
         for e in sub:
-            total = total + e.amount
+            total = total + (e.amount-e.amountsold)
         for e in sub:
             print(e.amount)
-            cost = (e.amount / total) * price
+            cost = ( (e.amount-e.amountsold) / total) * rate * amount_sold
             e.income += cost
-            e.amount -= (e.amount / total)*(e.amount)
+            e.amountsold += ( (e.amount-e.amountsold) / total)*(amount_sold)
             e.save()
-            if e.amount <= 0.0:
-                e.delete()
+            # if e.amountsold >= e.amount:
+            #     e.delete()
             owner = e.owner
             last_amount = 0.0
             if ew_transaction.objects.count() > 0:
@@ -527,7 +535,7 @@ def add_FPOLedger(request):
     context['crops'] = Crops.objects.all()
 
     # context['form_u']=form
-    return render(request, 'members/addfpoledger.html', context)
+    return render(request, 'members/addfpoledger.html', context)#addfpoledger
 
 
 def del_FPOLedger(request, id):

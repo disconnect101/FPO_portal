@@ -94,7 +94,13 @@ class FPOLedgerForm(forms.ModelForm):
         model = FPOLedger
 
         # specify fields to be used
-        fields = '__all__'
+        fields = [
+            "crop" ,                 
+            "amount_sold" ,                
+            "rate",                         
+            "sold_to",                
+            "description" ,              
+        ]
 
 
 class ProduceForm(forms.ModelForm):

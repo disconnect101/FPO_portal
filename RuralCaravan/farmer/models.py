@@ -8,6 +8,7 @@ from django.utils import timezone
 from datetime import datetime
 from ckeditor.fields import RichTextField
 from farmer.SMSservice import sms
+import random
 
 
 class MyUserProfileManager(BaseUserManager):   ## not a Model
@@ -77,8 +78,6 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Ewallet.objects.create(user=instance)
 
 
-
-
 class Products(models.Model):
     name = models.CharField(max_length=100)
 
@@ -136,6 +135,15 @@ class Farmer(models.Model):
     def __str__(self):
         return self.user.username + '-' +  self.first_name
 
+@receiver(post_save, sender='farmer.Farmer')
+def create_meeting_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        try:
+            meetings = Meetings.objects.filter(date__gte=datetime.now().date())
+            for meeting in meetings:
+                MeetingToken(token_number=int(str(random.randint(100000, 999999)) + str(instance.id)), meeting=meeting, farmer=instance).save()
+        except:
+            raise Exception('Could not generate Meeting tokens for the farmer')
 
 class FarmerCropMap(models.Model):
     farmer = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
