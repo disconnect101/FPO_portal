@@ -26,7 +26,7 @@ urlpatterns = [
 
 
     path('send_message/', views.send_message, name='send_message'),
-
+    path('predict_crop/', views.predict_crop, name="predict_crop"),
 
 
     path('redeem/', views.redeem, name="redeem"),

@@ -410,9 +410,50 @@
 
   </div>
 </div>
+<div class="row" style="margin-bottom: 2rem; margin-top: 4rem;">
+          <div class="col-12">
+              <p style="text-align: center; opacity: 0.2" class="mb-0"><strong>PREDICTIONS</strong></p>
+              <h1 style="text-align: center;" class="green-text mt-0 mb-3">Crop Recommendation</h1>
+              <hr style="margin: auto; width: 6rem; border: 2px solid #4aa327; border-radius: 20rem;">
+              <br>
+          </div>
+      </div>
+      <form method="POST" id="cropPredictor">
+        {% csrf_token %}
+  <h1 style="text-align: left;" class="green-text mt-0 mb-3">Input Values</h1>
+  <hr style="margin-left: 0;width: 6rem; border: 2px solid lightgray; opacity: 0.6; border-radius: 20rem;">
+  <div class="form-row">
+    <div class="col">
+      <input required type="text" id="nitrogen" name="nitrogen" class="form-control" placeholder="Nitrogen">
+    </div>
+    <div class="col">
+      <input required type="text" id="phosphorous" name="phosphorous" class="form-control" placeholder="Phosphorous">
+    </div>
+    <div class="col">
+      <input required type="text" id="potassium" name="potassium" class="form-control" placeholder="Potassium">
+    </div>
+    <div class="col">
+      <input required type="text" id="pH" name="pH" class="form-control" placeholder="pH">
+    </div>  
+    <div class="col">
+      <input required type="text" id="temperature" name="temperature" class="form-control" placeholder="Temperature">
+    </div>
+    <div class="col">
+      <select required name="climate" id="climate" class="form-control">
+        <option selected value="summer">Summer</option>
+        <option value="monsoon">Monsoons</option>
+        <option value="winter">Winter</option>
+      </select>
+    </div>
+  </div>
+  <div class="col mt-4 text-right">
+      <button type="submit" class="btn btn-outline-success" style="font-size: 1rem;">Submit</button>
+    </div>
+</form>
 
-
-
+      <h1 class="green-text mt-4 mb-2">Results</h1>
+        <div class="row mt-4" id="resultsRow">
+        </div>
 
 
       </section>
@@ -503,6 +544,100 @@ $('#dtBasicExample2').DataTable({
       toolbarGroups,
       removeButtons
     });
+
+
+    document.querySelector('#cropPredictor').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var nitrogen = document.getElementById('nitrogen').value;
+      var phosphorous = document.getElementById('phosphorous').value;
+      var potassium = document.getElementById('potassium').value;
+      var pH = document.getElementById('pH').value;
+      var temperature = document.getElementById('temperature').value;
+      var climate = document.getElementById('climate').value;
+      
+
+      let data = {
+          nitrogen,
+          phosphorous,
+          potassium,
+          pH,
+          temperature,
+          climate
+      }
+
+      let url = `${window.location.origin}/fpo/predict_crop/`;
+
+      function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              const cookies = document.cookie.split(';');
+              for (let i = 0; i < cookies.length; i++) {
+                  const cookie = cookies[i].trim();
+                  // Does this cookie string begin with the name we want?
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+      const csrftoken = getCookie('csrftoken');
+      
+      const json_data = JSON.stringify(data);
+
+      const headers = {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          "X-CSRFToken": csrftoken
+      }
+      
+      fetch(url, {method: 'post', headers: headers, body: json_data})
+          .then(function(response) {
+              if(response.status===200){
+                var rowHTML = document.querySelector('#resultsRow');
+                  response.json().then(function(data){
+                      for(let i = 0; i < data.length; i++){
+                        let climate;
+                        if(data[i].climate === 1){
+                          climate="Summer";
+                        } else if (data[i].climate === 2){
+                          climate="Monsoons";
+                        } else {
+                          climate="Winter";
+                        }
+                        let newHtml = `<div class="col-lg-3 col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title green-text">${data[i].Crop}</h4>
+                        <h6 class="card-subtitle mb-2 text-muted"><strong>Nitrogen:</strong> ${data[i].K}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted"><strong>Phosphorous:</strong> ${data[i].P}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted"><strong>Potassium:</strong> ${data[i].K}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted"><strong>pH:</strong> ${data[i].pH}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted"><strong>Temperature:</strong> ${data[i].temp}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted"><strong>Temperature:</strong> ${climate}</h6>
+                    </div>
+                </div>
+            </div>`
+                      resultsRow.innerHTML += newHtml;
+                      }
+                      document.getElementById('nitrogen').value = '';
+                      document.getElementById('phosphorous').value = '';
+                      document.getElementById('potassium').value = '';
+                      document.getElementById('pH').value = '';
+                      document.getElementById('temperature').value = '';
+                      document.getElementById('climate').value = 'summer';
+                  })
+              }
+          })
+          .catch(function(err) {
+              console.log('The errror is', err);
+          });
+
+
+    });
+
+
   </script>
 </body>
 
