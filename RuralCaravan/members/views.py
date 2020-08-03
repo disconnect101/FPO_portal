@@ -519,6 +519,8 @@ def add_FPOLedger(request):
         # form.price = price
         p = FPOLedger.objects.create(crop=crop, rate=rate, sold_to=sold_to, amount_sold=amount_sold, description=description, price=price)
         # form.save()
+        print("id is ",p.id)
+        print("hello")
         # amountsold = form.cleaned_data['amountsold']
         sub = Produce.objects.filter(crop=crop)
         total = 0.0
@@ -543,7 +545,7 @@ def add_FPOLedger(request):
 
             num = ew_transaction.objects.all().count() + 1
             year = datetime.now().year
-            refno = "REF" + str(year) + str(random.randint(100, 999)) + str(num)
+            refno = "PRO" + str(year) + str(p.id) + ":" +str(e.id)
             # print(refno)
             p = ew_transaction.objects.create(refno=refno, user=owner, amount=cost, currrent_amount=last_amount + cost, description='crop sold')
 
@@ -562,8 +564,44 @@ def del_FPOLedger(request, id):
     context = {}
 
     obj = get_object_or_404(FPOLedger, id=id)
-
+    rate = obj.rate
+    print(rate)
     if obj.id > 0:
+        for transaction in ew_transaction.objects.all():
+            refno = transaction.refno
+            prefix = refno[:3]
+            suffix = refno[7:]
+            # print(refno[10:])
+            if prefix == "PRO":
+                x = suffix.split(":")    
+                prod_id = x[0]
+                ew_id = x[1]
+                # print(x)
+                if prod_id == str(id):
+                    obj1 = get_object_or_404(Produce, id=int(ew_id))
+                    obj1.amountsold = obj1.amountsold - (transaction.amount/rate)   #to find the qauntity which has to be reduced
+                    obj1.income -= transaction.amount
+                    obj1.save()    
+                    user = transaction.user
+                    amount = -transaction.amount
+                    description = "Recorrection"
+                    last = ew_transaction.objects.filter(user=user).last()
+                    if last:
+                        last_amount = last.currrent_amount
+                    else:
+                        last_amount = 0
+                    currrent_amount = last_amount + amount
+                    num = ew_transaction.objects.all().count() + 1
+                    year = datetime.now().year
+                    refno = "REF" + str(year) + str(random.randint(100, 999)) + str(num)
+                    # print(refno)
+                    # print(hello)
+                    p = ew_transaction.objects.create(refno=refno, user=user, amount=amount, currrent_amount=currrent_amount, description=description)
+                    # obj1.delete()
+
+
+                    print("yes",refno[10:],user)
+
         # delete object
         obj.delete()
         # after deleting redirect to
