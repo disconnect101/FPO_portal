@@ -1137,6 +1137,16 @@ def plans_update(request, id):
   
     return render(request, "fpo/update_plans.html", context)
 
+def add_FarmerCropMap(request):
+    context ={}
+    form = FarmerCropMapForm(request.POST or None, request.FILES or None) 
+    if form.is_valid(): 
+        # form.crop.subscribers += 1.0
+        form.save() 
+        return redirect("/fpo/plans/")
+    context["form"] = form 
+    return render(request, "fpo/add.html",context)    
+
 # api data for plans............................................................................. 
 def data_village_count(request, *args, **kwargs):
     
@@ -1307,7 +1317,6 @@ def products_toggle(request, id):
     obj.save()
 
     return redirect("/fpo/products")
-
 
 
 

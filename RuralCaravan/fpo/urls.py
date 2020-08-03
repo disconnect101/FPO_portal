@@ -52,6 +52,7 @@ urlpatterns = [
     path('plans/api/data_village_quantity', views.data_village_quantity, name = 'plans-data-village-quantity'),
     path('plans/detail/<id1>/delete/<id2>', views.plan_del_product, name = 'plan_del_product'),
     path('plans/detail/<id>/add/', views.plan_add_product, name = 'plan_add_product'),
+    path('plans/subs', views.add_FarmerCropMap, name = 'add_FarmerCropMap'),
 
     path('products/', views.products_view, name='products'),
     path('products/update/<id>', views.products_update, name='products-update'),

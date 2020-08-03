@@ -100,6 +100,15 @@ class ProductsForm(forms.ModelForm):
         fields = '__all__'
 
 
+class FarmerCropMapForm(forms.ModelForm):
+    # create meta class
+    class Meta:
+        # specify model to be used
+        model = FarmerCropMap
+
+        # specify fields to be used
+        fields = '__all__'
+        
 class OrdersForm(forms.ModelForm):
     # create meta class
     class Meta:
@@ -108,7 +117,6 @@ class OrdersForm(forms.ModelForm):
 
         # specify fields to be used
         fields = '__all__'
-
 class plan_add_productForm(forms.Form):
     # create meta class
     ID = forms.IntegerField()              
