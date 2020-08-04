@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from farmer.api.utils import statuscode
-from farmer.models import Crops, FarmerCropMap, Farmer, UserProfile, Orders, Land
+from farmer.models import Crops, FarmerCropMap, Farmer, UserProfile, Orders, Land, Produce
 from farmer.api.serializers import CropSerializer
 import json
 from django.core import serializers
@@ -179,3 +179,21 @@ def confcrop(request, cropID):
             return Response(statuscode('12'))
 
         return Response(statuscode('0'))
+
+
+@api_view(['GET', ])
+@permission_classes((IsAuthenticated, ))
+def produce(request):
+    user = request.user
+
+    try:
+        produce = Produce.objects.filter(owner=user).order_by('-date').values()
+    except Exception as e:
+        print(str(e))
+        return Response(statuscode('12'))
+
+    data = {
+        'data': produce,
+    }
+
+    return Response(statuscode('0', data))

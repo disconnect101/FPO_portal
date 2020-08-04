@@ -26,6 +26,7 @@ urlpatterns = [
     path('crops/<int:cropID>/', crops.cropplan, name='cropplan'),
     path('cropproducts/<int:cropID>/', crops.cropproducts, name='cropproducts'),
     path('confcrop/<int:cropID>/', crops.confcrop, name='confcrop'),
+    path('produce/', crops.produce, name='produce'),
     path('balancesheet/', balancesheet.balancesheet, name='balancesheet'),
     path('leaderaccess/', leaderaccess.downlinefarmers, name='downlinefarmers'),
     path('leaderaccess/add/', leaderaccess.addfarmer, name='addfarmerdownline'),
