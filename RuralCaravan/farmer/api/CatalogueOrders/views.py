@@ -201,20 +201,26 @@ def order(request):
                 order.is_paid = True
 
             if paymentType == "PEW":
-                description = "Paid to FPO for OrderID: " + str(order.id)
+                description = ""
                 try:
                     refno = makeTransaction(user, order.price, description)
                 except Exception as e:
                     return Response(statuscode(str(e)))
             try:
                 order.save()
+            except:
+                return Response(statuscode('12'))
+            try:
                 message = "Your order has been placed successfully, Products : " + order.item.name + ", OrderID : " + str(order.id)
                 if order.buyer.category != 'N':
                     send_to = str(order.buyer.contact_set.first().number)
                     sms.send_message('+91' + send_to, sms.TWILIO_NUMBER, message)
             except Exception as e:
-                return Response(statuscode('0'))
-
+                print("SMS could not be sent.")
+            transaction = ew_transaction.objects.get(refno=refno)
+            transaction.description = "Paid to FPO for OrderID: " + str(order.id)
+            transaction.save()
+            
             return Response({
                 'statuscode': '0',
                 'orderID': order.id,

@@ -25,10 +25,12 @@ def makeTransaction(user, amount, description):
         raise Exception("17")
 
     refno = generateRefno()
+    current_amount = ew_transaction.objects.filter(user=user).order_by('-date').first().currrent_amount - amount
     ew_t = ew_transaction(refno=refno,
                           user=user,
                           amount=-1*amount,
-                          description=description)
+                          description=description,
+                          currrent_amount=current_amount)
     try:
         #ewallet.save()
         ew_t.save()
