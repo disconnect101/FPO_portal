@@ -51,30 +51,41 @@ def cropplan(request, cropID=0):
             try:
                 #### Recommendation System starts......
 
-                investments = Orders.objects.values('date__year').filter(buyer=user).annotate(investment=Sum('price'))
-                investmentSum = 0
+                avgInvestment = 0
+                if request.data.get('investment'):
+                    avgInvestment = request.data.get('investment')
+                else:
+                    investments = Orders.objects.values('date__year').filter(buyer=user).annotate(investment=Sum('price'))
+                    investmentSum = 0
 
-                for investment in investments:
-                    print(investment)
-                    investmentSum += investment.get('investment')
-                if investments.count()==0:
-                    print('invest')
-                    raise Exception("not enough investments to predict")
+                    for investment in investments:
+                        print(investment)
+                        investmentSum += investment.get('investment')
+                    if investments.count()==0:
+                        print('invest')
+                        raise Exception("not enough investments to predict")
 
-                avgInvestment = investmentSum/investments.count()
+                    avgInvestment = investmentSum/investments.count()
 
                 land = Land.objects.filter(owner=user)
                 if land.count()==0:
                     print("land")
                     raise Exception("No Land to predict profit for")
 
-                landarea = land.aggregate(avglandarea=Avg('area'))
+                landarea = 0
+                if request.data.get('landarea'):
+                    landarea = request.data.get('landarea')
+
+                else:
+                    landarea = land.aggregate(avglandarea=Avg('area'))
+                    landarea = landarea.get('avglandarea')
                 soil = land.first().soil
 
-
+                print('investment : ',avgInvestment)
+                print('landarea : ', landarea)
                 farmerData = {
-                    'investment': avgInvestment,
-                    'landarea': landarea.get('avglandarea'),
+                    'investment': int(avgInvestment),
+                    'landarea': int(landarea),
                     'soil': soil
                 }
 
