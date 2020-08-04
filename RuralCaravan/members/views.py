@@ -546,8 +546,9 @@ def add_FPOLedger(request):
             num = ew_transaction.objects.all().count() + 1
             year = datetime.now().year
             refno = "PRO" + str(year) + str(p.id) + ":" +str(e.id)
-            # print(refno)
-            p = ew_transaction.objects.create(refno=refno, user=owner, amount=cost, currrent_amount=last_amount + cost, description='crop sold')
+            print(p.id, p.rate)
+            cost = round(cost,2)
+            p1 = ew_transaction.objects.create(refno=refno, user=owner, amount=cost, currrent_amount=last_amount + cost, description='crop sold')
 
         # form_u.save()
         return redirect('/members/member_page/fpoledger')
@@ -596,6 +597,8 @@ def del_FPOLedger(request, id):
                     refno = "REF" + str(year) + str(random.randint(100, 999)) + str(num)
                     # print(refno)
                     # print(hello)
+                    amount = round(amount,2)
+                    currrent_amount = round(currrent_amount,2)
                     p = ew_transaction.objects.create(refno=refno, user=user, amount=amount, currrent_amount=currrent_amount, description=description)
                     # obj1.delete()
 
