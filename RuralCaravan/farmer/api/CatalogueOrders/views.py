@@ -186,7 +186,7 @@ def order(request):
                 })
 
             try:
-                order = Orders(type=type,
+                order = Orders(type=paymentType,
                                buyer=user,
                                item=product,
                                rate=product.rate,
