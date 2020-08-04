@@ -10,4 +10,8 @@
     <color name="yellow_add_to_cart">#f2ca68</color>
     <color name="red">#ED4337</color>
     <color name="green">#a4c639 </color>
+    <color name="off_white">#f8f8ff</color>
+    <color name="light_grey">#EFEFEF</color>
+    <color name="dark_green">#006400</color>
+    <color name="light_red">#FF0000</color>
 </resources>

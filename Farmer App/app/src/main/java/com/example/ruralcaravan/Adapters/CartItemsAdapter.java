@@ -1,6 +1,9 @@
 package com.example.ruralcaravan.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.CartItemsResponse;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+
+import info.hoang8f.widget.FButton;
 
 public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.CartItemsViewHolder> {
 
@@ -59,12 +65,10 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Cart
                 .load(context.getString(R.string.socket_address) + cartItem.getImage())
                 .placeholder(R.drawable.app_logo)
                 .into(holder.imageViewItem);
-        if(holder.textViewQuantity.getText().toString().equals("1")) {
-            holder.buttonDecreaseQuantity.setBackground(context.getDrawable(R.drawable.ic_delete));
-        } else {
-            holder.buttonDecreaseQuantity.setBackground(holder.buttonIncreaseQuantity.getBackground());
-            holder.buttonDecreaseQuantity.setText("-");
+        if(cartItem.getQuantity() == 1) {
+            holder.buttonDecreaseQuantity.setImageDrawable(context.getDrawable(R.drawable.ic_delete));
         }
+        holder.buttonDeleteItem.setButtonColor(context.getResources().getColor(R.color.light_grey));
     }
 
     @Override
@@ -75,15 +79,14 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Cart
     public class CartItemsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView textViewItemName;
         private TextView textViewItemRate;
-        private Button buttonDecreaseQuantity;
-        private Button buttonIncreaseQuantity;
+        private FloatingActionButton buttonDecreaseQuantity;
+        private FloatingActionButton buttonIncreaseQuantity;
         private TextView textViewQuantity;
-        private Button buttonDeleteItem;
+        private FButton buttonDeleteItem;
         private ImageView imageViewItem;
         private OnItemDeleteListener onItemDeleteListener;
         private OnQuantityDecreaseListener onQuantityDecreaseListener;
         private OnQuantityIncreaseListener onQuantityIncreaseListener;
-        private CardView cardViewCart;
 
         public CartItemsViewHolder(@NonNull View itemView,
                                    OnItemDeleteListener onItemDeleteListener,
@@ -97,7 +100,6 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Cart
             textViewQuantity = itemView.findViewById(R.id.textViewQuantity);
             buttonDeleteItem = itemView.findViewById(R.id.buttonDeleteItem);
             imageViewItem = itemView.findViewById(R.id.imageViewItem);
-            cardViewCart = itemView.findViewById(R.id.cardViewCart);
             this.onItemDeleteListener = onItemDeleteListener;
             this.onQuantityDecreaseListener = onQuantityDecreaseListener;
             this.onQuantityIncreaseListener = onQuantityIncreaseListener;
@@ -110,27 +112,27 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Cart
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.buttonDeleteItem:
-                    onItemDeleteListener.onItemDelete(cartItemsArrayList.get(getAdapterPosition()).getId().toString(), getAdapterPosition());
+                    onItemDeleteListener.onItemDelete(cartItemsArrayList.get(getAdapterPosition()).getId().toString(), getAdapterPosition(), Integer.parseInt(textViewQuantity.getText().toString()));
                     break;
                 case R.id.buttonDecreaseQuantity:
-                    onQuantityDecreaseListener.onQuantityDecreased(cartItemsArrayList.get(getAdapterPosition()).getId().toString(), textViewQuantity, buttonDecreaseQuantity, getAdapterPosition());
+                    onQuantityDecreaseListener.onQuantityDecreased(cartItemsArrayList.get(getAdapterPosition()).getId().toString(), textViewQuantity, getAdapterPosition(), buttonDecreaseQuantity);
                     break;
                 case R.id.buttonIncreaseQuantity:
-                    onQuantityIncreaseListener.onQuantityIncreased(cartItemsArrayList.get(getAdapterPosition()).getId().toString(), textViewQuantity, buttonDecreaseQuantity, buttonIncreaseQuantity);
+                    onQuantityIncreaseListener.onQuantityIncreased(cartItemsArrayList.get(getAdapterPosition()).getId().toString(), textViewQuantity, getAdapterPosition(), buttonDecreaseQuantity);
                     break;
             }
         }
     }
 
     public interface OnItemDeleteListener {
-        void onItemDelete(String cartId, int position);
+        void onItemDelete(String cartId, int position, int quantity);
     }
 
     public interface OnQuantityDecreaseListener {
-        void onQuantityDecreased(String cartId, TextView view, Button button, int position);
+        void onQuantityDecreased(String cartId, TextView view, int position, FloatingActionButton button);
     }
 
     public interface OnQuantityIncreaseListener {
-        void onQuantityIncreased(String cartId, TextView view, Button buttonDecrease, Button buttonIncrease);
+        void onQuantityIncreased(String cartId, TextView view, int position, FloatingActionButton button);
     }
 }

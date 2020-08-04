@@ -2,6 +2,7 @@ package com.example.ruralcaravan.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,13 +41,16 @@ public class ListPlansAdapter extends RecyclerView.Adapter<ListPlansAdapter.Plan
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PlansViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final PlansViewHolder holder, int position) {
         final PlansResponse plan = plansResponseArrayList.get(position);
         Glide.with(context)
                 .load(context.getString(R.string.socket_address) + plan.getImage())
                 .placeholder(R.drawable.app_logo)
                 .into(holder.imageViewImage);
         holder.textViewName.setText(plan.getName());
+        if(plan.getCurrentAmount() >= plan.getMaxCap()) {
+            holder.cardView.setBackgroundColor(context.getResources().getColor(R.color.light_red));
+        }
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

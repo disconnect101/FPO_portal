@@ -4,163 +4,241 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
-    tools:context=".Fragments.PlanDetailsFragment">
+    tools:context=".Fragments.PlanDetailsFragment"
+    android:background="@color/light_grey">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textViewPlanName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Hello"
-            android:textAlignment="center"
-            android:textSize="35sp" />
-
         <ImageView
             android:id="@+id/imageViewPlan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textViewPlanName"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:src="@drawable/app_logo" />
 
-        <LinearLayout
-            android:id="@+id/linearLayoutMaximumCapacity"
+        <TextView
+            android:id="@+id/textViewPlanName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imageViewPlan"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:fontFamily="@font/muli_black"
+            android:text="Hello"
+            android:textAlignment="center"
+            android:textSize="35sp"
+            android:layout_marginBottom="10dp"/>
 
-            <TextView
-                android:id="@+id/placeHolderMaximumCapacity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/maximum_capacity"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textViewMaximumCapacity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="123" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutPercentageAcquired"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewPlansStats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayoutMaximumCapacity"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:layout_below="@+id/textViewPlanName"
+            android:layout_marginBottom="10dp">
 
-            <TextView
-                android:id="@+id/placeHolderPercentageAcquired"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/acquired_percentage"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:padding="10dp">
 
-            <TextView
-                android:id="@+id/textViewPercentageAcquired"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="123" />
+                <TextView
+                    android:id="@+id/textViewPlansStatsPlaceHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/plan_stats"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textAllCaps="true"/>
 
-        </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/linearLayoutMaximumCapacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewPlansStatsPlaceHolder"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
 
-        <LinearLayout
-            android:id="@+id/linearLayoutSubscriberCount"
+                    <TextView
+                        android:id="@+id/placeHolderMaximumCapacity"
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:layout_height="wrap_content"
+                        android:text="@string/maximum_capacity"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewMaximumCapacity"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:paddingLeft="10dp"
+                        android:text="123" />
+
+                    <TextView
+                        android:id="@+id/placeHolderPercentageAcquired"
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:layout_height="wrap_content"
+                        android:text="@string/acquired"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textAlignment="textEnd"
+                        android:paddingEnd="10dp"/>
+
+                    <TextView
+                        android:id="@+id/textViewPercentageAcquired"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:text="123" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutSubscriberCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linearLayoutMaximumCapacity"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/placeHolderSubscriberCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_of_subscribers"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewSubscriberCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:textSize="15sp"
+                        android:text="123" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewGuidance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayoutPercentageAcquired"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:layout_below="@+id/cardViewPlansStats"
+            android:layout_marginBottom="10dp">
 
-            <TextView
-                android:id="@+id/placeHolderSubscriberCount"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/no_of_subscribers"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:padding="10dp">
 
-            <TextView
-                android:id="@+id/textViewSubscriberCount"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/placeHolderGuidance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:text="@string/guidance"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"/>
+
+                <TextView
+                    android:id="@+id/textViewGuidance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/placeHolderGuidance"
+                    android:layout_marginTop="5dp"
+                    android:textSize="15sp"
+                    android:text="Trial text for guidance" />
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewFacilities"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cardViewGuidance"
+            android:layout_marginBottom="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="123" />
+                android:padding="10dp">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/placeHolderFacilities"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:text="@string/facilities"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"/>
 
-        <TextView
-            android:id="@+id/placeHolderGuidance"
-            android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/textViewFacilities"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/placeHolderFacilities"
+                    android:layout_marginTop="5dp"
+                    android:textSize="15sp"
+                    android:text="Trial text for facilities" />
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewInvestments"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/linearLayoutSubscriberCount"
-            android:paddingTop="10dp"
-            android:text="@string/guidance"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            android:layout_below="@+id/cardViewFacilities"
+            android:layout_marginBottom="10dp">
 
-        <TextView
-            android:id="@+id/textViewGuidance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/placeHolderGuidance"
-            android:layout_marginTop="5dp"
-            android:text="Trial text for guidance" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
 
-        <TextView
-            android:id="@+id/placeHolderFacilities"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewGuidance"
-            android:paddingTop="10dp"
-            android:text="@string/facilities"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/placeHolderInvestments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:text="@string/investments"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"/>
 
-        <TextView
-            android:id="@+id/textViewFacilities"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/placeHolderFacilities"
-            android:layout_marginTop="5dp"
-            android:text="Trial text for facilities" />
+                <TextView
+                    android:id="@+id/textViewInvestments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/placeHolderInvestments"
+                    android:layout_marginTop="5dp"
+                    android:textSize="15sp"
+                    android:text="Trial text for investments" />
 
-        <TextView
-            android:id="@+id/placeHolderInvestments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewFacilities"
-            android:paddingTop="10dp"
-            android:text="@string/investments"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            </RelativeLayout>
 
-        <TextView
-            android:id="@+id/textViewInvestments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/placeHolderInvestments"
-            android:layout_marginTop="5dp"
-            android:text="Trial text for investments" />
+        </androidx.cardview.widget.CardView>
 
         <Button
             android:id="@+id/buttonPlanStatus"
-            android:layout_below="@+id/textViewInvestments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/cardViewInvestments"
             android:layout_marginTop="10dp"
             android:text="@string/subscribe"
             android:textAllCaps="true" />

@@ -8,6 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="NavigationViewStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/muli_semibold</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
 </resources>

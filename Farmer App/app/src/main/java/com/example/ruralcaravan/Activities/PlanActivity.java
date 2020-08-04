@@ -3,6 +3,7 @@ package com.example.ruralcaravan.Activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,16 +45,17 @@ public class PlanActivity extends AppCompatActivity {
     private TextView textViewProductsUnderPlan;
     private int count;
     private ACProgressFlower dialog;
-//    private Toolbar toolbar;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
 
-//        toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.plans);
 
         Intent intent = getIntent();
         String planId = intent.getStringExtra("planId");
@@ -68,7 +70,7 @@ public class PlanActivity extends AppCompatActivity {
         dialog = new ACProgressFlower.Builder(PlanActivity.this)
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                 .themeColor(Color.WHITE)
-                .text("Loading")
+                .text(getString(R.string.loading))
                 .fadeColor(Color.DKGRAY).build();
         dialog.show();
         fetchPlanDetails(planId);
@@ -78,7 +80,6 @@ public class PlanActivity extends AppCompatActivity {
 
     private void fetchProductsUnderPlan(String planId) {
         String productsUnderPlanUrl = getString(R.string.base_end_point_ip) + "cropproducts/" + planId + "/";
-
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -123,6 +124,14 @@ public class PlanActivity extends AppCompatActivity {
 
     private void fetchPlanDetails(String planId) {
         final String planDetailsUrl = getString(R.string.base_end_point_ip) + "crops/" + planId + "/";
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("recommendation", "0");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(PlanActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+            dialog.dismiss();
+        }
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -131,6 +140,7 @@ public class PlanActivity extends AppCompatActivity {
                         GsonBuilder gsonBuilder = new GsonBuilder();
                         Gson gson = gsonBuilder.create();
                         planDetails = gson.fromJson(response.getJSONObject("data").toString(), PlansResponse.class);
+                        getSupportActionBar().setTitle(planDetails.getName());
                         count--;
                         if(count == 0) {
                             dialog.dismiss();
@@ -154,7 +164,7 @@ public class PlanActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         };
-        JsonObjectRequest planDetailsRequest = new JsonObjectRequest(Request.Method.GET, planDetailsUrl, null, responseListener, errorListener) {
+        JsonObjectRequest planDetailsRequest = new JsonObjectRequest(Request.Method.POST, planDetailsUrl, jsonBody, responseListener, errorListener) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> params = new HashMap<>();
@@ -203,5 +213,13 @@ public class PlanActivity extends AppCompatActivity {
             textViewPlanDetails.setBackground(null);
             textViewProductsUnderPlan.setBackground(getDrawable(R.drawable.bottom_border));
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

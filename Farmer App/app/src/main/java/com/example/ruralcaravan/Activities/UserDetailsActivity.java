@@ -87,7 +87,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         dialog = new ACProgressFlower.Builder(UserDetailsActivity.this)
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                 .themeColor(Color.WHITE)
-                .text("Loading")
+                .text(getString(R.string.loading))
                 .fadeColor(Color.DKGRAY).build();
         dialog.show();
 
@@ -154,7 +154,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     public void chooseVillage(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(UserDetailsActivity.this);
-        builder.setTitle("Choose a village");
+        builder.setTitle(getString(R.string.choose_a_village));
         final ArrayAdapter<String> districtAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
                 android.R.layout.simple_list_item_1, villages);
         builder.setAdapter(districtAdapter, new DialogInterface.OnClickListener() {

@@ -75,7 +75,6 @@
     <string name="plan_details">Plan Details</string>
     <string name="products_under_plan">Products Under Plan</string>
     <string name="maximum_capacity">Maximum Capacity</string>
-    <string name="acquired_percentage">Acquired %</string>
     <string name="no_of_subscribers">No of subscribers</string>
     <string name="guidance">Guidance</string>
     <string name="facilities">Facilities</string>
@@ -102,7 +101,7 @@
     <string name="notification">Notification</string>
     <string name="profile">Profile</string>
     <string name="welcome_leader">Welcome Leader</string>
-    <string name="smartphone">Smartphone</string>
+    <string name="smart_phone">Smart Phone</string>
     <string name="feature_phone">Feature Phone</string>
     <string name="no_phone">No Phone</string>
     <string name="select_phone_status">Select phone status</string>
@@ -113,4 +112,10 @@
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
     <string name="accepted">Accepted</string>
+    <string name="choose_a_village">Choose a village</string>
+    <string name="user_details">User\nDetails</string>
+    <string name="no_products_under_plan">No products under plan</string>
+    <string name="recommendation">Recommendation</string>
+    <string name="plan_stats">Plan Stats</string>
+    <string name="acquired">Acquired</string>
 </resources>

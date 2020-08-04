@@ -2,9 +2,13 @@ package com.example.ruralcaravan.Fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ruralcaravan.Activities.MainActivity;
+import com.example.ruralcaravan.Activities.PlanActivity;
 import com.example.ruralcaravan.Adapters.ListPlansAdapter;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.PlansResponse;
@@ -24,6 +29,7 @@ import com.example.ruralcaravan.Utilities.Constants;
 import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
 import com.example.ruralcaravan.Utilities.SharedPreferenceUtils;
 import com.example.ruralcaravan.Utilities.VolleySingleton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -32,6 +38,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +56,8 @@ public class ListPlansFragment extends Fragment {
     private int currentSelection;
     private ACProgressFlower dialog;
     private TextView textViewNoPlansMessage;
+    private SwitchMaterial switchRecommendation;
+    private RelativeLayout relativeLayoutSwitch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +66,15 @@ public class ListPlansFragment extends Fragment {
         textViewNewPlans = rootView.findViewById(R.id.textViewNewPlans);
         textViewSubscribedPlans = rootView.findViewById(R.id.textViewSubscribedPlans);
         textViewNoPlansMessage = rootView.findViewById(R.id.textViewNoPlansMessage);
+        switchRecommendation = rootView.findViewById(R.id.switchRecommendation);
+        relativeLayoutSwitch = rootView.findViewById(R.id.relativeLayoutSwitch);
+
+        switchRecommendation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                fetchPlans(Constants.NEW_PLANS, switchRecommendation.isChecked());
+            }
+        });
 
         recyclerViewPlans = rootView.findViewById(R.id.recyclerViewPlans);
         recyclerViewPlans.setHasFixedSize(true);
@@ -67,13 +86,14 @@ public class ListPlansFragment extends Fragment {
         recyclerViewPlans.setAdapter(listPlansAdapter);
 
         currentSelection = Constants.SUBSCRIBED_PLANS;
-        fetchPlans(Constants.NEW_PLANS);
+        fetchPlans(Constants.NEW_PLANS, switchRecommendation.isChecked());
 
         textViewNewPlans.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(currentSelection == Constants.SUBSCRIBED_PLANS) {
-                    fetchPlans(Constants.NEW_PLANS);
+                    relativeLayoutSwitch.setVisibility(View.VISIBLE);
+                    fetchPlans(Constants.NEW_PLANS, switchRecommendation.isChecked());
                 }
             }
         });
@@ -82,21 +102,34 @@ public class ListPlansFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(currentSelection == Constants.NEW_PLANS) {
-                    fetchPlans(Constants.SUBSCRIBED_PLANS);
+                    relativeLayoutSwitch.setVisibility(View.GONE);
+                    fetchPlans(Constants.SUBSCRIBED_PLANS, false);
                 }
             }
         });
         return rootView;
     }
 
-    private void fetchPlans(final int id) {
+    private void fetchPlans(final int id, boolean recommendation) {
+
         dialog = new ACProgressFlower.Builder(getActivity())
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                 .themeColor(Color.WHITE)
-                .text("Loading")
+                .text(getString(R.string.loading))
                 .fadeColor(Color.DKGRAY).build();
         dialog.show();
-        String plansUrl = getString(R.string.base_end_point_ip) + "crops/0";
+        rootView.setVisibility(View.INVISIBLE);
+
+        String plansUrl = getString(R.string.base_end_point_ip) + "crops/0/";
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("recommendation", String.valueOf(recommendation));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+            dialog.dismiss();
+            rootView.setVisibility(View.VISIBLE);
+        }
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -109,6 +142,17 @@ public class ListPlansFragment extends Fragment {
                             plans = gson.fromJson(response.getJSONArray("not_subscribed").toString(), PlansResponse[].class);
                         else
                             plans = gson.fromJson(response.getJSONArray("subscriptions").toString(), PlansResponse[].class);
+                        Collections.sort(Arrays.asList(plans), new Comparator<PlansResponse>() {
+                            @Override
+                            public int compare(PlansResponse o1, PlansResponse o2) {
+                                if(o1.getEstimatedProfit() > o2.getEstimatedProfit()) {
+                                    return -1;
+                                }
+                                else {
+                                    return 1;
+                                }
+                            }
+                        });
                         updatePlansView(plans, id);
                     } else {
                         Toast.makeText(getActivity(), ResponseStatusCodeHandler.getMessage(response.getString("statuscode")), Toast.LENGTH_LONG).show();
@@ -118,6 +162,7 @@ public class ListPlansFragment extends Fragment {
                     e.printStackTrace();
                 }
                 dialog.dismiss();
+                rootView.setVisibility(View.VISIBLE);
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -126,9 +171,10 @@ public class ListPlansFragment extends Fragment {
                 Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
                 error.printStackTrace();
                 dialog.dismiss();
+                rootView.setVisibility(View.VISIBLE);
             }
         };
-        JsonObjectRequest plansRequest = new JsonObjectRequest(Request.Method.GET, plansUrl, null, responseListener, errorListener){
+        JsonObjectRequest plansRequest = new JsonObjectRequest(Request.Method.POST, plansUrl, jsonBody, responseListener, errorListener){
             @Override
             public Map<String, String> getHeaders() {
                 Map<String,String> params = new HashMap<>();

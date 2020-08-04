@@ -270,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
                 }, 2000);
             } else {
                 setTitle(R.string.home);
+                navigationView.setCheckedItem(R.id.home);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragmentContainer, new HomeFragment())
