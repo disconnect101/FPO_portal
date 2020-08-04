@@ -10,6 +10,7 @@ from django.forms.models import model_to_dict
 from farmer.SMSservice import sms
 from farmer.Recommender.profit_estimate import Recommender
 from django.db.models import Sum, Avg
+from django.core import serializers
 
 
 @api_view(['POST', ])
@@ -25,8 +26,11 @@ def cropplan(request, cropID=0):
         subscriptions = []
         for subscription in crop_subscriptions:
             crop_subscriptions_ids.append(subscription.crop.id)
-            subscriptions += [ CropSerializer(subscription.crop).data ]
+            #subscriptions += [ CropSerializer(subscription.crop).data ]
+            #subscriptions += [subscription]
 
+        subscriptions = Crops.objects.filter(id__in=crop_subscriptions_ids).values()
+        
         crops = Crops.objects.filter(live=True).exclude(id__in=list(crop_subscriptions_ids)).values('id',
                                                                                                     'code',
                                                                                                     'name',
