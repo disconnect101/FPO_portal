@@ -477,6 +477,76 @@
         options: {}
     });
 
+        // For the visualization of engagement of farmers
+    var farmerEngagementData = {{ farmer_engagement_data|safe }};
+
+    var smartphoneFarmerEngagement = farmerEngagementData[0];
+    var featurephoneFarmerEngagement = farmerEngagementData[1]; 
+    var nophoneFarmerEngagement = farmerEngagementData[2];
+
+    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    var ctxFarmerEngagement = document.getElementById('farmerEngagement').getContext('2d');
+	var farmerEngagement = new Chart(ctxFarmerEngagement, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                label:[smartphoneFarmerEngagement.label],
+                backgroundColor: ['rgba(255, 206, 86, 0.2)'],
+                borderColor: ['rgba(255, 206, 86, 1)'],
+                data: smartphoneFarmerEngagement.data,
+                fill: false
+            },
+            {
+                label:[featurephoneFarmerEngagement.label],
+                backgroundColor: ['rgba(78, 205, 196, 0.2)',],
+                borderColor: ['rgba(78, 205, 196, 1)',],
+                data: featurephoneFarmerEngagement.data,
+                fill: false
+            },
+            {
+                label:[nophoneFarmerEngagement.label],
+                backgroundColor: ['rgba(54, 162, 235, 0.2)',],
+                borderColor: ['rgba(54, 162, 235, 1)',],
+                data: nophoneFarmerEngagement.data,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Percentage Engagement of Farmers'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Month'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Value'
+                    },
+                    ticks: {max:100, min:0}
+                }]
+            }
+        }
+    });
+
     // Crops by farmers
     var cropsData = {{ crops_data|safe }}
     var cropsLabels = {{ crops_labels|safe }}
@@ -708,77 +778,6 @@
         profitsByYear.update();
     });
 
-
-
-    // For the visualization of engagement of farmers
-    var farmerEngagementData = {{ farmer_engagement_data|safe }};
-
-    var smartphoneFarmerEngagement = farmerEngagementData[0];
-    var featurephoneFarmerEngagement = farmerEngagementData[1]; 
-    var nophoneFarmerEngagement = farmerEngagementData[2];
-
-    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-    var ctxFarmerEngagement = document.getElementById('farmerEngagement').getContext('2d');
-	var farmerEngagement = new Chart(ctxFarmerEngagement, {
-        type: 'line',
-        data: {
-            labels: months,
-            datasets: [{
-                label:[smartphoneFarmerEngagement.label],
-                backgroundColor: ['rgba(255, 206, 86, 0.2)'],
-                borderColor: ['rgba(255, 206, 86, 1)'],
-                data: smartphoneFarmerEngagement.data,
-                fill: false
-            },
-            {
-                label:[featurephoneFarmerEngagement.label],
-                backgroundColor: ['rgba(78, 205, 196, 0.2)',],
-                borderColor: ['rgba(78, 205, 196, 1)',],
-                data: featurephoneFarmerEngagement.data,
-                fill: false
-            },
-            {
-                label:[nophoneFarmerEngagement.label],
-                backgroundColor: ['rgba(54, 162, 235, 0.2)',],
-                borderColor: ['rgba(54, 162, 235, 1)',],
-                data: nophoneFarmerEngagement.data,
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            title: {
-                display: true,
-                text: 'Percentage Engagement of Farmers'
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false,
-            },
-            hover: {
-                mode: 'nearest',
-                intersect: true
-            },
-            scales: {
-                xAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Month'
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Value'
-                    },
-                    ticks: {max:100, min:0}
-                }]
-            }
-        }
-    });
 
 
   </script>

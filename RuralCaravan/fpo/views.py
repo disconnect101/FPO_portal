@@ -672,9 +672,6 @@ def govtschemes_single(request, id):
         for locality in farmers_by_locality:
             if locality['locality_name'] == farmer['locality']:
                 locality['farmers'].append(farmer)
-                print('Sum')
-                print(sum(scheme in x['schemes'] for x in locality['farmers']))
-                print()
                 locality['engagement'] = round(sum(scheme in x['schemes'] for x in locality['farmers'])/villages_total[farmer['locality']], 2)*100
                 locality['farmers'] = sorted(locality['farmers'], key=lambda x: x['farmer'])
                 placed = True
@@ -753,8 +750,8 @@ def fpo_statistics(request):
 
     # Communication Channels
     communication_channels = UserProfile.objects.values('category').annotate(total=Count('category'))
-    communication_channels_data = [x['total'] for x in communication_channels if x['category'] not in ['A','L']]
-    communication_channels_labels = [x['category'] for x in communication_channels if x['category'] not in ['A','L']]
+    communication_channels_data = [x['total'] for x in communication_channels if x['category'] not in ['A','L', '']]
+    communication_channels_labels = [x['category'] for x in communication_channels if x['category'] not in ['A','L','']]
     context['communication_channels_data'] = communication_channels_data if len(communication_channels_data) == 3 else communication_channels_data + [0 for x in range(3-len(communication_channels_data))]
 
     for i in range(len(communication_channels_labels)):
@@ -774,7 +771,6 @@ def fpo_statistics(request):
             communication_channels_labels.append('Farmers with No Phones')
 
     context['communication_channels_labels'] = communication_channels_labels 
-
     
     # Farmers by Leaders
     leaders = Leader.objects.all()
@@ -819,18 +815,17 @@ def fpo_statistics(request):
             else:
                 NP.append(token)
         
-        SP_engagement = round(sum(x.did_attend for  x in SP) / len(SP), 2)*100 if SP else 0.0
-        FP_engagement = round(sum(x.did_attend for  x in FP) / len(FP), 2)*100 if FP else 0.0
-        NP_engagement = round(sum(x.did_attend for  x in NP) / len(NP), 2)*100 if NP else 0.0
+        SP_engagement = round(sum(x.did_attend for  x in SP) / len(SP), 4)*100 if SP else 0.0
+        FP_engagement = round(sum(x.did_attend for  x in FP) / len(FP), 4)*100 if FP else 0.0
+        NP_engagement = round(sum(x.did_attend for  x in NP) / len(NP), 4)*100 if NP else 0.0
 
-        SP_by_months['data'].append(SP_engagement)
-        FP_by_months['data'].append(FP_engagement)
-        NP_by_months['data'].append(NP_engagement)
+        SP_by_months['data'].append(round(SP_engagement, 2))
+        FP_by_months['data'].append(round(FP_engagement, 2))
+        NP_by_months['data'].append(round(NP_engagement, 2))
 
     farmer_engagement_data = [SP_by_months, FP_by_months, NP_by_months]
     
     context['farmer_engagement_data'] = farmer_engagement_data
-
 
 
     # Villages
@@ -851,7 +846,6 @@ def fpo_statistics(request):
 
     # Crop Production By Years
     crops_by_years_data = staticalanalysis.getCropProductionByYear()
-    print(f'\n\nThis is the data\n\n{crops_by_years_data}\n\n')
     # crops_by_years_data = [
     # {
     #     'name': 'Rice',
@@ -873,7 +867,6 @@ def fpo_statistics(request):
     for crop in crops_by_years_data:
         data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
         prediction = predict_production(data)
-        print(prediction)
         crop['years'].append(f'{prediction[0]} (Prediction)')
         crop['data'].append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
 
@@ -884,7 +877,6 @@ def fpo_statistics(request):
 
     # Profits Per Crop
     crops_profits_by_years_data = staticalanalysis.getCropProfitsByYear()
-    print(f'\n\nThis is the data\n\n{crops_profits_by_years_data}\n\n')
     # crops_profits_by_years_data = [
     # {
     #     'name': 'Corn',
@@ -905,9 +897,6 @@ def fpo_statistics(request):
 
     for crop in crops_profits_by_years_data:
         data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
-        print()
-        print(f'Data->>{data}')
-        print()
         prediction = predict_production(data)
         crop['years'].append(f'{prediction[0]} (Prediction)')
         crop['data'].append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
@@ -979,9 +968,7 @@ def plans_view(request):
   
     # add the dictionary during initialization      # Add and view both
     form = CropsForm(request.POST or None, request.FILES)
-    if form.is_valid(): 
-        print(request.POST)
-        print(request.FILES)
+    if form.is_valid():
         form.save() 
         return redirect('/fpo/plans')
           
@@ -1027,6 +1014,7 @@ def plans_detail(request, id):
     plans = get_object_or_404(Crops,id=id)
     farmers = FarmerCropMap.objects.filter(crop=plans)
     farmers = [Farmer.objects.get(user=x.farmer) for x in farmers]
+    num_subscribers = len(farmers)
     temp_farmers = farmers
 
     farmers_by_villages = {}
@@ -1094,7 +1082,7 @@ def plans_detail(request, id):
             })
     
     for subscriber_village in subscribers_by_villages:
-        engagement_score = round(sum(x['engagement'] for x in subscriber_village['farmers'])/len(subscriber_village), 2)*100
+        engagement_score = round(sum(x['engagement'] for x in subscriber_village['farmers'])/len(subscriber_village['farmers']), 2)
         subscriber_village['engagement'] = engagement_score
 
     produces_amount_percentages = [round(x/sum(produces_amount), 2)*100 for x in produces_amount]
@@ -1105,7 +1093,8 @@ def plans_detail(request, id):
         'village_total': village_total,
         'produce_villages': produces_villages,
         'produce_amount_percentages': produces_amount_percentages,
-        'subscribers_by_villages': subscribers_by_villages
+        'subscribers_by_villages': subscribers_by_villages,
+        'num_subscribers': num_subscribers
     }
 
     return render(request, "fpo/plan_detail.html",context)
@@ -1155,7 +1144,6 @@ def data_village_count(request, *args, **kwargs):
     farmers = FarmerCropMap.objects.all()
     for farmer in farmers:
         obj = get_object_or_404(Farmer, user=farmer.farmer)#, category='F' and or 'P' or 'N')
-        print(obj.village)
         if obj.village in data:
             data[obj.village]+=1
         else:
@@ -1169,10 +1157,8 @@ def data_village_quantity(request, *args, **kwargs):
     farmers = FarmerCropMap.objects.all()
     for farmer in farmers:
         obj = get_object_or_404(Farmer, user=farmer.farmer)#, category='F' and or 'P' or 'N')
-        print(obj.village)
         crop1 = farmer.crop
         obj1 = get_object_or_404(Crops, id=crop1.id)
-        print(obj1.weigth_per_land)
         weight = obj1.weigth_per_land
         # print(farmer.crop.weight_per_land)
         if obj.village in data:
@@ -1199,7 +1185,7 @@ def plan_del_product(request, id1, id2):
 
     obj.products.remove(sub)
     if (obj.products.count() >= 0):
-        print(obj.products.all())
+        pass
     return redirect('plans-detail',id=id1)
 
     
@@ -1224,7 +1210,6 @@ def plan_add_product(request, id):
         # q4 = Q(ID=ID)
         # obj = UserProfile.objects.filter((q1 | q2 | q3) & q4)   
         obj = Products.objects.filter( id=ID)
-        print(obj.count())
 
         
         if obj.count() < 1:
@@ -1234,13 +1219,12 @@ def plan_add_product(request, id):
     
         
         obj2 = get_object_or_404(Products, id=obj.first().id)   
-        print(obj2)
         sub = get_object_or_404(Crops, id=id)
         sub.products.add(obj2)
         sub.save()
         if (sub.products.count() > 0):
             for far in sub.products.all():
-                print(far)
+                pass
             # print(sub.farmers.all())
             # return redirect('detail_leader',id=id)
         return redirect('/fpo/plans/detail/'+id)

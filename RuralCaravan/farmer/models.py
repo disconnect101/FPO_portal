@@ -361,7 +361,7 @@ class MeetingToken(models.Model):
     # (the incentive is not decided yet)
     is_redeemed = models.BooleanField(default=False)
     # The creation of the token
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, editable=True)
     # The event for which the token was created
     meeting = models.ForeignKey(Meetings, on_delete=models.CASCADE)
     # The farmer for which the token was created
