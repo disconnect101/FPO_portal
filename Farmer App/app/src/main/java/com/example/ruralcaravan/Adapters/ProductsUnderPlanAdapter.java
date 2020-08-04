@@ -42,7 +42,7 @@ public class ProductsUnderPlanAdapter extends RecyclerView.Adapter<ProductsUnder
     public void onBindViewHolder(@NonNull ProductsUnderPlanAdapter.ProductsUnderPlanViewHolder holder, int position) {
         final ItemDetailedResponse item = itemDetailedResponses.get(position);
         Glide.with(context)
-                .load(context.getResources().getString(R.string.socket_address) + "/" + item.getImage() + "/")
+                .load(context.getResources().getString(R.string.socket_address) + "/media/" + item.getImage() + "/")
                 .placeholder(R.drawable.app_logo)
                 .into(holder.imageViewItem);
         holder.textViewItemName.setText(item.getName());

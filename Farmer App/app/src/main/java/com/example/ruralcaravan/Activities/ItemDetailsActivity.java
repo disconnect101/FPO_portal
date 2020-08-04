@@ -150,7 +150,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Glide.with(ItemDetailsActivity.this)
-                        .load(getResources().getString(R.string.socket_address) + "/" + itemDetailedResponse.getImage())
+                        .load(getResources().getString(R.string.socket_address) + itemDetailedResponse.getImage())
                         .placeholder(R.drawable.app_logo)
                         .into(imageViewItem);
                 textViewItemName.setText(itemDetailedResponse.getName());

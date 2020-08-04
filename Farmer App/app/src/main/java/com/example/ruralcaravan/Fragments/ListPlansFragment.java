@@ -142,17 +142,17 @@ public class ListPlansFragment extends Fragment {
                             plans = gson.fromJson(response.getJSONArray("not_subscribed").toString(), PlansResponse[].class);
                         else
                             plans = gson.fromJson(response.getJSONArray("subscriptions").toString(), PlansResponse[].class);
-                        Collections.sort(Arrays.asList(plans), new Comparator<PlansResponse>() {
-                            @Override
-                            public int compare(PlansResponse o1, PlansResponse o2) {
-                                if(o1.getEstimatedProfit() > o2.getEstimatedProfit()) {
-                                    return -1;
-                                }
-                                else {
-                                    return 1;
-                                }
-                            }
-                        });
+//                        Collections.sort(Arrays.asList(plans), new Comparator<PlansResponse>() {
+//                            @Override
+//                            public int compare(PlansResponse o1, PlansResponse o2) {
+//                                if(o1.getEstimatedProfit() > o2.getEstimatedProfit()) {
+//                                    return -1;
+//                                }
+//                                else {
+//                                    return 1;
+//                                }
+//                            }
+//                        });
                         updatePlansView(plans, id);
                     } else {
                         Toast.makeText(getActivity(), ResponseStatusCodeHandler.getMessage(response.getString("statuscode")), Toast.LENGTH_LONG).show();

@@ -33,6 +33,6 @@ public class ResponseStatusCodeHandler {
             case "23": return "No meeting token found";
             case "24": return "No matching meeting token found";
         }
-        return "Android system error";
+        return "Unknown error";
     }
 }

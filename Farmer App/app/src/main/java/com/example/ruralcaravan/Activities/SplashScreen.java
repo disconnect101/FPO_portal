@@ -3,13 +3,18 @@ package com.example.ruralcaravan.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.Utilities.Constants;
 import com.example.ruralcaravan.Utilities.SharedPreferenceUtils;
+
+import java.util.Locale;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -19,6 +24,13 @@ public class SplashScreen extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash_screen);
+
+        Locale locale = new Locale(SharedPreferenceUtils.getLanguage(SplashScreen.this));
+        Resources resources = getResources();
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+        resources.updateConfiguration(configuration, displayMetrics);
 
         Intent intent;
         Log.d("STATE", String.valueOf(SharedPreferenceUtils.getActivityState(SplashScreen.this)));

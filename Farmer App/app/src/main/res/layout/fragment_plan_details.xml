@@ -58,12 +58,12 @@
                     android:layout_below="@+id/textViewPlansStatsPlaceHolder"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal"
-                    android:weightSum="10">
+                    android:weightSum="12">
 
                     <TextView
                         android:id="@+id/placeHolderMaximumCapacity"
                         android:layout_width="0dp"
-                        android:layout_weight="3"
+                        android:layout_weight="5"
                         android:layout_height="wrap_content"
                         android:text="@string/maximum_capacity"
                         android:textSize="18sp"

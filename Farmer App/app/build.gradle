@@ -49,4 +49,5 @@ dependencies {
     implementation 'com.crowdfire.cfalertdialog:cfalertdialog:1.1.0'
     implementation 'com.afollestad.material-dialogs:input:3.3.0'
     implementation 'info.hoang8f:fbutton:1.0.5'
+    implementation 'com.synnapps:carouselview:0.1.5'
 }

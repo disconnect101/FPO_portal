@@ -32,4 +32,7 @@ public class Constants {
     public static final String MEETING_ACCEPTED_CODE = "at";
     public static final String GOVT_SCHEME_DETAILS = "govtSchemeDetails";
     public static final String GOVT_SCHEME_NAME = "govtSchemeName";
+    public static final int ENGLISH = 0;
+    public static final int HINDI = 1;
+    public static final String LANGUAGE = "language";
 }

@@ -72,7 +72,7 @@ public class PlanDetailsFragment extends Fragment {
 
         textViewPlanName.setText(planDetails.getName());
         Glide.with(getActivity())
-                .load(getActivity().getString(R.string.socket_address) + planDetails.getImage())
+                .load(getActivity().getString(R.string.socket_address) + "/media/" + planDetails.getImage())
                 .placeholder(R.drawable.app_logo)
                 .into(imageViewPlan);
         textViewMaximumCapacity.setText(planDetails.getMaxCap().toString());
@@ -123,7 +123,7 @@ public class PlanDetailsFragment extends Fragment {
         final EditText input = new EditText(getActivity());
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         new AlertDialog.Builder(getActivity())
-                .setTitle(getString(R.string.enter_land_area_in_bigha))
+                .setTitle(getString(R.string.enter_land_area_in_hectare))
                 .setNeutralButton(getString(R.string.subscribe), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

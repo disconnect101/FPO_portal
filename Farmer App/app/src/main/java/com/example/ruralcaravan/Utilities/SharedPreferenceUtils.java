@@ -93,4 +93,16 @@ public class SharedPreferenceUtils {
         editor.commit();
     }
 
+    public static void setLanguage(Context context, String language) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getApplicationContext().getPackageName(), Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Constants.LANGUAGE, language);
+        editor.commit();
+    }
+
+    public static String getLanguage(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getApplicationContext().getPackageName(), Activity.MODE_PRIVATE);
+        return preferences.getString(Constants.LANGUAGE, "en");
+    }
+
 }

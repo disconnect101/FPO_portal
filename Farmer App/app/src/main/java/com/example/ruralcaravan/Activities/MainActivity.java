@@ -1,13 +1,18 @@
 package com.example.ruralcaravan.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,12 +28,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.ruralcaravan.Fragments.CatalogueCategoryFragment;
+import com.crowdfire.cfalertdialog.CFAlertDialog;
 import com.example.ruralcaravan.Fragments.BalanceSheetFragment;
+import com.example.ruralcaravan.Fragments.CatalogueCategoryFragment;
+import com.example.ruralcaravan.Fragments.GovtSchemesFragment;
 import com.example.ruralcaravan.Fragments.HomeFragment;
 import com.example.ruralcaravan.Fragments.ListPlansFragment;
 import com.example.ruralcaravan.Fragments.MeetingsFragment;
-import com.example.ruralcaravan.Fragments.GovtSchemesFragment;
 import com.example.ruralcaravan.Fragments.WeatherFragment;
 import com.example.ruralcaravan.Fragments.YourCartFragment;
 import com.example.ruralcaravan.Fragments.YourOrdersFragment;
@@ -41,6 +47,7 @@ import com.google.android.material.navigation.NavigationView;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
@@ -54,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private ACProgressFlower dialog;
     private boolean doubleBackToExitPressedOnce;
+    private View navigationViewHeader;
+    private TextView textViewName;
+    private int languageOption;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView = findViewById(R.id.navigationView);
         setupDrawerContent(navigationView);
+        navigationViewHeader = navigationView.getHeaderView(0);
+        textViewName = navigationViewHeader.findViewById(R.id.header_user_name);
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -94,10 +106,11 @@ public class MainActivity extends AppCompatActivity {
             Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
+                    Log.e("response", response.toString());
                     SharedPreferenceUtils.setUserData(MainActivity.this, response.toString());
-                    Toast.makeText(MainActivity.this,
-                            "Hello " + SharedPreferenceUtils.getUserData(MainActivity.this).getFirstName(),
-                            Toast.LENGTH_LONG);
+                    textViewName.setText(getString(R.string.hello) + ", " +
+                            SharedPreferenceUtils.getUserData(MainActivity.this).getFirstName() + " " +
+                            SharedPreferenceUtils.getUserData(MainActivity.this).getLastName());
                     dialog.dismiss();
                 }
             };
@@ -117,6 +130,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
             VolleySingleton.getInstance(MainActivity.this).addToRequestQueue(userDataRequest);
+        } else {
+            textViewName.setText(getString(R.string.hello) + ", " +
+                    SharedPreferenceUtils.getUserData(MainActivity.this).getFirstName() + " " +
+                    SharedPreferenceUtils.getUserData(MainActivity.this).getLastName());
         }
     }
 
@@ -163,6 +180,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.logOut:
                 logOut();
                 break;
+            case R.id.language:
+                changeLanguageMenu();
+                break;
             default:
                 switchToNewFragment(HomeFragment.class, menuItem);
         }
@@ -183,6 +203,56 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.closeDrawers();
     }
 
+    private void changeLanguageMenu() {
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+
+        final CFAlertDialog.Builder builder = new CFAlertDialog.Builder(MainActivity.this);
+        builder.setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT);
+        builder.setTitle(getString(R.string.select_language));
+        builder.setSingleChoiceItems(new String[]{"English", "हिन्दी"}, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                languageOption = which;
+            }
+        });
+        builder.addButton(getString(R.string.ok), -1, -1, CFAlertDialog.CFAlertActionStyle.POSITIVE, CFAlertDialog.CFAlertActionAlignment.JUSTIFIED, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                changeLanguage(languageOption);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.addButton(getString(R.string.cancel), -1, -1, CFAlertDialog.CFAlertActionStyle.POSITIVE, CFAlertDialog.CFAlertActionAlignment.JUSTIFIED, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+    }
+
+    private void changeLanguage(int language) {
+        if(language == Constants.ENGLISH){
+            setLocale("en");
+        } else if(language == Constants.HINDI) {
+            setLocale("hi");
+        }
+    }
+
+    private void setLocale(String language) {
+        SharedPreferenceUtils.setLanguage(MainActivity.this, language);
+        Locale locale = new Locale(language);
+        Resources resources = getResources();
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+        resources.updateConfiguration(configuration, displayMetrics);
+        Intent refresh = new Intent(this, MainActivity.class);
+        startActivity(refresh);
+        finish();
+    }
+
     private void contactFPO(MenuItem menuItem) {
         //TODO: Add FPO contact number
         String url = "tel:1234567890";
@@ -200,17 +270,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
-        if(SharedPreferenceUtils.isLeader(MainActivity.this)) {
-            menu.findItem(R.id.leaderAccess).setVisible(true);
-        } else {
-            menu.findItem(R.id.leaderAccess).setVisible(false);
-        }
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
@@ -223,11 +282,6 @@ public class MainActivity extends AppCompatActivity {
             }
             case R.id.notification: {
                 Toast.makeText(MainActivity.this, SharedPreferenceUtils.getUserData(MainActivity.this).getFirstName(), Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            case R.id.leaderAccess: {
-                Intent intent = new Intent(MainActivity.this, LeaderAccessActivity.class);
-                startActivity(intent);
                 return true;
             }
         }

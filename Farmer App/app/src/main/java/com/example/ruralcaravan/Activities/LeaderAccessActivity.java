@@ -66,7 +66,7 @@ public class LeaderAccessActivity extends AppCompatActivity implements LeaderAcc
         dialog = new ACProgressFlower.Builder(LeaderAccessActivity.this)
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                 .themeColor(Color.WHITE)
-                .text("Loading")
+                .text(getString(R.string.loading))
                 .fadeColor(Color.DKGRAY).build();
         dialog.show();
 

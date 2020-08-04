@@ -44,7 +44,7 @@ public class ListPlansAdapter extends RecyclerView.Adapter<ListPlansAdapter.Plan
     public void onBindViewHolder(@NonNull final PlansViewHolder holder, int position) {
         final PlansResponse plan = plansResponseArrayList.get(position);
         Glide.with(context)
-                .load(context.getString(R.string.socket_address) + plan.getImage())
+                .load(context.getString(R.string.socket_address) + "/media/" + plan.getImage() + "/")
                 .placeholder(R.drawable.app_logo)
                 .into(holder.imageViewImage);
         holder.textViewName.setText(plan.getName());

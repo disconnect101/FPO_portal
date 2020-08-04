@@ -31,7 +31,7 @@ public class GovtSchemesAdapter extends RecyclerView.Adapter<GovtSchemesAdapter.
     @NonNull
     @Override
     public GovtSchemesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.govt_schemes_row_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_row_layout, parent, false);
         GovtSchemesAdapter.GovtSchemesViewHolder govtSchemesViewHolder = new GovtSchemesViewHolder(view);
         return govtSchemesViewHolder;
     }
@@ -61,8 +61,8 @@ public class GovtSchemesAdapter extends RecyclerView.Adapter<GovtSchemesAdapter.
         private CardView cardView;
         public GovtSchemesViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewGovtSchemeName = itemView.findViewById(R.id.textViewGovtSchemeName);
-            cardView = itemView.findViewById(R.id.cardViewGovtScheme);
+            textViewGovtSchemeName = itemView.findViewById(R.id.textViewName);
+            cardView = itemView.findViewById(R.id.cardView);
         }
     }
 }
