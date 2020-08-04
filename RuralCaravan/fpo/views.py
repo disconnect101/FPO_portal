@@ -237,6 +237,15 @@ def detail_meetings(request, id):
 
     context["data"] = Meetings.objects.get(id=id) # getting the specific meeting
 
+    # if context['data'].id == 3:
+    #     tokens = MeetingToken.objects.all().filter(meeting=context['data'])
+    #     date_time_june = (datetime.datetime.now() - datetime.timedelta(60))
+        # print(date_time_june)
+        # for token in tokens:
+        #     token.created_at = date_time_june
+        #     token.save()
+        # print([x.created_at for x in tokens])
+
     meeting_tokens = MeetingToken.objects.all().filter(meeting=context['data'])
     Phone_Type = ['Smartphone', 'Featurephone', 'NoSmartphone']
         
@@ -467,7 +476,7 @@ def meetings_view(request):
     # field names as keys 
     context ={} 
 
-    meetings = Meetings.objects.order_by('date')
+    meetings = Meetings.objects.order_by('-date')
 
     # add the dictionary during initialization      # Add and view both
     form = MeetingsForm(request.POST or None) 
@@ -1325,9 +1334,16 @@ def products_detail(request, id):
     Years = []
     Amount = []
 
+    years_amount = []
+
     for k, v in orders_by_years.items():
-        Years.append(k)
-        Amount.append(v)
+        years_amount.append((k,v))
+
+    years_amount = sorted(years_amount, key=lambda x: x[0])
+    
+    for year, amount in years_amount:
+        Years.append(year)
+        Amount.append(amount)
 
     data = {'Production': Amount, 'Year': Years}
     
