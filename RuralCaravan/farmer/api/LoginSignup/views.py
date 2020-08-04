@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.serializers import AuthTokenSerializer
-from farmer.api.serializers import RegistrationSerializer, FarmerSerializer
+from farmer.api.serializers import RegistrationSerializer, FarmerSerializer, LeaderSerializer
 from rest_framework.authtoken.models import Token
 from farmer.SMSservice import sms
 import random
@@ -11,7 +11,7 @@ from farmer.models import Contact
 from django.utils import timezone
 from datetime import datetime
 from django.contrib.auth import login
-from farmer.models import Farmer, UserProfile
+from farmer.models import Farmer, UserProfile, Leader
 from rest_framework.authtoken.views import ObtainAuthToken
 import pytz
 from farmer.api.utils import *
@@ -110,12 +110,21 @@ def userData(request):
     user = request.user
 
     if request.method=='GET':
-        try:
-            farmer = Farmer.objects.get(user=user)
-            print(farmer.first_name)
-        except Farmer.DoesNotExist:
-            return Response(statuscode('farmer details not available'))
-        serializer = FarmerSerializer(farmer)
+        if user.category=='L':
+            try:
+                leader = Leader.objects.get(user=user)
+                print(leader.first_name)
+            except Leader.DoesNotExist:
+                return Response("Leader Does not exist")
+            serializer = LeaderSerializer(leader)
+        else:
+            try:
+                farmer = Farmer.objects.get(user=user)
+                print(farmer.first_name)
+            except Farmer.DoesNotExist:
+                return Response(statuscode('farmer details not available'))
+            serializer = FarmerSerializer(farmer)
+            
         return Response(serializer.data)
 
     if request.method=='POST':
