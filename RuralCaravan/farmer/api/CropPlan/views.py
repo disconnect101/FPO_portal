@@ -47,28 +47,33 @@ def cropplan(request, cropID=0):
             try:
                 #### Recommendation System starts......
 
-                investments = Orders.objects.values('date__year').annotate(investment=Sum('price'))
+                investments = Orders.objects.values('date__year').filter(buyer=user).annotate(investment=Sum('price'))
                 investmentSum = 0
 
                 for investment in investments:
+                    print(investment)
                     investmentSum += investment.get('investment')
                 if investments.count()==0:
+                    print('invest')
                     raise Exception("not enough investments to predict")
 
                 avgInvestment = investmentSum/investments.count()
 
                 land = Land.objects.filter(owner=user)
                 if land.count()==0:
+                    print("land")
                     raise Exception("No Land to predict profit for")
 
                 landarea = land.aggregate(avglandarea=Avg('area'))
                 soil = land.first().soil
+
 
                 farmerData = {
                     'investment': avgInvestment,
                     'landarea': landarea.get('avglandarea'),
                     'soil': soil
                 }
+
                 recommender = Recommender()
                 recommender.trainModel(recommender.gatherData())
                 estimatedProfits = recommender.predict(farmerData, unsubscribedCropList)
@@ -81,6 +86,7 @@ def cropplan(request, cropID=0):
 
                 #### Recommendation System ends......
             except Exception as e:
+                print(str(e))
                 recommendationFailed = True
                 for temp in unsubscribedCropList:
                     temp.update({'estimatedProfit': 0})

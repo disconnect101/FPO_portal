@@ -20,34 +20,44 @@ class Recommender:
         data = []
         for produce in allProduce:
             produceRecord = []
+            test = []
             year = produce.date.year
             farmer = produce.owner
             investment = Orders.objects.filter(buyer=farmer, date__year=year, is_paid=True).annotate(total=Sum('price'))
-            landarea = FarmerCropMap.objects.filter(farmer=farmer, crop=produce.crop, date__year=year).first().landarea
+            try:
+                landarea = FarmerCropMap.objects.filter(farmer=farmer, crop=produce.crop, date__year=year).first().landarea
+            except:
+                continue
 
             if investment.count()==0:
                 continue
             produceRecord = [investment.first().total, landarea]
-            for crop in self.crops:
-                if crop.get('crop__code') == produce.crop.code:
-                    produceRecord.append(1)
-                else:
-                    produceRecord.append(0)
-
+            test.append(investment.first().total)
+            test.append(landarea)
             if not produce.land:
                 continue
             for soil in self.soils:
                 if soil.get('land__soil') == produce.land.soil:
                     produceRecord.append(1)
+                    test.append(produce.land.soil)
                 else:
                     produceRecord.append(0)
 
+            for crop in self.crops:
+                if crop.get('crop__code') == produce.crop.code:
+                    produceRecord.append(1)
+                    test.append(produce.crop.code)
+                else:
+                    produceRecord.append(0)
+
+            test.append(produce.income)
             profit = ((produce.income - investment.first().total) / investment.first().total) * 100
             produceRecord.append(profit)
 
             data.append(produceRecord)
-
-        #print(data, "fverv")
+            print(test)
+        print(self.crops)
+        print(data)
         return data
 
 
