@@ -160,6 +160,7 @@ body {font-family: Arial;}
 th {
   background-color: #547e40;
   color: white;
+  text-transform:uppercase;
 }
 th,td{
     padding:0.3%;
@@ -365,16 +366,16 @@ th,td{
         <hr>
         <h4 class="green-text mt-0 mb-3">Existing Farmers Under {{ data.first_name }}{{' '}}{{ data.last_name}}</h4>
         <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
-    <table
-        class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+    <table id="farmdisplay"
+        class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
         <thead>
 
-            <th>S.no.</th>
-            <th>Name</th>
-            <th>Username</th>
-            <th>Village</th>
-            <th>Contact</th>
-            <th>Delete</th>
+            <th class="th-sm">S.no.</th>
+            <th class="th-sm">Name</th>
+            <th class="th-sm">Username</th>
+            <th class="th-sm">Village</th>
+            <th class="th-sm">Contact</th>
+            <th class="th-sm">Delete</th>
          </thead>
 <tbody>
      {% for farmer in leader %}
@@ -388,7 +389,7 @@ th,td{
 
         <td>{{farmer.village}}</td>
         <td>{{farmer.contact}}</td>
-        <td><p data-placement="top" data-toggle="tooltip" title="Delete"><a href="delete/{{farmer.user_id}}"><i class="fas fa-trash-alt"></i></a></p></td>
+        <td><p data-placement="top" data-toggle="tooltip" title="Delete"><a href="delete/{{farmer.user_id}}"><i class="fas fa-trash-alt blue-text"></i></a></p></td>
     </tr>
     {% endfor %}
 </tbody>
@@ -401,8 +402,8 @@ th,td{
     <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
        <h3 class="green-text mt-0 mb-3">Balance Sheet:</h3>
         <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
-    <table id="tbldisplay"
-        class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+    <table id="baldisplay"
+        class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
         <thead>
          <th>Ref no.</th>
             <th>Date</th>
@@ -466,8 +467,8 @@ function openCity(evt, Name) {
 document.getElementById("defaultOpen").click();
 </script>
 <script language="JavaScript">
-         $(document).ready(function () {
- $("#tbldisplay td:nth-child(3)").each(function () {
+
+ $("#baldisplay td:nth-child(3)").each(function () {
                 if (parseInt($(this).text(), 10) < 0) {
                     $(this).parent("tr").css("background-color", "orange");
                 }
@@ -475,7 +476,25 @@ document.getElementById("defaultOpen").click();
                     $(this).parent("tr").css("background-color", "Lightgreen");
                 }
             });
-});
 </script>
+<script>
+      $(document).ready(function () {
+ $('#farmdisplay').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [4,5]
+  }]
+});
+$('#baldisplay').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [4,5]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
+});
+  </script>
 </body>
 </html>
