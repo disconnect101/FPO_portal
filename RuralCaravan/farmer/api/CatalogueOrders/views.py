@@ -200,6 +200,7 @@ def order(request):
             if paymentType=="CAS" or paymentType=="PEW":
                 order.is_paid = True
 
+            refno = ""
             if paymentType == "PEW":
                 description = ""
                 try:
