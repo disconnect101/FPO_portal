@@ -531,6 +531,7 @@ def add_FPOLedger(request):
             cost = ( (e.amount-e.amountsold) / total) * rate * amount_sold
             e.income += cost
             e.amountsold += ( (e.amount-e.amountsold) / total)*(amount_sold)
+            e.amountsold = round(e.amountsold,2)
             e.save()
             # if e.amountsold >= e.amount:
             #     e.delete()
