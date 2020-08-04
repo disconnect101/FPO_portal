@@ -237,14 +237,13 @@ def detail_meetings(request, id):
 
     context["data"] = Meetings.objects.get(id=id) # getting the specific meeting
 
-    # if context['data'].id == 3:
+    # if context['data'].id == 4:
     #     tokens = MeetingToken.objects.all().filter(meeting=context['data'])
-    #     date_time_june = (datetime.datetime.now() - datetime.timedelta(60))
-        # print(date_time_june)
-        # for token in tokens:
-        #     token.created_at = date_time_june
-        #     token.save()
-        # print([x.created_at for x in tokens])
+    #     date_time_may = (datetime.datetime.now() - datetime.timedelta(80))
+    #     for token in tokens:
+    #         token.created_at = date_time_may
+    #         token.save()
+    #     print([x.created_at for x in tokens])
 
     meeting_tokens = MeetingToken.objects.all().filter(meeting=context['data'])
     Phone_Type = ['Smartphone', 'Featurephone', 'NoSmartphone']

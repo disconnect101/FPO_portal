@@ -46,7 +46,7 @@ class StatisticalAnalysis:
             }
 
             cropProductionByYear.append(data)
-        print(cropProductionByYear)
+    
         return cropProductionByYear
 
 
@@ -70,7 +70,7 @@ class StatisticalAnalysis:
             }
 
             cropProfitsByYear.append(data)
-        print(cropProfitsByYear)
+        
         return cropProfitsByYear
 
 
@@ -95,7 +95,6 @@ class StatisticalAnalysis:
 
             profitsByYear.append(yeardata)
 
-        print(profitsByYear)
         return profitsByYear
 
 
@@ -103,14 +102,18 @@ class StatisticalAnalysis:
         crops = []
         productions = []
 
-        for crop in self.cropWiseProduction:
-            crops.append(crop.get('crop__code'))
-            productions.append(crop.get('amount'))
+        distinct_years = [list(x.values())[0] for x in Produce.objects.values('date__year').distinct()]
+
+        for year in distinct_years:
+            yearly_produce = (Produce.objects.filter(date__year=year).values('crop__name').annotate(total=Sum('amount')))
+            for produce in yearly_produce:
+                crops.append(produce['crop__name'])
+                productions.append(produce['total'])
 
         data = {
             'crops': crops,
             'productions': productions
         }
 
-        print(data)
+
         return data
