@@ -140,6 +140,48 @@ def userData(request):
             })
 
 
+@api_view(['POST', ])
+@permission_classes((IsAuthenticated, ))
+def updateUserData(request):
+    user = request.user
+    first_name = request.data.get('first_name')
+    last_name = request.data.get('last_name')
+    village = request.data.get('village')
+    district = request.data.get('district')
+
+    if user.category=='L':
+        profession = request.data.get('profession')
+        try:
+            leader = Leader.objects.get(user=user)
+        except:
+            return Response(statuscode('27'))
+        leader.first_name = first_name
+        leader.last_name = last_name
+        leader.village = village
+        leader.district = district
+        leader.profession = profession
+        try:
+            leader.save()
+        except:
+            return Response(statuscode('12'))
+
+    else:
+        try:
+            farmer = Farmer.objects.get(user=user)
+        except:
+            return Response(statuscode('27'))
+        farmer.first_name = first_name
+        farmer.last_name = last_name
+        farmer.village = village
+        farmer.district = district
+        try:
+            farmer.save()
+        except:
+            return Response(statuscode('12'))
+
+    return Response(statuscode('0'))
+
+
 @api_view(['POST'],)
 def verifyOTP(request):
 

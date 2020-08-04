@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from farmer.models import Meetings, MeetingToken, Farmer, Govt
+from farmer.models import Meetings, MeetingToken, Farmer, Govt, Leader
 from rest_framework.response import Response
 from datetime import datetime
 from farmer.api.utils import statuscode
@@ -11,9 +11,15 @@ import json
 @permission_classes((IsAuthenticated, ))
 def meetings(request):
     user = request.user
-    farmer = Farmer.objects.get(user=user)
+
     currDate = datetime.now().date()
     meetings = Meetings.objects.filter(date__gte=currDate).values()
+
+    if user.category=='L':
+        data = { 'data': meetings }
+        return Response(statuscode('0', data))
+
+    farmer = Farmer.objects.get(user=user)
 
     meetingsList = []
     for meeting in meetings:

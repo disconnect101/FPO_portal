@@ -292,6 +292,8 @@ def updateEwallet(sender, instance=None, **kwargs):
     except:
         raise Exception('Could retrieve E-wallet')
     ewallet.amount += instance.amount
+    transaction = ew_transaction.objects.filter(user=instance.user).latest('date')
+    instance.currrent_amount = transaction.currrent_amount + instance.amount
     try:
         ewallet.save()
     except:

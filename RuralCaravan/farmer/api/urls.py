@@ -12,6 +12,7 @@ urlpatterns = [
     path('register/', auth.register, name='register'),
     path('login/', auth.CustomAuthToken.as_view(), name='login'),
     path('userdata/', auth.userData, name='getuserdata'),
+    path('updateuserdata/', auth.updateUserData, name='updateuserdata'),
     path('register/OTP/', auth.verifyOTP, name='OTP'),
     path('villages/', auth.getVillageInfo, name='OTP'),
     path('catalogue/', catalogue.catalogue, name='catalogue'),
