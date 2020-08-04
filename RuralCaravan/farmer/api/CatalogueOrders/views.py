@@ -218,9 +218,11 @@ def order(request):
                     sms.send_message('+91' + send_to, sms.TWILIO_NUMBER, message)
             except Exception as e:
                 print("SMS could not be sent.")
-            transaction = ew_transaction.objects.get(refno=refno)
-            transaction.description = "Paid to FPO for OrderID: " + str(order.id)
-            transaction.save()
+
+            if paymentType=='PEW':
+                transaction = ew_transaction.objects.get(refno=refno)
+                transaction.description = "Paid to FPO for OrderID: " + str(order.id)
+                transaction.save()
             
             return Response({
                 'statuscode': '0',
