@@ -198,7 +198,12 @@ def produce(request):
     user = request.user
 
     try:
-        produce = Produce.objects.filter(owner=user).order_by('-date').values()
+        produce = Produce.objects.filter(owner=user).order_by('-date').values('crop__name',
+                                                                              'amount',
+                                                                              'amountsold',
+                                                                              'date',
+                                                                              'quality',
+                                                                              'income')
     except Exception as e:
         print(str(e))
         return Response(statuscode('12'))
