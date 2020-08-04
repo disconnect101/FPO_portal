@@ -162,7 +162,7 @@
                         android:textSize="15sp"
                         android:fontFamily="@font/muli_black"
                         android:textColor="@color/black"
-                        android:text="@string/news" />
+                        android:text="@string/govt_schemes" />
 
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>

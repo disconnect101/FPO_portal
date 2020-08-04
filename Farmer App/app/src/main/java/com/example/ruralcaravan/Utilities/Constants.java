@@ -30,4 +30,6 @@ public class Constants {
     public static final int FEATURE_PHONE = 1;
     public static final int NO_PHONE = 2;
     public static final String MEETING_ACCEPTED_CODE = "at";
+    public static final String GOVT_SCHEME_DETAILS = "govtSchemeDetails";
+    public static final String GOVT_SCHEME_NAME = "govtSchemeName";
 }

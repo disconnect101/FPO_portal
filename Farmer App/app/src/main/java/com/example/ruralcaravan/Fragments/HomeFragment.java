@@ -76,8 +76,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 menuItemId = R.id.meetings;
                 break;
             case R.id.cardViewNews:
-                fragment = new NewsFragment();
-                menuItemId = R.id.news;
+                fragment = new GovtSchemesFragment();
+                menuItemId = R.id.govt_schemes;
                 break;
             case R.id.cardViewYourOrders:
                 fragment = new YourOrdersFragment();

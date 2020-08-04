@@ -10,7 +10,7 @@
     <string name="balanceSheet">Balance Sheet</string>
     <string name="meetings">Meetings</string>
     <string name="yourOrders">Your Orders</string>
-    <string name="news">News</string>
+    <string name="govt_schemes">Govt Schemes</string>
     <string name="weather">Weather</string>
     <string name="plans">Plans</string>
     <string name="logOut">Log out</string>
@@ -118,4 +118,6 @@
     <string name="recommendation">Recommendation</string>
     <string name="plan_stats">Plan Stats</string>
     <string name="acquired">Acquired</string>
+    <string name="no_govt_schemes">No government schemes</string>
+    <string name="overview">Overview</string>
 </resources>

@@ -28,7 +28,7 @@ import com.example.ruralcaravan.Fragments.BalanceSheetFragment;
 import com.example.ruralcaravan.Fragments.HomeFragment;
 import com.example.ruralcaravan.Fragments.ListPlansFragment;
 import com.example.ruralcaravan.Fragments.MeetingsFragment;
-import com.example.ruralcaravan.Fragments.NewsFragment;
+import com.example.ruralcaravan.Fragments.GovtSchemesFragment;
 import com.example.ruralcaravan.Fragments.WeatherFragment;
 import com.example.ruralcaravan.Fragments.YourCartFragment;
 import com.example.ruralcaravan.Fragments.YourOrdersFragment;
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             dialog = new ACProgressFlower.Builder(MainActivity.this)
                     .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                     .themeColor(Color.WHITE)
-                    .text("Loading")
+                    .text(getString(R.string.loading))
                     .fadeColor(Color.DKGRAY).build();
             dialog.show();
             String getUserDataUrl = getResources().getString(R.string.base_end_point_ip) + "userdata/";
@@ -142,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.meetings:
                 switchToNewFragment(MeetingsFragment.class, menuItem);
                 break;
-            case R.id.news:
-                switchToNewFragment(NewsFragment.class, menuItem);
+            case R.id.govt_schemes:
+                switchToNewFragment(GovtSchemesFragment.class, menuItem);
                 break;
             case R.id.yourOrders:
                 switchToNewFragment(YourOrdersFragment.class, menuItem);
