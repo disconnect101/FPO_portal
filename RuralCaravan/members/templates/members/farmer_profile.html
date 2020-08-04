@@ -360,7 +360,7 @@ th,td{
          <!----<span><a href="addnewtransaction.html" class="btn btn-primary">Add New Transaction</a></span>--->
         <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
     <table id="tbldisplay"
-        class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
+        class="table table-responsive-sm table-bordered" cellspacing="0" width="100%" style="text-align:center">
         <thead>
             <th class="th-sm">S no.</th>
             <th class="th-sm">Date</th>
@@ -661,10 +661,10 @@ document.getElementById("defaultOpen").click();
 <script language="JavaScript">
  $("#tbldisplay td:nth-child(3)").each(function () {
                 if (parseInt($(this).text(), 10) < 0) {
-                    $(this).parent("tr").css("background-color", "Lightgreen");
+                    $(this).css("background-color", "#FF8882");
                 }
                 else{
-                    $(this).parent("tr").css("background-color", "white");
+                    $(this).css("background-color", "Lightgreen");
                 }
 
     } );

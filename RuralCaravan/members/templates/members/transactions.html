@@ -203,7 +203,7 @@ th,td{
          <div class="text-right"><a href="{% url 'add_transaction' %}" class="btn btn-outline-success" style="font-size: 1.2rem;">Add New Record</a></div>
         <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
     <table id="tbldisplay"
-        class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
+        class="table table-responsive-sm table-bordered" cellspacing="0" width="100%" style="text-align:center">
             <thead>
                 <th class="th-sm">Ref No.</th>
                  <th class="th-sm">User</th>
@@ -275,10 +275,10 @@ var data = table.columns( [2] ).data();
  <script language="JavaScript">
  $("#tbldisplay td:nth-child(3)").each(function () {
                 if (parseInt($(this).text(), 10) < 0) {
-                    $(this).parent("tr").css("background-color", "Lightgreen");
+                    $(this).css("background-color", "#FF8882");
                 }
                 else{
-                    $(this).parent("tr").css("background-color", "white");
+                    $(this).css("background-color", "Lightgreen");
                 }
             });
 </script>

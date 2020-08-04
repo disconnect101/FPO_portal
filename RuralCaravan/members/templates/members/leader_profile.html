@@ -403,7 +403,7 @@ th,td{
        <h3 class="green-text mt-0 mb-3">Balance Sheet:</h3>
         <div class="table-responsive" style="margin-top:25px;margin-bottom: 50px;">
     <table id="baldisplay"
-        class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
+        class="table table-responsive-sm table-bordered" cellspacing="0" width="100%" style="text-align:center">
         <thead>
          <th>Ref no.</th>
             <th>Date</th>
@@ -470,10 +470,10 @@ document.getElementById("defaultOpen").click();
 
  $("#baldisplay td:nth-child(3)").each(function () {
                 if (parseInt($(this).text(), 10) < 0) {
-                    $(this).parent("tr").css("background-color", "Lightgreen");
+                    $(this).css("background-color", "#FF8882");
                 }
                 else{
-                    $(this).parent("tr").css("background-color", "white");
+                    $(this).css("background-color", "Lightgreen");
                 }
             });
 </script>
@@ -490,7 +490,7 @@ $('#baldisplay').DataTable({
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [4,5]
+  targets: [4]
   }]
 });
   $('.dataTables_length').addClass('bs-select');
