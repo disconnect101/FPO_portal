@@ -439,7 +439,7 @@ th,td{
                 <th class="th-sm">Crop Code</th>
                 <th class="th-sm">Crop Name</th>
                 <th class="th-sm">Produce(in quintals)</th>
-                <th class="th-sm">Quality</th>
+                <!---<th class="th-sm">Quality</th>---->
              </thead>
             <tbody>
         {% for entry in produce%}
@@ -449,12 +449,12 @@ th,td{
                     <td>{{entry.crop.code}}</td>
                     <td>{{entry.crop.name}}</td>
                     <td>{{entry.amount}}</td>
-                    <td>{% if entry.quality %}
+                    <!---<td>{% if entry.quality %}
                             High
                         {% else %}
                             Low
                         {% endif %}
-                    </td>
+                    </td>---->
              </tr>
             {% endif %}
         {% endfor %}
@@ -607,7 +607,7 @@ th,td{
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [5,6]
+  targets: [2,3]
   }]
 });
   $('.dataTables_length').addClass('bs-select');
@@ -615,7 +615,7 @@ th,td{
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [4,5]
+  targets: [2,3]
   }]
 });
   $('.dataTables_length').addClass('bs-select');
@@ -627,7 +627,7 @@ th,td{
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [4]
+  targets: [2,3]
   }]
 });
   $('.dataTables_length').addClass('bs-select');
