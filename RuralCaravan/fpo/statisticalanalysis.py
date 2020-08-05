@@ -28,11 +28,11 @@ class StatisticalAnalysis:
 
 
     def getCropProductionByYear(self):
-        crops = Crops.objects.values('code').distinct()
+        crops = Crops.objects.values('name').distinct()
 
         cropProductionByYear = []
         for crop in crops:
-            cropProduction = self.productionYearWise.filter(crop__code=crop.get('code'))
+            cropProduction = self.productionYearWise.filter(crop__name=crop.get('name'))
             years = []
             production = []
             for produce in cropProduction:
@@ -40,7 +40,7 @@ class StatisticalAnalysis:
                 production.append(produce.get('amount'))
 
             data = {
-                'name': crop.get('code'),
+                'name': crop.get('name'),
                 'years': years,
                 'data': production
             }
@@ -52,11 +52,11 @@ class StatisticalAnalysis:
 
 
     def getCropProfitsByYear(self):
-        crops = Crops.objects.values('code').distinct()
+        crops = Crops.objects.values('name').distinct()
 
         cropProfitsByYear = []
         for crop in crops:
-            cropProfits = self.productionYearWise.filter(crop__code=crop.get('code'))
+            cropProfits = self.productionYearWise.filter(crop__name=crop.get('name'))
             years = []
             profits = []
             for produce in cropProfits:
@@ -64,7 +64,7 @@ class StatisticalAnalysis:
                 profits.append(produce.get('income'))
 
             data = {
-                'name': crop.get('code'),
+                'name': crop.get('name'),
                 'years': years,
                 'data': profits
             }
@@ -104,11 +104,19 @@ class StatisticalAnalysis:
 
         distinct_years = [list(x.values())[0] for x in Produce.objects.values('date__year').distinct()]
 
+        crop_amounts = {}
+
         for year in distinct_years:
             yearly_produce = (Produce.objects.filter(date__year=year).values('crop__name').annotate(total=Sum('amount')))
             for produce in yearly_produce:
-                crops.append(produce['crop__name'])
-                productions.append(produce['total'])
+                if produce['crop__name'] in crop_amounts.keys():
+                    crop_amounts[produce['crop__name']] += produce['total']
+                else:
+                    crop_amounts[produce['crop__name']] = produce['total']
+        
+        for k, v in crop_amounts.items():
+            crops.append(k)
+            productions.append(v)
 
         data = {
             'crops': crops,

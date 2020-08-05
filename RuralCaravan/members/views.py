@@ -161,6 +161,10 @@ def detail_farmer(request, id):
 
     for crop in crops_by_years_data:
         data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
+        # data = {
+        #     'Production': [600, 400,700],
+        #     'Year': [2018, 2019, 2020]
+        # }
         prediction = predict_production(data)
         print(prediction)
         crop['years'].append(f'{prediction[0]} (Prediction)')
