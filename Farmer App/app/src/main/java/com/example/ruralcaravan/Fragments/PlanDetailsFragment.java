@@ -12,12 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.fragment.app.Fragment;
 
@@ -27,7 +24,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.crowdfire.cfalertdialog.CFAlertDialog;
-import com.example.ruralcaravan.Activities.ItemDetailsActivity;
 import com.example.ruralcaravan.Activities.MainActivity;
 import com.example.ruralcaravan.Activities.PlanActivity;
 import com.example.ruralcaravan.R;
@@ -82,7 +78,7 @@ public class PlanDetailsFragment extends Fragment {
                 .load(getActivity().getString(R.string.socket_address) + "/media/" + planDetails.getImage())
                 .placeholder(R.drawable.app_logo)
                 .into(imageViewPlan);
-        textViewMaximumCapacity.setText(planDetails.getMaxCap().toString());
+        textViewMaximumCapacity.setText(planDetails.getMaxCap().toString() + "Q");
         double acquiredPercentage = 100.0*planDetails.getCurrentAmount()/planDetails.getMaxCap();
         textViewPercentageAcquired.setText(String.format("%.2f", acquiredPercentage) + "%");
         textViewSubscriberCount.setText(planDetails.getSubscribers().toString());

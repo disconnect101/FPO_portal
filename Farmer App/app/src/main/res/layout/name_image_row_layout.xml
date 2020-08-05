@@ -35,4 +35,5 @@
             android:text="Category"/>
 
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

@@ -133,4 +133,14 @@
     <string name="fields_can_not_be_empty">Fields can not be empty</string>
     <string name="plan_subscribed_successfully">Plan subscribed successfully</string>
     <string name="plan_un_subscribed_successfully">Plan unsubscribed successfully</string>
+    <string name="amount_sold">Amount sold</string>
+    <string name="income">Income</string>
+    <string name="quality">Quality</string>
+    <string name="farmer_produce">Farmer produce</string>
+    <string name="produce">Produce</string>
+    <string name="rejected">Rejected</string>
+    <string name="enter_estimated_investment">Enter estimated investment</string>
+    <string name="profit">Profit</string>
+    <string name="register_your_land_with_FPO_to_get_recommendation">Register your land with FPO to get recommendation</string>
+    <string name="no_farmers_under_the_leader">No farmer under the leader</string>
 </resources>

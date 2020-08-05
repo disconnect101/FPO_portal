@@ -23,6 +23,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.crowdfire.cfalertdialog.CFAlertDialog;
 import com.example.ruralcaravan.Adapters.ListPlansAdapter;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.PlansResponse;
@@ -143,7 +144,7 @@ public class ListPlansFragment extends Fragment {
         dialogBuilder.show();
     }
 
-    private void fetchPlans(final int id, boolean recommendation) {
+    private void fetchPlans(final int id, final boolean recommendation) {
 
         dialog = new ACProgressFlower.Builder(getActivity())
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
@@ -156,9 +157,10 @@ public class ListPlansFragment extends Fragment {
         String plansUrl = getString(R.string.base_end_point_ip) + "crops/0/";
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("recommendation", String.valueOf(recommendation));
+            jsonBody.put("recommendation", recommendation ? "1" : "0");
             jsonBody.put("landarea", landArea);
             jsonBody.put("investment", investment);
+            Log.e("response", jsonBody.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
@@ -177,18 +179,24 @@ public class ListPlansFragment extends Fragment {
                             plans = gson.fromJson(response.getJSONArray("not_subscribed").toString(), PlansResponse[].class);
                         else
                             plans = gson.fromJson(response.getJSONArray("subscriptions").toString(), PlansResponse[].class);
-//                        Collections.sort(Arrays.asList(plans), new Comparator<PlansResponse>() {
-//                            @Override
-//                            public int compare(PlansResponse o1, PlansResponse o2) {
-//                                if(o1.getEstimatedProfit() > o2.getEstimatedProfit()) {
-//                                    return -1;
-//                                }
-//                                else {
-//                                    return 1;
-//                                }
-//                            }
-//                        });
+                        if(recommendation) {
+                            Collections.sort(Arrays.asList(plans), new Comparator<PlansResponse>() {
+                                @Override
+                                public int compare(PlansResponse o1, PlansResponse o2) {
+                                    if (o1.getEstimatedProfit() > o2.getEstimatedProfit()) {
+                                        return -1;
+                                    } else {
+                                        return 1;
+                                    }
+                                }
+                            });
+                        }
                         updatePlansView(plans, id);
+                    } else if(response.getString("statuscode").equals("25")){
+                        CFAlertDialog.Builder builder = new CFAlertDialog.Builder(getActivity());
+                        builder.setDialogStyle(CFAlertDialog.CFAlertStyle.BOTTOM_SHEET);
+                        builder.setMessage(getActivity().getString(R.string.register_your_land_with_FPO_to_get_recommendation));
+                        builder.show();
                     } else {
                         Toast.makeText(getActivity(), ResponseStatusCodeHandler.getMessage(response.getString("statuscode")), Toast.LENGTH_LONG).show();
                     }

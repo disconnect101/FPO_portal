@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,6 +46,7 @@ public class LeaderAccessActivity extends AppCompatActivity implements LeaderAcc
     private ArrayList<LeaderAccessResponse> leaderAccessAdapterArrayList;
     private ACProgressFlower dialog;
     private Toolbar toolbar;
+    private TextView textViewNoFarmerUnderLeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class LeaderAccessActivity extends AppCompatActivity implements LeaderAcc
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.leader_access);
 
+        textViewNoFarmerUnderLeader = findViewById(R.id.textViewNoFarmerUnderLeader);
         recyclerViewFarmers = findViewById(R.id.recyclerViewFarmers);
         recyclerViewFarmers.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(LeaderAccessActivity.this);
@@ -112,6 +116,9 @@ public class LeaderAccessActivity extends AppCompatActivity implements LeaderAcc
     }
 
     public void handleResponse(LeaderAccessResponse[] leaderAccessResponses) {
+        if(leaderAccessResponses.length == 0) {
+            textViewNoFarmerUnderLeader.setVisibility(View.VISIBLE);
+        }
         leaderAccessAdapterArrayList.clear();
         leaderAccessAdapterArrayList.addAll(Arrays.asList(leaderAccessResponses));
         recyclerViewFarmers.getAdapter().notifyDataSetChanged();

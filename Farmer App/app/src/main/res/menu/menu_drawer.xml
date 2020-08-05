@@ -53,6 +53,11 @@
             android:icon="@drawable/ic_plans"
             android:title="@string/plans" />
 
+        <item
+            android:id="@+id/produce"
+            android:icon="@drawable/ic_produce"
+            android:title="@string/produce" />
+
     </group>
 
     <group android:checkableBehavior="single"

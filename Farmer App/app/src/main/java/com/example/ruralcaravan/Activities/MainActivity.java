@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void contactFPO(MenuItem menuItem) {
         //TODO: Add FPO contact number
-        String url = "tel:1234567890";
+        String url = "tel:9149379200";
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse(url));
         startActivity(intent);
@@ -273,14 +273,6 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home: {
                 drawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            }
-            case R.id.profile: {
-                Toast.makeText(MainActivity.this, "Profile clicked", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            case R.id.notification: {
-                Toast.makeText(MainActivity.this, SharedPreferenceUtils.getUserData(MainActivity.this).getFirstName(), Toast.LENGTH_SHORT).show();
                 return true;
             }
         }

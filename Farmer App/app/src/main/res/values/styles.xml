@@ -1,8 +1,6 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -11,10 +9,8 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="NavigationViewStyle">
-        <item name="android:textColor">@color/black</item>
-        <item name="android:fontFamily">@font/muli_semibold</item>
-        <item name="android:textSize">15sp</item>
+    <style name="myCustomMenuTextAppearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
 </resources>

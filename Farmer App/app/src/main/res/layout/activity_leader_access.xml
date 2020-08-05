@@ -5,16 +5,26 @@
     android:layout_height="match_parent"
     tools:context=".Activities.LeaderAccessActivity">
 
-    <include
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFarmers"
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <TextView
+        android:id="@+id/textViewNoFarmerUnderLeader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/muli_black"
+        android:textSize="35sp"
+        android:text="@string/no_farmers_under_the_leader"
+        android:gravity="center"
+        android:visibility="gone"/>
 
 </RelativeLayout>
