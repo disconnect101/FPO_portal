@@ -103,7 +103,7 @@ class Recommender:
                     arr.append(0)
 
             serializedData.append(arr)
-
+        print(serializedData)
         return serializedData
 
 

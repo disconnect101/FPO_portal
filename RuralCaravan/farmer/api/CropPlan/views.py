@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from farmer.api.utils import statuscode
-from farmer.models import Crops, FarmerCropMap, Farmer, UserProfile, Orders, Land
+from farmer.models import Crops, FarmerCropMap, Farmer, UserProfile, Orders, Land, Produce
 from farmer.api.serializers import CropSerializer
 import json
 from django.core import serializers
@@ -10,6 +10,7 @@ from django.forms.models import model_to_dict
 from farmer.SMSservice import sms
 from farmer.Recommender.profit_estimate import Recommender
 from django.db.models import Sum, Avg
+from django.core import serializers
 
 
 @api_view(['POST', ])
@@ -25,8 +26,11 @@ def cropplan(request, cropID=0):
         subscriptions = []
         for subscription in crop_subscriptions:
             crop_subscriptions_ids.append(subscription.crop.id)
-            subscriptions += [ CropSerializer(subscription.crop).data ]
+            #subscriptions += [ CropSerializer(subscription.crop).data ]
+            #subscriptions += [subscription]
 
+        subscriptions = Crops.objects.filter(id__in=crop_subscriptions_ids).values()
+        
         crops = Crops.objects.filter(live=True).exclude(id__in=list(crop_subscriptions_ids)).values('id',
                                                                                                     'code',
                                                                                                     'name',
@@ -47,30 +51,42 @@ def cropplan(request, cropID=0):
             try:
                 #### Recommendation System starts......
 
-                investments = Orders.objects.values('date__year').filter(buyer=user).annotate(investment=Sum('price'))
-                investmentSum = 0
+                avgInvestment = 0
+                if request.data.get('investment'):
+                    avgInvestment = request.data.get('investment')
+                else:
+                    investments = Orders.objects.values('date__year').filter(buyer=user).annotate(investment=Sum('price'))
+                    investmentSum = 0
 
-                for investment in investments:
-                    print(investment)
-                    investmentSum += investment.get('investment')
-                if investments.count()==0:
-                    print('invest')
-                    raise Exception("not enough investments to predict")
+                    for investment in investments:
+                        print(investment)
+                        investmentSum += investment.get('investment')
+                    if investments.count()==0:
+                        print('invest')
+                        raise Exception("not enough investments to predict")
 
-                avgInvestment = investmentSum/investments.count()
+                    avgInvestment = investmentSum/investments.count()
 
                 land = Land.objects.filter(owner=user)
                 if land.count()==0:
                     print("land")
                     raise Exception("No Land to predict profit for")
 
-                landarea = land.aggregate(avglandarea=Avg('area'))
+                landarea = 0
+                if request.data.get('landarea'):
+                    landarea = request.data.get('landarea')
+
+                else:
+                    landarea = land.aggregate(avglandarea=Avg('area'))
+                    landarea = landarea.get('avglandarea')
                 soil = land.first().soil
 
-
+                print('investment : ',avgInvestment)
+                print('landarea : ', landarea)
+                print('soil : ', soil)
                 farmerData = {
-                    'investment': avgInvestment,
-                    'landarea': landarea.get('avglandarea'),
+                    'investment': int(avgInvestment),
+                    'landarea': int(landarea),
                     'soil': soil
                 }
 
@@ -175,3 +191,26 @@ def confcrop(request, cropID):
             return Response(statuscode('12'))
 
         return Response(statuscode('0'))
+
+
+@api_view(['GET', ])
+@permission_classes((IsAuthenticated, ))
+def produce(request):
+    user = request.user
+
+    try:
+        produce = Produce.objects.filter(owner=user).order_by('-date').values('crop__name',
+                                                                              'amount',
+                                                                              'amountsold',
+                                                                              'date',
+                                                                              'quality',
+                                                                              'income')
+    except Exception as e:
+        print(str(e))
+        return Response(statuscode('12'))
+
+    data = {
+        'data': produce,
+    }
+
+    return Response(statuscode('0', data))
