@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/textViewName"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textAlignment="textStart"
+                android:paddingLeft="20dp"
+                android:textSize="25sp"
+                android:fontFamily="@font/muli_black"
+                android:layout_gravity="center_vertical"
+                android:text="Name"/>
+
+            <TextView
+                android:id="@+id/textViewDate"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                android:text="Date"
+                android:textSize="20sp"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/muli_black"
+                android:paddingRight="20dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/textViewAmountPlaceHolder"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:textSize="18sp"
+                android:fontFamily="@font/muli_black"
+                android:layout_gravity="center_vertical"
+                android:text="@string/amount"/>
+
+            <TextView
+                android:id="@+id/textViewAmount"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:fontFamily="@font/muli_semibold"
+                android:layout_gravity="center_vertical"
+                android:text="@string/amount"/>
+
+            <TextView
+                android:id="@+id/textViewAmountSoldPlaceHolder"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:text="@string/amount_sold"
+                android:textSize="18sp"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/muli_black"/>
+
+            <TextView
+                android:id="@+id/textViewAmountSold"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:fontFamily="@font/muli_semibold"
+                android:layout_gravity="center_vertical"
+                android:text="@string/amount"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/textViewIncomePlaceHolder"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:textSize="18sp"
+                android:fontFamily="@font/muli_black"
+                android:layout_gravity="center_vertical"
+                android:text="@string/income"/>
+
+            <TextView
+                android:id="@+id/textViewIncome"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:fontFamily="@font/muli_semibold"
+                android:layout_gravity="center_vertical"
+                android:text="@string/amount"/>
+
+            <TextView
+                android:id="@+id/textViewQualityPlaceHolder"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:text="@string/quality"
+                android:textSize="18sp"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/muli_black"/>
+
+            <TextView
+                android:id="@+id/textViewQuality"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:fontFamily="@font/muli_semibold"
+                android:layout_gravity="center_vertical"
+                android:text="@string/amount"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

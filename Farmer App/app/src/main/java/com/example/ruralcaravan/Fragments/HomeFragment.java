@@ -32,6 +32,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private CardView cardViewWeather;
     private CardView cardViewPlans;
     private CardView cardViewLeaderAccess;
+    private CardView cardViewProduce;
 
     private NavigationView navigationView;
     private Menu menu;
@@ -51,6 +52,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         cardViewWeather = rootView.findViewById(R.id.cardViewWeather);
         cardViewPlans = rootView.findViewById(R.id.cardViewPlans);
         cardViewLeaderAccess = rootView.findViewById(R.id.cardViewLeaderAccess);
+        cardViewProduce = rootView.findViewById(R.id.cardViewProduce);
 
         cardViewEWallet.setOnClickListener(this);
         cardViewCatalogue.setOnClickListener(this);
@@ -61,6 +63,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         cardViewWeather.setOnClickListener(this);
         cardViewPlans.setOnClickListener(this);
         cardViewLeaderAccess.setOnClickListener(this);
+        cardViewProduce.setOnClickListener(this);
 
         navigationView = getActivity().findViewById(R.id.navigationView);
         menu = navigationView.getMenu();
@@ -122,6 +125,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             case R.id.cardViewPlans:
                 fragment = new ListPlansFragment();
                 menuItemId = R.id.plans;
+                break;
+            case R.id.cardViewProduce:
+                fragment = new ProduceFragment();
+                menuItemId = R.id.produce;
                 break;
             case R.id.cardViewLeaderAccess:
                 fragment = null;

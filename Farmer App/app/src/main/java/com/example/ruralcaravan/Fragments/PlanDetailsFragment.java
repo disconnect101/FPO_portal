@@ -82,7 +82,7 @@ public class PlanDetailsFragment extends Fragment {
                 .load(getActivity().getString(R.string.socket_address) + "/media/" + planDetails.getImage())
                 .placeholder(R.drawable.app_logo)
                 .into(imageViewPlan);
-        textViewMaximumCapacity.setText(planDetails.getMaxCap().toString());
+        textViewMaximumCapacity.setText(planDetails.getMaxCap().toString() + "Q");
         double acquiredPercentage = 100.0*planDetails.getCurrentAmount()/planDetails.getMaxCap();
         textViewPercentageAcquired.setText(String.format("%.2f", acquiredPercentage) + "%");
         textViewSubscriberCount.setText(planDetails.getSubscribers().toString());

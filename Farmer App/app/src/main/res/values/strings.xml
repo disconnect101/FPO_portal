@@ -133,4 +133,10 @@
     <string name="fields_can_not_be_empty">Fields can not be empty</string>
     <string name="plan_subscribed_successfully">Plan subscribed successfully</string>
     <string name="plan_un_subscribed_successfully">Plan unsubscribed successfully</string>
+    <string name="amount_sold">Amount sold</string>
+    <string name="income">Income</string>
+    <string name="quality">Quality</string>
+    <string name="farmer_produce">Farmer produce</string>
+    <string name="produce">Produce</string>
+    <string name="rejected">Rejected</string>
 </resources>
