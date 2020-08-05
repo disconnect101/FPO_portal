@@ -83,6 +83,7 @@ def cropplan(request, cropID=0):
 
                 print('investment : ',avgInvestment)
                 print('landarea : ', landarea)
+                print('soil : ', soil)
                 farmerData = {
                     'investment': int(avgInvestment),
                     'landarea': int(landarea),
