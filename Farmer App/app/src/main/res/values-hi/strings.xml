@@ -122,4 +122,17 @@
     <string name="fertilisers">उर्वरक</string>
     <string name="equipments">उपकरण</string>
     <string name="choose_a_district">एक जिला चुनें</string>
+    <string name="amount_sold">बेची गई राशि</string>
+    <string name="enter_estimated_investment">अनुमानित निवेश दर्ज करें</string>
+    <string name="farmer_produce">किसान उपज</string>
+    <string name="fields_can_not_be_empty">प्रवेश क्षेत्र खाली नहीं हो सकते</string>
+    <string name="income">आय</string>
+    <string name="plan_subscribed_successfully">योजना सफलतापूर्वक सदस्यता ले ली गई</string>
+    <string name="plan_un_subscribed_successfully">योजना को सफलतापूर्वक रद्द कर दिया गया</string>
+    <string name="produce">उत्पादित करें</string>
+    <string name="profit">फायदा</string>
+    <string name="quality">गुणवत्ता</string>
+    <string name="recommend">सिफारिश</string>
+    <string name="register_your_land_with_FPO_to_get_recommendation">अनुशंसा प्राप्त करने के लिए एफपीओ के साथ अपनी भूमि को पंजीकृत करें</string>
+    <string name="rejected">अस्वीकृत</string>
 </resources>

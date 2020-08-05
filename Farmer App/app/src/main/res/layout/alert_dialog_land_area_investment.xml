@@ -32,7 +32,7 @@
         android:fontFamily="@font/muli_black"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:text="@string/enter_land_area_in_hectare"/>
+        android:text="@string/enter_estimated_investment"/>
 
     <EditText
         android:id="@+id/textViewInvestment"
