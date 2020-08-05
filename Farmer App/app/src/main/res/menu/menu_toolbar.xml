@@ -16,12 +16,4 @@
         app:showAsAction="always"
         android:title="@string/profile" />
 
-    <item
-        android:id="@+id/leaderAccess"
-        android:icon="@drawable/app_logo"
-        android:orderInCategory="3"
-        app:showAsAction="always"
-        android:visible="false"
-        android:title="@string/leader_access"/>
-
 </menu>

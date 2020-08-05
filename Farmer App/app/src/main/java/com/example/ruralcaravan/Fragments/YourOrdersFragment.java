@@ -2,6 +2,7 @@ package com.example.ruralcaravan.Fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,7 @@ public class YourOrdersFragment extends Fragment {
         OrdersAdapter ordersAdapter = new OrdersAdapter(getActivity(), ordersAdapterArrayList);
         recyclerViewOrders.setAdapter(ordersAdapter);
         recyclerViewOrders.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        recyclerViewOrders.setBackgroundColor(getResources().getColor(R.color.light_grey));
 
         currentSelection = Constants.PENDING_ORDERS;
 
@@ -119,7 +121,7 @@ public class YourOrdersFragment extends Fragment {
         dialog = new ACProgressFlower.Builder(getActivity())
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                 .themeColor(Color.WHITE)
-                .text("Loading")
+                .text(getString(R.string.loading))
                 .fadeColor(Color.DKGRAY).build();
         dialog.show();
         JsonObjectRequest ordersRequest = new JsonObjectRequest(Request.Method.GET, ordersUrl, null, responseListener, errorListener) {
@@ -164,20 +166,6 @@ public class YourOrdersFragment extends Fragment {
         }
     }
 
-    private void handleResponse() {
-        if(jsonResponseSize == 0) {
-            updateRecyclerView(Constants.DELIVERED_ORDERS);
-            dialog.dismiss();
-        }
-        jsonResponseSize = deliveredOrders.length + pendingOrders.length;
-        for (int i = 0; i < deliveredOrders.length; i++) {
-            fetchNameAndImage(deliveredOrders[i]);
-        }
-        for (int i = 0; i < pendingOrders.length; i++) {
-            fetchNameAndImage(pendingOrders[i]);
-        }
-    }
-
     private void fetchNameAndImage(final OrdersResponse order) {
         final String itemDetailsUrl = getResources().getString(R.string.base_end_point_ip) + "product/";
         JSONObject jsonBody = new JSONObject();
@@ -216,6 +204,22 @@ public class YourOrdersFragment extends Fragment {
             VolleySingleton.getInstance(getActivity()).addToRequestQueue(itemDetailsRequest);
         } catch (JSONException e) {
             e.printStackTrace();
+            dialog.dismiss();
+            Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void handleResponse() {
+        jsonResponseSize = deliveredOrders.length + pendingOrders.length;
+        if(jsonResponseSize == 0) {
+            updateRecyclerView(Constants.DELIVERED_ORDERS);
+            dialog.dismiss();
+        }
+        for (int i = 0; i < deliveredOrders.length; i++) {
+            fetchNameAndImage(deliveredOrders[i]);
+        }
+        for (int i = 0; i < pendingOrders.length; i++) {
+            fetchNameAndImage(pendingOrders[i]);
         }
     }
 

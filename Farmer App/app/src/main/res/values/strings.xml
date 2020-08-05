@@ -1,22 +1,22 @@
 <resources>
-    <string name="app_name">Rural Caravan</string>
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
+    <string name="app_name" translatable="false">Rural Caravan</string>
+    <string name="drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="drawer_close" translatable="false">Close navigation drawer</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="greeting_message">Hello, Manas</string>
     <string name="home">Home</string>
     <string name="catalogue">Catalogue</string>
     <string name="balanceSheet">Balance Sheet</string>
     <string name="meetings">Meetings</string>
     <string name="yourOrders">Your Orders</string>
-    <string name="news">News</string>
+    <string name="govt_schemes">Govt Schemes</string>
     <string name="weather">Weather</string>
     <string name="plans">Plans</string>
     <string name="logOut">Log out</string>
     <string name="language">Language</string>
     <string name="contact">Contact FPO</string>
-    <string name="about">About Rural Caravan</string>
+    <string name="about" translatable="false">About Rural Caravan</string>
     <string name="humidity">Humidity</string>
     <string name="cloudiness">Cloudiness</string>
     <string name="wind">Wind</string>
@@ -40,14 +40,13 @@
     <string name="otp_verification_text">Verification</string>
     <string name="verify_code">Verify code</string>
     <string name="otp_verification">OTP\nVerification</string>
-    <string name="OTP">OTP</string>
+    <string name="OTP" translatable="false">OTP</string>
     <string name="verification">Verification</string>
-    <string name="base_end_point_ip">http://207.46.228.104:8000/farmer/api/</string>
-    <string name="socket_address">http://207.46.228.104:8000</string>
+    <string name="base_end_point_ip" translatable="false">http://207.46.228.104:8000/farmer/api/</string>
+    <string name="socket_address" translatable="false">http://207.46.228.104:8000</string>
     <string name="register">Register</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
-    <string name="about_the_event">About the event</string>
     <string name="quantity">Quantity</string>
     <string name="buy_now">Buy Now</string>
     <string name="add_to_cart">Add to Cart</string>
@@ -75,8 +74,7 @@
     <string name="plan_details">Plan Details</string>
     <string name="products_under_plan">Products Under Plan</string>
     <string name="maximum_capacity">Maximum Capacity</string>
-    <string name="acquired_percentage">Acquired %</string>
-    <string name="no_of_subscribers">No of subscribers</string>
+    <string name="no_of_subscribers">No. of subscribers</string>
     <string name="guidance">Guidance</string>
     <string name="facilities">Facilities</string>
     <string name="investments">Investments</string>
@@ -84,7 +82,7 @@
     <string name="unsubscribe">Unsubscribe</string>
     <string name="enter_land_area">Enter land area</string>
     <string name="are_you_sure_you_want_to">Are you sure you want to </string>
-    <string name="enter_land_area_in_bigha">Enter land area (in bigha)</string>
+    <string name="enter_land_area_in_hectare">Enter land area (in hectare)</string>
     <string name="confirmation">Confirmation</string>
     <string name="enter_6_digit_OTP">Enter 6 digit OTP</string>
     <string name="server_error">Server error</string>
@@ -102,7 +100,7 @@
     <string name="notification">Notification</string>
     <string name="profile">Profile</string>
     <string name="welcome_leader">Welcome Leader</string>
-    <string name="smartphone">Smartphone</string>
+    <string name="smart_phone">Smart Phone</string>
     <string name="feature_phone">Feature Phone</string>
     <string name="no_phone">No Phone</string>
     <string name="select_phone_status">Select phone status</string>
@@ -113,4 +111,26 @@
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
     <string name="accepted">Accepted</string>
+    <string name="choose_a_village">Choose a village</string>
+    <string name="user_details">User\nDetails</string>
+    <string name="no_products_under_plan">No products under plan</string>
+    <string name="recommendation">Recommendation</string>
+    <string name="plan_stats">Plan Stats</string>
+    <string name="acquired">Acquired</string>
+    <string name="no_govt_schemes">No government schemes</string>
+    <string name="overview">Overview</string>
+    <string name="hello">Hello</string>
+    <string name="about_the_event">About the event</string>
+    <string name="ok">OK</string>
+    <string name="select_language">Select language</string>
+    <string name="seeds">Seeds</string>
+    <string name="fertilisers">Fertilisers</string>
+    <string name="pesticides">Pesticides</string>
+    <string name="equipments">Equipments</string>
+    <string name="others">Others</string>
+    <string name="choose_a_district">Choose a district</string>
+    <string name="recommend">Recommend</string>
+    <string name="fields_can_not_be_empty">Fields can not be empty</string>
+    <string name="plan_subscribed_successfully">Plan subscribed successfully</string>
+    <string name="plan_un_subscribed_successfully">Plan unsubscribed successfully</string>
 </resources>

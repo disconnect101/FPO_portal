@@ -1,8 +1,5 @@
 package com.example.ruralcaravan.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,10 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -31,6 +31,7 @@ import com.example.ruralcaravan.Utilities.Constants;
 import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
 import com.example.ruralcaravan.Utilities.SharedPreferenceUtils;
 import com.example.ruralcaravan.Utilities.VolleySingleton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -42,6 +43,7 @@ import java.util.Map;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
+import info.hoang8f.widget.FButton;
 
 public class ItemDetailsActivity extends AppCompatActivity {
 
@@ -52,10 +54,13 @@ public class ItemDetailsActivity extends AppCompatActivity {
     private TextView textViewQuantity;
     private String productId;
     private String productName;
-    private Button buttonDecreaseQuantity;
+    private FloatingActionButton buttonDecreaseQuantity;
     private int paymentMode;
     private ACProgressFlower dialog;
     private Toolbar toolbar;
+    private FButton buttonBuyNow;
+    private FButton buttonAddToCart;
+    private RelativeLayout relativeLayoutItemDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +77,18 @@ public class ItemDetailsActivity extends AppCompatActivity {
         textViewItemDescription = findViewById(R.id.textViewItemDescription);
         textViewQuantity = findViewById(R.id.textViewQuantity);
         buttonDecreaseQuantity = findViewById(R.id.buttonDecreaseQuantity);
+        relativeLayoutItemDetails = findViewById(R.id.relativeLayoutItemDetails);
+
+        buttonBuyNow = findViewById(R.id.buttonBuyNow);
+        buttonBuyNow.setButtonColor(getResources().getColor(R.color.orange_buy_now));
+        buttonAddToCart = findViewById(R.id.buttonAddToCart);
+        buttonAddToCart.setButtonColor(getResources().getColor(R.color.yellow_add_to_cart));
 
         if(textViewQuantity.getText().toString().equals("0")) {
             buttonDecreaseQuantity.setEnabled(false);
         }
 
+        relativeLayoutItemDetails.setVisibility(View.GONE);
         dialog = new ACProgressFlower.Builder(ItemDetailsActivity.this)
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                 .themeColor(Color.WHITE)
@@ -103,6 +115,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
                     ItemDetailedResponse itemDetailedResponse = gson.fromJson(response.toString(), ItemDetailedResponse.class);
                     handleResponse(itemDetailedResponse);
                     dialog.dismiss();
+                    relativeLayoutItemDetails.setVisibility(View.VISIBLE);
                 }
             };
             Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -111,6 +124,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
                     error.printStackTrace();
                     Toast.makeText(ItemDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
+                    relativeLayoutItemDetails.setVisibility(View.VISIBLE);
                 }
             };
             JsonObjectRequest itemDetailsRequest = new JsonObjectRequest(Request.Method.POST, itemDetailsUrl, jsonBody, responseListener, errorListener){
@@ -126,6 +140,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
             e.printStackTrace();
             Toast.makeText(ItemDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
             dialog.dismiss();
+            relativeLayoutItemDetails.setVisibility(View.VISIBLE);
         }
     }
 
@@ -135,7 +150,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Glide.with(ItemDetailsActivity.this)
-                        .load(getResources().getString(R.string.socket_address) + "/" + itemDetailedResponse.getImage())
+                        .load(getResources().getString(R.string.socket_address) + itemDetailedResponse.getImage())
                         .placeholder(R.drawable.app_logo)
                         .into(imageViewItem);
                 textViewItemName.setText(itemDetailedResponse.getName());

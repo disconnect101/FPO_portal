@@ -19,6 +19,7 @@
             android:layout_weight="1"
             android:text="@string/delivered"
             android:textAlignment="center"
+            android:fontFamily="@font/muli_black"
             android:textSize="20sp"
             android:padding="10dp" />
 
@@ -28,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/pending"
+            android:fontFamily="@font/muli_black"
             android:textAlignment="center"
             android:padding="10dp"
             android:textSize="20sp"/>
@@ -38,6 +40,7 @@
         android:id="@+id/recyclerViewOrders"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/top_border"
         android:layout_below="@+id/linearLayoutOptions"/>
 
     <TextView

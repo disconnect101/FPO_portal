@@ -44,6 +44,9 @@ public class PlansResponse {
     @SerializedName("investment_requirements")
     @Expose
     private String investments;
+    @SerializedName("estimatedProfit")
+    @Expose
+    private Double estimatedProfit;
 
     public Integer getId() {
         return id;
@@ -149,6 +152,14 @@ public class PlansResponse {
         this.investments = investments;
     }
 
+    public Double getEstimatedProfit() {
+        return estimatedProfit;
+    }
+
+    public void setEstimatedProfit(Double estimatedProfit) {
+        this.estimatedProfit = estimatedProfit;
+    }
+
     @Override
     public String toString() {
         return "PlansResponse{" +
@@ -165,6 +176,7 @@ public class PlansResponse {
                 ", subscribers=" + subscribers +
                 ", facilities='" + facilities + '\'' +
                 ", investments='" + investments + '\'' +
+                ", estimatedProfit=" + estimatedProfit +
                 '}';
     }
 }

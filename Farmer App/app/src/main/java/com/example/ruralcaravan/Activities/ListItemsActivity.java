@@ -73,23 +73,23 @@ public class ListItemsActivity extends AppCompatActivity {
         try { switch (whatToList) {
                 case Constants.LIST_SEED:
                     jsonBody.put("category", "SED");
-                    getSupportActionBar().setTitle("Seeds");
+                    getSupportActionBar().setTitle(getString(R.string.seeds));
                     break;
                 case Constants.LIST_FERTILIZER:
                     jsonBody.put("category", "FER");
-                    getSupportActionBar().setTitle("Fertilisers");
+                    getSupportActionBar().setTitle(getString(R.string.fertilisers));
                     break;
                 case Constants.LIST_PESTICIDES:
                     jsonBody.put("category", "PES");
-                    getSupportActionBar().setTitle("Pesticides");
+                    getSupportActionBar().setTitle(R.string.pesticides);
                     break;
                 case Constants.LIST_EQUIPMENTS:
                     jsonBody.put("category", "EQP");
-                    getSupportActionBar().setTitle("Equipments");
+                    getSupportActionBar().setTitle(R.string.equipments);
                     break;
                 case Constants.LIST_OTHERS:
                     jsonBody.put("category", "OTH");
-                    getSupportActionBar().setTitle("Others");
+                    getSupportActionBar().setTitle(R.string.others);
                     break;
             }
         } catch (JSONException e) {
@@ -123,7 +123,7 @@ public class ListItemsActivity extends AppCompatActivity {
         dialog = new ACProgressFlower.Builder(ListItemsActivity.this)
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                 .themeColor(Color.WHITE)
-                .text("Loading")
+                .text(getString(R.string.loading))
                 .fadeColor(Color.DKGRAY).build();
         dialog.show();
         JsonObjectRequest itemsListRequest = new JsonObjectRequest(Request.Method.POST, itemsUrl, jsonBody, responseListener, errorListener){

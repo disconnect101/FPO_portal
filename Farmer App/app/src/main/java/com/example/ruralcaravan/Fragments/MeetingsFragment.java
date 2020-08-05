@@ -37,6 +37,7 @@ import java.util.Map;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
+import info.hoang8f.widget.FButton;
 
 public class MeetingsFragment extends Fragment implements MeetingsAdapter.OnMeetingAcceptedListener {
 
@@ -115,7 +116,7 @@ public class MeetingsFragment extends Fragment implements MeetingsAdapter.OnMeet
         if(meetings.length == 0) {
             textViewNoUpcomingMeetings.setVisibility(View.VISIBLE);
         } else {
-            textViewNoUpcomingMeetings.setVisibility(View.INVISIBLE);
+            textViewNoUpcomingMeetings.setVisibility(View.GONE);
             meetingsAdapterArrayList.clear();
             meetingsAdapterArrayList.addAll(Arrays.asList(meetings));
             meetingsRecyclerView.getAdapter().notifyDataSetChanged();
@@ -124,7 +125,7 @@ public class MeetingsFragment extends Fragment implements MeetingsAdapter.OnMeet
     }
 
     @Override
-    public void onMeetingAccepted(int position, final Button button) {
+    public void onMeetingAccepted(int position, final FButton button) {
 
         dialog = new ACProgressFlower.Builder(getActivity())
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
@@ -143,7 +144,7 @@ public class MeetingsFragment extends Fragment implements MeetingsAdapter.OnMeet
                     try {
                         if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
                             button.setText(getString(R.string.accepted));
-                            button.setBackgroundColor(getResources().getColor(R.color.orange_buy_now));
+                            button.setButtonColor(getResources().getColor(R.color.orange_buy_now));
                         } else {
                             Toast.makeText(getActivity(), ResponseStatusCodeHandler.getMessage(response.getString("statuscode")), Toast.LENGTH_LONG).show();
                         }

@@ -31,7 +31,7 @@ public class LeaderAccessAdapter extends RecyclerView.Adapter<LeaderAccessAdapte
     @NonNull
     @Override
     public LeaderAccessViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.leader_access_row_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_row_layout, parent, false);
         LeaderAccessAdapter.LeaderAccessViewHolder leaderAccessViewHolder = new LeaderAccessViewHolder(view,
                 onFarmerSelectedListener);
         return leaderAccessViewHolder;

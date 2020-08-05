@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,7 +17,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.ruralcaravan.Activities.MainActivity;
 import com.example.ruralcaravan.Adapters.BalanceSheetAdapter;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.BalanceSheetResponse;
@@ -45,6 +45,7 @@ public class BalanceSheetFragment extends Fragment {
     private ACProgressFlower dialog;
     private TextView textViewAvailableBalance;
     private TextView textViewNoTransaction;
+    private RelativeLayout relativeLayoutBalanceSheet;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,6 +63,8 @@ public class BalanceSheetFragment extends Fragment {
         BalanceSheetAdapter balanceSheetAdapter = new BalanceSheetAdapter(getActivity(), balanceSheetAdapterArrayList);
         recyclerViewBalanceSheet.setAdapter(balanceSheetAdapter);
 
+        relativeLayoutBalanceSheet = rootView.findViewById(R.id.relativeLayoutBalanceSheet);
+
         String balanceSheetUrl = getString(R.string.base_end_point_ip) + "balancesheet/";
 
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
@@ -71,16 +74,18 @@ public class BalanceSheetFragment extends Fragment {
                     if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
                         GsonBuilder gsonBuilder = new GsonBuilder();
                         Gson gson = gsonBuilder.create();
-                        textViewAvailableBalance.setText(response.getJSONObject("current_amount").getString("amount"));
+                        textViewAvailableBalance.setText("\u20B9" + response.getJSONObject("current_amount").getString("amount"));
                         BalanceSheetResponse[] balanceSheet = gson.fromJson(response.getJSONArray("balancesheet").toString(), BalanceSheetResponse[].class);
                         handleResponse(balanceSheet);
                     } else {
                         Toast.makeText(getActivity(), ResponseStatusCodeHandler.getMessage(response.getString("statuscode")), Toast.LENGTH_LONG).show();
                     }
                     dialog.dismiss();
+                    relativeLayoutBalanceSheet.setVisibility(View.VISIBLE);
                 } catch (JSONException e) {
                     Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
                     dialog.dismiss();
+                    relativeLayoutBalanceSheet.setVisibility(View.VISIBLE);
                 }
             }
         };
@@ -90,6 +95,7 @@ public class BalanceSheetFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
                 dialog.dismiss();
+                relativeLayoutBalanceSheet.setVisibility(View.VISIBLE);
             }
         };
 
@@ -99,6 +105,7 @@ public class BalanceSheetFragment extends Fragment {
                 .text(getString(R.string.loading))
                 .fadeColor(Color.DKGRAY).build();
         dialog.show();
+        relativeLayoutBalanceSheet.setVisibility(View.GONE);
 
         JsonObjectRequest balanceSheetRequest = new JsonObjectRequest(Request.Method.GET, balanceSheetUrl, null, responseListener, errorListener){
             @Override

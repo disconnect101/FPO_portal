@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.BalanceSheetFragment">
+    tools:context=".Fragments.BalanceSheetFragment"
+    android:id="@+id/relativeLayoutBalanceSheet">
 
     <LinearLayout
         android:id="@+id/linearLayoutAvailableBalance"
@@ -16,14 +17,17 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="@string/available_balance"
-            android:textSize="16sp"
+            android:textSize="20sp"
+            android:fontFamily="@font/muli_black"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textViewAvailableBalance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/muli_semibold"
+            android:textSize="20sp"
             android:text="0.00"
             android:paddingLeft="10dp"/>
 

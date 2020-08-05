@@ -2,7 +2,9 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayoutItemDetails">
 
     <include
         android:id="@+id/toolbar"
@@ -29,48 +31,46 @@
                 android:src="@drawable/app_logo" />
 
             <LinearLayout
-                android:id="@+id/linearLayoutItemName"
+                android:id="@+id/linearLayoutItemHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageViewItem"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:src="@drawable/ic_description" />
-
                 <TextView
                     android:id="@+id/textViewItemName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/muli_black"
                     android:text="Item name"
-                    android:textSize="20sp" />
+                    android:textSize="40sp" />
 
-            </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/linearLayoutItemRate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linearLayoutItemName"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/linearLayoutItemRate"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:src="@drawable/ic_rupee_indian" />
+                    android:layout_below="@+id/linearLayoutItemName"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:gravity="end">
 
-                <TextView
-                    android:id="@+id/textViewItemRate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Item rate"
-                    android:textSize="20sp" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:src="@drawable/ic_rupee_indian" />
+
+                    <TextView
+                        android:id="@+id/textViewItemRate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Item rate"
+                        android:paddingEnd="10dp"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -78,10 +78,13 @@
                 android:id="@+id/textViewItemDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linearLayoutItemRate"
+                android:layout_below="@+id/linearLayoutItemHeader"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
+                android:fontFamily="@font/muli"
+                android:textColor="@color/black"
+                android:textSize="15sp"
                 android:text="Random text" />
 
             <LinearLayout
@@ -90,89 +93,76 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewItemDescription"
                 android:orientation="horizontal"
-                android:weightSum="10">
+                android:weightSum="20">
 
                 <TextView
                     android:id="@+id/textViewQuantityPlaceHolder"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_below="@+id/textViewItemDescription"
-                    android:layout_weight="5"
+                    android:layout_weight="9"
                     android:text="@string/quantity"
                     android:textAlignment="center"
                     android:textAllCaps="true"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/muli_semibold"
                     android:textSize="20sp" />
 
-                <Button
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/buttonDecreaseQuantity"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
+                    app:fabCustomSize="40dp"
+                    android:src="@drawable/ic_minus"
                     android:onClick="decreaseQuantityPressed"
-                    android:text="-"
-                    android:textSize="24dp" />
+                    app:elevation="0dp"
+                    app:borderWidth="0dp"
+                    android:backgroundTint="@color/yellow"/>
 
                 <TextView
                     android:id="@+id/textViewQuantity"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
                     android:text="0"
+                    android:gravity="center"
                     android:textAlignment="center"
                     android:textSize="20sp" />
 
-                <Button
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/buttonIncreaseQuantity"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
+                    app:fabCustomSize="40dp"
                     android:onClick="increaseQuantityPressed"
-                    android:text="+"
-                    android:textSize="24dp" />
+                    app:elevation="0dp"
+                    android:src="@drawable/ic_add"
+                    app:borderWidth="0dp"
+                    android:backgroundTint="@color/yellow" />
 
             </LinearLayout>
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardViewAddToCart"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <info.hoang8f.widget.FButton
+                android:id="@+id/buttonBuyNow"
                 android:layout_below="@+id/linearLayoutQuantity"
-                android:layout_margin="20dp"
-                android:onClick="buyNowPressed">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:background="@color/orange_buy_now"
-                    android:padding="5dp"
-                    android:text="@string/buy_now"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardViewBuyNow"
+                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/cardViewAddToCart"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:text="@string/buy_now"
+                android:onClick="buyNowPressed" />
+
+            <info.hoang8f.widget.FButton
+                android:id="@+id/buttonAddToCart"
+                android:layout_below="@id/buttonBuyNow"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="20dp"
-                android:onClick="addToCartPressed">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:background="@color/yellow_add_to_cart"
-                    android:padding="5dp"
-                    android:text="@string/add_to_cart"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-
-            </androidx.cardview.widget.CardView>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_to_cart"
+                android:onClick="addToCartPressed"/>
 
         </RelativeLayout>
 

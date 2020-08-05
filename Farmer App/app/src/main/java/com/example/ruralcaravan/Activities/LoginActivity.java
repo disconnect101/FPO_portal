@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         dialog = new ACProgressFlower.Builder(LoginActivity.this)
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                 .themeColor(Color.WHITE)
-                .text("Loading")
+                .text(getString(R.string.loading))
                 .fadeColor(Color.DKGRAY).build();
         dialog.show();
         //Server request for login

@@ -2,6 +2,7 @@ package com.example.ruralcaravan.Fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
@@ -11,9 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.fragment.app.Fragment;
 
@@ -22,6 +26,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
+import com.crowdfire.cfalertdialog.CFAlertDialog;
+import com.example.ruralcaravan.Activities.ItemDetailsActivity;
+import com.example.ruralcaravan.Activities.MainActivity;
 import com.example.ruralcaravan.Activities.PlanActivity;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.PlansResponse;
@@ -72,7 +79,7 @@ public class PlanDetailsFragment extends Fragment {
 
         textViewPlanName.setText(planDetails.getName());
         Glide.with(getActivity())
-                .load(getActivity().getString(R.string.socket_address) + planDetails.getImage())
+                .load(getActivity().getString(R.string.socket_address) + "/media/" + planDetails.getImage())
                 .placeholder(R.drawable.app_logo)
                 .into(imageViewPlan);
         textViewMaximumCapacity.setText(planDetails.getMaxCap().toString());
@@ -120,18 +127,25 @@ public class PlanDetailsFragment extends Fragment {
     }
 
     private void enterLandArea() {
-        final EditText input = new EditText(getActivity());
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        new AlertDialog.Builder(getActivity())
-                .setTitle(getString(R.string.enter_land_area_in_bigha))
-                .setNeutralButton(getString(R.string.subscribe), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        notifyServerAboutSubscription(true, input.getText().toString());
-                    }
-                })
-                .setView(input)
-                .show();
+
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(getActivity()).create();
+
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View input = inflater.inflate(R.layout.alert_dialog_land_area, null);
+
+        final EditText editText = input.findViewById(R.id.textViewLandArea);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        final TextView textViewSubscribe = input.findViewById(R.id.textViewSubscribe);
+
+        textViewSubscribe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogBuilder.dismiss();
+                notifyServerAboutSubscription(true, editText.getText().toString());
+            }
+        });
+        dialogBuilder.setView(input);
+        dialogBuilder.show();
     }
 
     private void notifyServerAboutSubscription(final boolean status, String landArea) {
@@ -139,7 +153,7 @@ public class PlanDetailsFragment extends Fragment {
         final ACProgressFlower dialog = new ACProgressFlower.Builder(getActivity())
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                 .themeColor(Color.WHITE)
-                .text("Loading")
+                .text(getString(R.string.loading))
                 .fadeColor(Color.DKGRAY).build();
         dialog.show();
 
@@ -150,6 +164,16 @@ public class PlanDetailsFragment extends Fragment {
                 try {
                     if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
                         setButtonState(status);
+                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        CFAlertDialog.Builder builder = new CFAlertDialog.Builder(getActivity());
+                        builder.setDialogStyle(CFAlertDialog.CFAlertStyle.BOTTOM_SHEET);
+                        if(status) {
+                            builder.setMessage(getString(R.string.plan_subscribed_successfully));
+                        } else {
+                            builder.setMessage(getString(R.string.plan_un_subscribed_successfully));
+                        }
+                        builder.show();
                     } else {
                         Toast.makeText(getActivity(), ResponseStatusCodeHandler.getMessage(response.getString("statuscode")), Toast.LENGTH_LONG).show();
                     }

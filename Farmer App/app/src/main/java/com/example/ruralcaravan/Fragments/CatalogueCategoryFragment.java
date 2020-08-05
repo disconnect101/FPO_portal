@@ -30,11 +30,11 @@ public class CatalogueCategoryFragment extends Fragment {
         recyclerViewCatalogueCategory.setLayoutManager(linearLayoutManagerDaily);
 
         ArrayList<String> categories = new ArrayList<>();
-        categories.add("Seeds");
-        categories.add("Fertilizers");
-        categories.add("Pesticides");
-        categories.add("Equipments");
-        categories.add("Others");
+        categories.add(getString(R.string.seeds));
+        categories.add(getString(R.string.fertilisers));
+        categories.add(getString(R.string.pesticides));
+        categories.add(getString(R.string.equipments));
+        categories.add(getString(R.string.others));
 
         ArrayList<Integer> categoryIcons = new ArrayList<>();
         categoryIcons.add(R.drawable.seeds);

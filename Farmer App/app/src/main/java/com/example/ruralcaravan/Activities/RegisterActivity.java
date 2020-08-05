@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
         countryCodePicker = findViewById(R.id.countryCodePicker);
         linearLayoutPhoneStatus = findViewById(R.id.linearLayoutPhoneStatus);
         String[] options = new String[]{
-                getString(R.string.smartphone),
+                getString(R.string.smart_phone),
                 getString(R.string.feature_phone),
                 getString(R.string.no_phone)
         };

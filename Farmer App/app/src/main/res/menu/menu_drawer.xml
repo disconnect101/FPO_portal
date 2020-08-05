@@ -39,9 +39,9 @@
             android:title="@string/yourCart" />
 
         <item
-            android:id="@+id/news"
+            android:id="@+id/govt_schemes"
             android:icon="@drawable/ic_news"
-            android:title="@string/news" />
+            android:title="@string/govt_schemes" />
 
         <item
             android:id="@+id/weather"
