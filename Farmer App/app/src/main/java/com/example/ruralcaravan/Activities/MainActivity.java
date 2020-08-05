@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Toast.makeText(this, "Hello", Toast.LENGTH_LONG).show();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
@@ -210,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         final CFAlertDialog.Builder builder = new CFAlertDialog.Builder(MainActivity.this);
         builder.setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT);
         builder.setTitle(getString(R.string.select_language));
-        builder.setSingleChoiceItems(new String[]{"English", "हिन्दी"}, 0, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(new String[]{"English", "हिन्दी"}, SharedPreferenceUtils.getLanguage(MainActivity.this).equals("en") ? 0 : 1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 languageOption = which;

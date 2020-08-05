@@ -68,7 +68,6 @@
                     android:textColor="@color/black"
                     android:textCursorDrawable="@null" />
 
-
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -79,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/loginUserName"
-                android:hint="Enter password"
+                android:hint="@string/enter_password"
                 android:textColorHint="@color/black"
                 app:boxStrokeColor="@color/black"
                 app:boxStrokeWidthFocused="2dp"

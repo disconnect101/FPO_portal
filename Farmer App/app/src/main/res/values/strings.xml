@@ -26,7 +26,7 @@
     <string name="tagLine">Bridging the gap between farmers and FPO</string>
     <string name="login">LOGIN</string>
     <string name="enterUserName">Enter User Name</string>
-    <string name="createAccount">Create Account</string>
+    <string name="createAccount">Create\nAccount</string>
     <string name="enterName">Enter name</string>
     <string name="enterPhoneNumber">Enter phone number</string>
     <string name="nextButton">Next</string>
@@ -128,4 +128,9 @@
     <string name="pesticides">Pesticides</string>
     <string name="equipments">Equipments</string>
     <string name="others">Others</string>
+    <string name="choose_a_district">Choose a district</string>
+    <string name="recommend">Recommend</string>
+    <string name="fields_can_not_be_empty">Fields can not be empty</string>
+    <string name="plan_subscribed_successfully">Plan subscribed successfully</string>
+    <string name="plan_un_subscribed_successfully">Plan unsubscribed successfully</string>
 </resources>

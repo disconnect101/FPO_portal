@@ -1,13 +1,16 @@
 package com.example.ruralcaravan.Fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,8 +23,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.ruralcaravan.Activities.MainActivity;
-import com.example.ruralcaravan.Activities.PlanActivity;
 import com.example.ruralcaravan.Adapters.ListPlansAdapter;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.PlansResponse;
@@ -58,6 +59,8 @@ public class ListPlansFragment extends Fragment {
     private TextView textViewNoPlansMessage;
     private SwitchMaterial switchRecommendation;
     private RelativeLayout relativeLayoutSwitch;
+    private String landArea;
+    private String investment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,7 +75,11 @@ public class ListPlansFragment extends Fragment {
         switchRecommendation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                fetchPlans(Constants.NEW_PLANS, switchRecommendation.isChecked());
+                if(isChecked) {
+                    getUserInputs();
+                } else {
+                    fetchPlans(Constants.NEW_PLANS, false);
+                }
             }
         });
 
@@ -110,6 +117,32 @@ public class ListPlansFragment extends Fragment {
         return rootView;
     }
 
+    private void getUserInputs() {
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(getActivity()).create();
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View input = inflater.inflate(R.layout.alert_dialog_land_area_investment, null);
+        final EditText editTextLandArea = input.findViewById(R.id.textViewLandArea);
+        editTextLandArea.setInputType(InputType.TYPE_CLASS_NUMBER);
+        final EditText editTextInvestment = input.findViewById(R.id.textViewInvestment);
+        editTextInvestment.setInputType(InputType.TYPE_CLASS_NUMBER);
+        final TextView textViewRecommend = input.findViewById(R.id.textViewRecommend);
+        textViewRecommend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(editTextInvestment.getText().toString().isEmpty() || editTextInvestment.getText().toString().isEmpty()) {
+                    Toast.makeText(getActivity(), getString(R.string.fields_can_not_be_empty), Toast.LENGTH_LONG).show();
+                } else {
+                    landArea = editTextLandArea.getText().toString();
+                    investment = editTextInvestment.getText().toString();
+                    fetchPlans(Constants.NEW_PLANS, true);
+                    dialogBuilder.dismiss();
+                }
+            }
+        });
+        dialogBuilder.setView(input);
+        dialogBuilder.show();
+    }
+
     private void fetchPlans(final int id, boolean recommendation) {
 
         dialog = new ACProgressFlower.Builder(getActivity())
@@ -124,6 +157,8 @@ public class ListPlansFragment extends Fragment {
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("recommendation", String.valueOf(recommendation));
+            jsonBody.put("landarea", landArea);
+            jsonBody.put("investment", investment);
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
@@ -214,5 +249,4 @@ public class ListPlansFragment extends Fragment {
             textViewSubscribedPlans.setBackground(getActivity().getDrawable(R.drawable.bottom_border));
         }
     }
-
 }

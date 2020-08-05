@@ -21,7 +21,7 @@
     <string name="enter_land_area_in_hectare">भूमि क्षेत्र दर्ज करें (हेक्टेयर में)</string>
     <string name="confirmation">पुष्टीकरण</string>
     <string name="contact">संपर्क करें एफपीओ</string>
-    <string name="createAccount">सृजन करना\\nलेखा</string>
+    <string name="createAccount">सृजन करना\nलेखा</string>
     <string name="dailyForecast">दैनिक पूर्वानुमान</string>
     <string name="delete">हटाएं</string>
     <string name="delivered">पहुंचा दिया</string>
@@ -73,7 +73,7 @@
     <string name="notification">अधिसूचना</string>
     <string name="order_successful">आदेश सफल</string>
     <string name="otp_description_text">पर भेजे गए वन टाइम पासवर्ड को दर्ज करें</string>
-    <string name="otp_verification">OTP\\nसत्यापन</string>
+    <string name="otp_verification">OTP\nसत्यापन</string>
     <string name="otp_verification_text">सत्यापन</string>
     <string name="overview">अवलोकन</string>
     <string name="paid">भुगतान किया है</string>
@@ -121,4 +121,5 @@
     <string name="others">अन्य</string>
     <string name="fertilisers">उर्वरक</string>
     <string name="equipments">उपकरण</string>
+    <string name="choose_a_district">एक जिला चुनें</string>
 </resources>
