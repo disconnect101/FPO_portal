@@ -1,10 +1,13 @@
 package com.example.ruralcaravan.Fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,6 +36,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
+
 public class YourOrdersFragment extends Fragment {
 
     private View rootView;
@@ -42,8 +48,10 @@ public class YourOrdersFragment extends Fragment {
     private ArrayList<OrdersResponse> ordersAdapterArrayList;
     private OrdersResponse[] deliveredOrders;
     private OrdersResponse[] pendingOrders;
-    private int previousSelection;
+    private int currentSelection;
     private int jsonResponseSize;
+    private ACProgressFlower dialog;
+    private TextView textViewNoOrdersMessage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,6 +60,7 @@ public class YourOrdersFragment extends Fragment {
 
         textViewDeliveredOrders = rootView.findViewById(R.id.textViewDeliveredOrders);
         textViewPendingOrders = rootView.findViewById(R.id.textViewPendingOrders);
+        textViewNoOrdersMessage = rootView.findViewById(R.id.textViewNoOrdersMessage);
         recyclerViewOrders = rootView.findViewById(R.id.recyclerViewOrders);
 
         recyclerViewOrders = rootView.findViewById(R.id.recyclerViewOrders);
@@ -62,8 +71,9 @@ public class YourOrdersFragment extends Fragment {
         OrdersAdapter ordersAdapter = new OrdersAdapter(getActivity(), ordersAdapterArrayList);
         recyclerViewOrders.setAdapter(ordersAdapter);
         recyclerViewOrders.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        recyclerViewOrders.setBackgroundColor(getResources().getColor(R.color.light_grey));
 
-        previousSelection = Constants.PENDING_ORDERS;
+        currentSelection = Constants.PENDING_ORDERS;
 
         textViewDeliveredOrders.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +89,7 @@ public class YourOrdersFragment extends Fragment {
             }
         });
 
-        String ordersUrl = getResources().getString(R.string.base_end_point_ip) + "order/";
+        String ordersUrl = getString(R.string.base_end_point_ip) + "order/";
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -91,10 +101,14 @@ public class YourOrdersFragment extends Fragment {
                         pendingOrders = gson.fromJson(response.getJSONArray("pending_orders").toString(), OrdersResponse[].class);
                         handleResponse();
                     } else {
-                        //handle exception
+                        Toast.makeText(getActivity(),
+                                ResponseStatusCodeHandler.getMessage(response.getString("statuscode")),
+                                Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    dialog.dismiss();
                 }
             }
         };
@@ -104,6 +118,12 @@ public class YourOrdersFragment extends Fragment {
                 error.printStackTrace();
             }
         };
+        dialog = new ACProgressFlower.Builder(getActivity())
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text(getString(R.string.loading))
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
         JsonObjectRequest ordersRequest = new JsonObjectRequest(Request.Method.GET, ordersUrl, null, responseListener, errorListener) {
             @Override
             public Map<String, String> getHeaders() {
@@ -117,30 +137,32 @@ public class YourOrdersFragment extends Fragment {
     }
 
     private void updateRecyclerView(int id) {
-        if(id == Constants.DELIVERED_ORDERS && previousSelection == Constants.PENDING_ORDERS) {
+        if(id == Constants.DELIVERED_ORDERS && currentSelection == Constants.PENDING_ORDERS) {
             ordersAdapterArrayList.clear();
             ordersAdapterArrayList.addAll(Arrays.asList(deliveredOrders));
             recyclerViewOrders.getAdapter().notifyDataSetChanged();
-            previousSelection = Constants.DELIVERED_ORDERS;
+            if (deliveredOrders.length == 0) {
+                textViewNoOrdersMessage.setText(getString(R.string.no_delivered_orders));
+                textViewNoOrdersMessage.setVisibility(View.VISIBLE);
+            } else {
+                textViewNoOrdersMessage.setVisibility(View.GONE);
+            }
+            currentSelection = Constants.DELIVERED_ORDERS;
             textViewPendingOrders.setBackground(null);
             textViewDeliveredOrders.setBackground(getActivity().getDrawable(R.drawable.bottom_border));
-        } else if(id == Constants.PENDING_ORDERS && previousSelection == Constants.DELIVERED_ORDERS) {
+        } else if(id == Constants.PENDING_ORDERS && currentSelection == Constants.DELIVERED_ORDERS) {
             ordersAdapterArrayList.clear();
             ordersAdapterArrayList.addAll(Arrays.asList(pendingOrders));
             recyclerViewOrders.getAdapter().notifyDataSetChanged();
-            previousSelection = Constants.PENDING_ORDERS;
+            if(pendingOrders.length == 0) {
+                textViewNoOrdersMessage.setText(getString(R.string.no_pending_orders));
+                textViewNoOrdersMessage.setVisibility(View.VISIBLE);
+            } else {
+                textViewNoOrdersMessage.setVisibility(View.GONE);
+            }
+            currentSelection = Constants.PENDING_ORDERS;
             textViewDeliveredOrders.setBackground(null);
             textViewPendingOrders.setBackground(getActivity().getDrawable(R.drawable.bottom_border));
-        }
-    }
-
-    private void handleResponse() {
-        jsonResponseSize = deliveredOrders.length + pendingOrders.length;
-        for (int i = 0; i < deliveredOrders.length; i++) {
-            fetchNameAndImage(deliveredOrders[i]);
-        }
-        for (int i = 0; i < pendingOrders.length; i++) {
-            fetchNameAndImage(pendingOrders[i]);
         }
     }
 
@@ -160,6 +182,7 @@ public class YourOrdersFragment extends Fragment {
                     --jsonResponseSize;
                     if(jsonResponseSize == 0) {
                         updateRecyclerView(Constants.DELIVERED_ORDERS);
+                        dialog.dismiss();
                     }
                 }
             };
@@ -167,6 +190,7 @@ public class YourOrdersFragment extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest itemDetailsRequest = new JsonObjectRequest(Request.Method.POST, itemDetailsUrl, jsonBody, responseListener, errorListener) {
@@ -180,6 +204,22 @@ public class YourOrdersFragment extends Fragment {
             VolleySingleton.getInstance(getActivity()).addToRequestQueue(itemDetailsRequest);
         } catch (JSONException e) {
             e.printStackTrace();
+            dialog.dismiss();
+            Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void handleResponse() {
+        jsonResponseSize = deliveredOrders.length + pendingOrders.length;
+        if(jsonResponseSize == 0) {
+            updateRecyclerView(Constants.DELIVERED_ORDERS);
+            dialog.dismiss();
+        }
+        for (int i = 0; i < deliveredOrders.length; i++) {
+            fetchNameAndImage(deliveredOrders[i]);
+        }
+        for (int i = 0; i < pendingOrders.length; i++) {
+            fetchNameAndImage(pendingOrders[i]);
         }
     }
 

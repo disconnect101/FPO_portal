@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.PlanActivity">
+
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutOptions"
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewPlanDetails"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/plan_details"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:padding="10dp"
+            android:onClick="showPlanDetails"/>
+
+        <TextView
+            android:id="@+id/textViewProductsUnderPlan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/products_under_plan"
+            android:textAlignment="center"
+            android:padding="10dp"
+            android:textSize="20sp"
+            android:onClick="showProductsUnderPlan"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/planFragmentContainer"
+        android:layout_below="@+id/linearLayoutOptions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>

@@ -5,25 +5,47 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.YourCartFragment">
 
-    <TextView
-        android:id="@+id/textViewSummary"
+    <LinearLayout
+        android:id="@+id/linearLayoutTotal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:textSize="20sp"
-        android:textAlignment="center"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:weightSum="2">
 
-    <TextView
+        <TextView
+            android:id="@+id/textViewTotalPlaceHolder"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd"
+            android:text="@string/total"
+            android:paddingEnd="10dp"
+            android:fontFamily="@font/muli_semibold"
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/textViewTotal"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:textColor="@color/black"
+            android:fontFamily="@font/muli_black"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+    <info.hoang8f.widget.FButton
         android:id="@+id/proceedToBuy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewSummary"
-        android:textSize="20sp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:textAlignment="center"
-        android:text="@string/proceed_to_buy"
-        android:background="@color/yellow_add_to_cart"/>
+        android:layout_below="@+id/linearLayoutTotal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/proceed_to_buy" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCart"
@@ -31,5 +53,15 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/proceedToBuy"
         android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/textViewEmptyCartMessage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="@string/no_items_added_to_cart"
+        android:textSize="40sp"
+        android:visibility="gone" />
 
 </RelativeLayout>

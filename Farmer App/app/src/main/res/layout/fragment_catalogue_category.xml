@@ -9,6 +9,6 @@
         android:id="@+id/recyclerViewCatalogueCategory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"/>
+        android:background="#D3D3D3"/>
 
 </RelativeLayout>

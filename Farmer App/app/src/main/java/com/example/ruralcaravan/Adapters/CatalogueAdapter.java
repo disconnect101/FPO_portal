@@ -2,6 +2,7 @@ package com.example.ruralcaravan.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +42,9 @@ public class CatalogueAdapter extends RecyclerView.Adapter<CatalogueAdapter.Cata
     @Override
     public void onBindViewHolder(@NonNull CatalogueViewHolder holder, int position) {
         final ItemsResponse item = itemsResponses.get(position);
+        Log.e("image url", context.getString(R.string.socket_address) + "/media/" + item.getImage() + "/");
         Glide.with(context)
-                .load(context.getResources().getString(R.string.socket_address) + "/" + item.getImage() + "/")
+                .load(context.getString(R.string.socket_address) + "/media/" + item.getImage() + "/")
                 .placeholder(R.drawable.app_logo)
                 .into(holder.imageViewItem);
         holder.textViewItemName.setText(item.getName());
@@ -52,6 +54,7 @@ public class CatalogueAdapter extends RecyclerView.Adapter<CatalogueAdapter.Cata
             public void onClick(View v) {
                 Intent intent = new Intent(context, ItemDetailsActivity.class);
                 intent.putExtra(Constants.KEY_PRODUCT_ID, item.getId());
+                intent.putExtra(Constants.KEY_PRODUCT_NAME, item.getName());
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 context.startActivity(intent);
             }

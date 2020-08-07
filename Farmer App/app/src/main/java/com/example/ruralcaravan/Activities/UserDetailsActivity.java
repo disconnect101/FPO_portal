@@ -3,6 +3,7 @@ package com.example.ruralcaravan.Activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,6 +20,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.crowdfire.cfalertdialog.CFAlertDialog;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.Utilities.Constants;
 import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
@@ -31,9 +34,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
 
 public class UserDetailsActivity extends AppCompatActivity {
 
@@ -45,6 +52,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     private ArrayList<String> villages;
     private JSONObject locationResponse;
     private TextView textViewErrorMessage;
+    private ACProgressFlower dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,20 +68,31 @@ public class UserDetailsActivity extends AppCompatActivity {
         textViewErrorMessage = findViewById(R.id.textViewErrorMessage);
         districts = new ArrayList<>();
         villages = new ArrayList<>();
+
         String getLocationListUrl = getResources().getString(R.string.base_end_point_ip) + "villages/";
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 locationResponse = response;
                 handleLocationListResponse(response);
+                dialog.dismiss();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                textViewErrorMessage.setText("SERVER error");
+                textViewErrorMessage.setText(getString(R.string.server_error));
+                dialog.dismiss();
             }
         };
+
+        dialog = new ACProgressFlower.Builder(UserDetailsActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text(getString(R.string.loading))
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         JsonObjectRequest locationListRequest = new JsonObjectRequest(Request.Method.GET, getLocationListUrl, null, responseListener, errorListener){
             @Override
             public Map<String, String> getHeaders() {
@@ -103,23 +122,23 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
     public void chooseDistrict(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(UserDetailsActivity.this);
-        builder.setTitle("Choose a district");
-        final ArrayAdapter<String> districtAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
-                android.R.layout.simple_dropdown_item_1line, districts);
-        builder.setAdapter(districtAdapter, new DialogInterface.OnClickListener() {
+
+        CFAlertDialog.Builder builder = new CFAlertDialog.Builder(this);
+        builder.setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT);
+        builder.setTitle(getString(R.string.choose_a_district));
+        builder.setItems(districts.toArray(new String[districts.size()]), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                editTextDistrict.setText(districts.get(which));
-                setVillageList(districts.get(which));
+            public void onClick(DialogInterface dialogInterface, int index) {
+                editTextDistrict.setText(districts.get(index));
+                setVillageList(districts.get(index));
+                dialogInterface.dismiss();
             }
         });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.show();
     }
 
     private void setVillageList(String district) {
-        villages = new ArrayList<>();
+        villages.clear();
         try {
             JSONArray jsonArrayLocation = locationResponse.getJSONArray("data");
             for(int i=0;i<jsonArrayLocation.length();i++) {
@@ -132,27 +151,37 @@ public class UserDetailsActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.e("Villages", villages.toString());
     }
 
     public void chooseVillage(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(UserDetailsActivity.this);
-        builder.setTitle("Choose a village");
-        final ArrayAdapter<String> districtAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
-                android.R.layout.simple_list_item_1, villages);
-        builder.setAdapter(districtAdapter, new DialogInterface.OnClickListener() {
+
+        setVillageList(editTextDistrict.getText().toString());
+
+        CFAlertDialog.Builder builder = new CFAlertDialog.Builder(this);
+        builder.setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT);
+        builder.setTitle(getString(R.string.choose_a_village));
+        builder.setItems(villages.toArray(new String[villages.size()]), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                editTextVillage.setText(villages.get(which));
-                setVillageList(villages.get(which));
+            public void onClick(DialogInterface dialogInterface, int index) {
+                editTextVillage.setText(villages.get(index));
+                setVillageList(villages.get(index));
+                dialogInterface.dismiss();
             }
         });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.show();
+
     }
 
     public void moveToMainActivity(View view) {
         //TODO: Check the inputs
+
+        dialog = new ACProgressFlower.Builder(UserDetailsActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text(getString(R.string.loading))
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         String postUserDataUrl = getResources().getString(R.string.base_end_point_ip) + "userdata/";
         JSONObject jsonBody = new JSONObject();
         try {
@@ -169,7 +198,8 @@ public class UserDetailsActivity extends AppCompatActivity {
             Response.ErrorListener errorListener = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    textViewErrorMessage.setText("SERVER Error");
+                    textViewErrorMessage.setText(getString(R.string.server_error));
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest postUserDetails = new JsonObjectRequest(Request.Method.POST, postUserDataUrl, jsonBody, responseListener, errorListener){
@@ -184,18 +214,72 @@ public class UserDetailsActivity extends AppCompatActivity {
         } catch (JSONException e) {
             textViewErrorMessage.setText(e.toString());
             e.printStackTrace();
+            dialog.dismiss();
         }
     }
 
     private void handlePostUserDataResponse(JSONObject response) {
         try {
             if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
-                Intent intent = new Intent(UserDetailsActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                SharedPreferenceUtils.clearUserInformation(UserDetailsActivity.this);
+                if(SharedPreferenceUtils.isLeader(UserDetailsActivity.this)) {
+                    addFarmer();
+                } else {
+                    Intent intent = new Intent(UserDetailsActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    dialog.dismiss();
+                    startActivity(intent);
+                }
             } else {
                 textViewErrorMessage.setText(ResponseStatusCodeHandler.getMessage(response.getString("statuscode")));
+                dialog.dismiss();
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addFarmer() {
+        String addFarmerUnderLeaderUrl = getString(R.string.base_end_point_ip) + "leaderaccess/add/";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("farmertoken", SharedPreferenceUtils.getToken(UserDetailsActivity.this));
+            Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
+                            Toast.makeText(UserDetailsActivity.this, getString(R.string.farmer_added_successfully), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(UserDetailsActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            dialog.dismiss();
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(UserDetailsActivity.this, ResponseStatusCodeHandler.getMessage(response.getString("statuscode")), Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                    } catch (JSONException e) {
+                        Toast.makeText(UserDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
+                    }
+                }
+            };
+            Response.ErrorListener errorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(UserDetailsActivity.this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
+                }
+            };
+            JsonObjectRequest addFarmerUnderLeaderRequest = new JsonObjectRequest(Request.Method.POST, addFarmerUnderLeaderUrl, jsonObject, responseListener, errorListener) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String,String> params = new HashMap<>();
+                    params.put("Authorization", "Token " + SharedPreferenceUtils.getLeaderToken(UserDetailsActivity.this));
+                    return params;
+                }
+            };
+            VolleySingleton.getInstance(UserDetailsActivity.this).addToRequestQueue(addFarmerUnderLeaderRequest);
         } catch (JSONException e) {
             e.printStackTrace();
         }

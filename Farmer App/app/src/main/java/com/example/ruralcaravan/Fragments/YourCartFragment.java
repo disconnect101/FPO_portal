@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,8 +22,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.crowdfire.cfalertdialog.CFAlertDialog;
-import com.example.ruralcaravan.Activities.ItemDetailsActivity;
-import com.example.ruralcaravan.Activities.MainActivity;
 import com.example.ruralcaravan.Adapters.CartItemsAdapter;
 import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.CartItemsResponse;
@@ -32,6 +30,7 @@ import com.example.ruralcaravan.Utilities.Constants;
 import com.example.ruralcaravan.Utilities.ResponseStatusCodeHandler;
 import com.example.ruralcaravan.Utilities.SharedPreferenceUtils;
 import com.example.ruralcaravan.Utilities.VolleySingleton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -45,6 +44,7 @@ import java.util.Map;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
+import info.hoang8f.widget.FButton;
 
 
 public class YourCartFragment extends Fragment implements CartItemsAdapter.OnItemDeleteListener, CartItemsAdapter.OnQuantityDecreaseListener, CartItemsAdapter.OnQuantityIncreaseListener {
@@ -54,11 +54,13 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
     private ArrayList<CartItemsResponse> cartItemsAdapterArrayList;
     private int jsonResponseSize;
     private CartItemsResponse[] cartItems;
-    private TextView proceedToBuy;
+    private FButton proceedToBuy;
     private int paymentMode;
-    private String amount;
     private ACProgressFlower dialog;
-    private TextView textViewSummary;
+    private TextView textViewTotal;
+    private TextView textViewEmptyCartMessage;
+    private String total;
+    private TextView textViewTotalPlaceHolder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,9 +78,11 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
 
         recyclerViewCart = rootView.findViewById(R.id.recyclerViewCart);
         proceedToBuy = rootView.findViewById(R.id.proceedToBuy);
+        proceedToBuy.setButtonColor(getResources().getColor(R.color.yellow_add_to_cart));
+        textViewEmptyCartMessage = rootView.findViewById(R.id.textViewEmptyCartMessage);
 
-        //TODO: Update the summary
-        textViewSummary = rootView.findViewWithTag(R.id.textViewSummary);
+        textViewTotalPlaceHolder = rootView.findViewById(R.id.textViewTotalPlaceHolder);
+        textViewTotal = rootView.findViewById(R.id.textViewTotal);
 
         recyclerViewCart = rootView.findViewById(R.id.recyclerViewCart);
         recyclerViewCart.setHasFixedSize(true);
@@ -94,8 +98,7 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
             public void onClick(View v) {
                 new AlertDialog.Builder(getActivity())
                         .setTitle(getString(R.string.confirm_order))
-                        //TODO: Add amount here
-                        .setMessage(getString(R.string.confirm_order_message) + "\n\n" + getString(R.string.amount) + ": \u20B9")
+                        .setMessage(getString(R.string.confirm_order_message) + "\n\n" + getString(R.string.amount) + ": \u20B9" + total)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 choosePaymentMethod();
@@ -107,7 +110,7 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                 }
             });
 
-        String cartItemsUrl = getResources().getString(R.string.base_end_point_ip) + "kart/";
+        String cartItemsUrl = getString(R.string.base_end_point_ip) + "kart/";
         Log.e("cartItemsUrl", cartItemsUrl);
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
@@ -118,15 +121,22 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                     cartItems = gson.fromJson(response.getJSONArray("data").toString(), CartItemsResponse[].class);
                     jsonResponseSize = cartItems.length;
                     if(jsonResponseSize == 0) {
-                        dialog.dismiss();
-                        rootView.setVisibility(View.VISIBLE);
+                        textViewEmptyCartMessage.setVisibility(View.VISIBLE);
                         proceedToBuy.setVisibility(View.GONE);
+                        textViewTotalPlaceHolder.setVisibility(View.GONE);
+                        textViewTotal.setVisibility(View.GONE);
+                        rootView.setVisibility(View.VISIBLE);
+                        dialog.dismiss();
                     } else {
-                        proceedToBuy.setVisibility(View.VISIBLE);
+                        textViewEmptyCartMessage.setVisibility(View.GONE);
+                        total = response.getString("total");
+                        textViewTotal.setText(total);
+                        handleResponse(cartItems);
                     }
-                    handleResponse(cartItems);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             }
         };
@@ -134,6 +144,8 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
             }
         };
         JsonObjectRequest cartItemsRequest = new JsonObjectRequest(Request.Method.GET, cartItemsUrl, null, responseListener, errorListener){
@@ -186,6 +198,8 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest itemDetailsRequest = new JsonObjectRequest(Request.Method.POST, itemDetailsUrl, jsonBody, responseListener, errorListener) {
@@ -202,7 +216,15 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
         }
     }
 
-    public void updateCartItem(String cartId, final TextView textViewQuantity, final int change) {
+    public void updateCartItem(String cartId, final TextView textViewQuantity, final int change, final double rate) {
+
+        dialog = new ACProgressFlower.Builder(getActivity())
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text(getString(R.string.loading))
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         String quantityUpdateUrl = getResources().getString(R.string.base_end_point_ip) + "kart/";
         JSONObject jsonBody = new JSONObject();
         try {
@@ -214,11 +236,13 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                     try {
                         if (ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
                             textViewQuantity.setText(String.valueOf(Integer.parseInt(textViewQuantity.getText().toString()) + change));
+                            textViewTotal.setText(String.valueOf(Double.parseDouble(textViewTotal.getText().toString()) + (change*rate)));
                         } else {
                             Toast.makeText(getContext(), ResponseStatusCodeHandler.getMessage(response.getString("statuscode")), Toast.LENGTH_LONG);
                         }
+                        dialog.dismiss();
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
                     }
                 }
             };
@@ -226,6 +250,8 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest updateCartItemRequest = new JsonObjectRequest(Request.Method.POST, quantityUpdateUrl, jsonBody, responseListener, errorListener) {
@@ -242,7 +268,14 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
         }
     }
 
-    public void deleteCartItem(String cartId, final int position) {
+    public void deleteCartItem(String cartId, final int position, final int quantity) {
+
+        dialog = new ACProgressFlower.Builder(getActivity())
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text(getString(R.string.loading))
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
 
         String cartDeleteUrl = getResources().getString(R.string.base_end_point_ip) + "kart/delete/";
         JSONObject jsonBody = new JSONObject();
@@ -251,20 +284,33 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.e("json", jsonBody.toString());
 
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("position", String.valueOf(position));
-                Log.e("response", response.toString());
                 try {
                     if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
+                        double rate = Double.parseDouble(cartItemsAdapterArrayList.get(position).getRate());
+                        textViewTotal.setText(String.valueOf(Double.parseDouble(textViewTotal.getText().toString()) - (quantity*rate)));
                         cartItemsAdapterArrayList.remove(position);
-                        recyclerViewCart.getAdapter().notifyDataSetChanged();
+                        if(cartItemsAdapterArrayList.size() == 0) {
+                            textViewTotalPlaceHolder.setVisibility(View.GONE);
+                            textViewTotal.setVisibility(View.GONE);
+                            proceedToBuy.setVisibility(View.GONE);
+                            textViewEmptyCartMessage.setVisibility(View.VISIBLE);
+                        } else {
+                            recyclerViewCart.getAdapter().notifyDataSetChanged();
+                        }
+                    } else {
+                        Toast.makeText(getActivity(),
+                                ResponseStatusCodeHandler.getMessage(response.getString("statuscode")),
+                                Toast.LENGTH_LONG).show();
                     }
+                    dialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    dialog.dismiss();
+                    Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -286,28 +332,28 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
     }
 
     @Override
-    public void onItemDelete(String cartId, int position) {
-        deleteCartItem(cartId, position);
+    public void onItemDelete(String cartId, int position, int quantity) {
+        deleteCartItem(cartId, position, quantity);
     }
 
     @Override
-    public void onQuantityDecreased(String cartId, TextView textViewQuantity, Button buttonDecreaseQuantity, int position) {
+    public void onQuantityDecreased(String cartId, TextView textViewQuantity, int position, FloatingActionButton buttonDecreaseQuantity) {
         if(textViewQuantity.getText().toString().equals("1")) {
-            deleteCartItem(cartId, position);
+            deleteCartItem(cartId, position, 1);
         } else {
             if(textViewQuantity.getText().toString().equals("2")) {
-                buttonDecreaseQuantity.setBackground(getActivity().getDrawable(R.drawable.ic_delete));
+                buttonDecreaseQuantity.setImageResource(R.drawable.ic_delete);
             }
-            updateCartItem(cartId, textViewQuantity, -1);
+            updateCartItem(cartId, textViewQuantity, -1, Double.parseDouble(cartItemsAdapterArrayList.get(position).getRate()));
         }
     }
 
     @Override
-    public void onQuantityIncreased(String cartId, final TextView textViewQuantity, Button buttonDecreaseQuantity, Button buttonIncreaseQuantity) {
+    public void onQuantityIncreased(String cartId, final TextView textViewQuantity, int position, FloatingActionButton buttonDecreaseQuantity) {
         if(textViewQuantity.getText().toString().equals("1")) {
-            buttonDecreaseQuantity.setBackground(buttonIncreaseQuantity.getBackground());
+            buttonDecreaseQuantity.setImageResource(R.drawable.ic_minus);
         }
-        updateCartItem(cartId, textViewQuantity, 1);
+        updateCartItem(cartId, textViewQuantity, 1, Double.parseDouble(cartItemsAdapterArrayList.get(position).getRate()));
     }
 
     private void choosePaymentMethod() {
@@ -315,7 +361,7 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
         final CFAlertDialog.Builder builder = new CFAlertDialog.Builder(getActivity());
         builder.setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT);
         builder.setTitle(getString(R.string.payment_mode));
-        builder.setSingleChoiceItems(new String[]{getString(R.string.cash_on_delivery), getString(R.string.pay_with_e_wallet), getString(R.string.pay_at_FPO_office)}, 0, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(new String[]{getString(R.string.cash_on_delivery), getString(R.string.pay_with_account), getString(R.string.pay_at_FPO_office)}, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 paymentMode = which;
@@ -338,6 +384,14 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
     }
 
     private void buyItem() {
+
+        dialog = new ACProgressFlower.Builder(getActivity())
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text("Loading")
+                .fadeColor(Color.DKGRAY).build();
+        dialog.show();
+
         String buyItemsUrl = getString(R.string.base_end_point_ip) + "order/";
         JSONObject jsonBody = new JSONObject();
         try {
@@ -360,13 +414,23 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                         CFAlertDialog.Builder builder = new CFAlertDialog.Builder(getActivity());
                         builder.setDialogStyle(CFAlertDialog.CFAlertStyle.BOTTOM_SHEET);
                         if(ResponseStatusCodeHandler.isSuccessful(response.getString("statuscode"))) {
+                            cartItemsAdapterArrayList.clear();
+                            recyclerViewCart.getAdapter().notifyDataSetChanged();
+                            textViewTotal.setVisibility(View.GONE);
+                            proceedToBuy.setVisibility(View.GONE);
+                            textViewEmptyCartMessage.setVisibility(View.VISIBLE);
+                            textViewTotalPlaceHolder.setVisibility(View.GONE);
+                            textViewTotal.setVisibility(View.GONE);
                             builder.setMessage(getString(R.string.order_successful));
                         } else {
                             builder.setMessage(ResponseStatusCodeHandler.getMessage(response.getString("statuscode")));
                         }
                         builder.show();
+                        dialog.dismiss();
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
                     }
                 }
             };
@@ -374,6 +438,8 @@ public class YourCartFragment extends Fragment implements CartItemsAdapter.OnIte
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    Toast.makeText(getActivity(), getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             };
             JsonObjectRequest buyItemRequest = new JsonObjectRequest(Request.Method.POST, buyItemsUrl, jsonBody, responseListener, errorListener){

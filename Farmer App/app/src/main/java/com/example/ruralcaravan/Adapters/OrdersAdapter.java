@@ -19,7 +19,10 @@ import com.example.ruralcaravan.R;
 import com.example.ruralcaravan.ResponseClasses.OrdersResponse;
 import com.example.ruralcaravan.Utilities.Constants;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersViewHolder> {
 
@@ -43,7 +46,14 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
     public void onBindViewHolder(@NonNull OrdersViewHolder holder, int position) {
         final OrdersResponse order = ordersResponseArrayList.get(position);
         holder.textViewOrderName.setText(order.getName());
-        holder.textViewOrderDate.setText(order.getDate());
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = sdfDate.parse(order.getDate());
+            String dateTime = new SimpleDateFormat("dd MMM yyyy").format(date);
+            holder.textViewOrderDate.setText(dateTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         holder.textViewOrderMode.setText(getModeOfPayment(order.getType()));
         Glide.with(context)
                 .load(context.getString(R.string.socket_address) + order.getImage())
@@ -64,6 +74,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
                 Intent intent = new Intent(context, ItemDetailsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(Constants.KEY_PRODUCT_ID, order.getItemId().toString());
+                intent.putExtra(Constants.KEY_PRODUCT_NAME, order.getName());
                 context.startActivity(intent);
             }
         });
@@ -72,7 +83,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
     private String getModeOfPayment(String type) {
         switch (type) {
             case "PEW":
-                return context.getString(R.string.pay_with_e_wallet);
+                return context.getString(R.string.pay_with_account);
             case "CAS":
                 return context.getString(R.string.pay_at_FPO_office);
             default:
@@ -105,7 +116,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrdersView
             imageViewOrder = itemView.findViewById(R.id.imageViewOrder);
             cardViewOrder = itemView.findViewById(R.id.cardViewOrder);
             textViewIsPaid = itemView.findViewById(R.id.textViewIsPaid);
-            textViewAmount = itemView.findViewById(R.id.textViewSummary);
+            textViewAmount = itemView.findViewById(R.id.textViewTotal);
             textViewRate = itemView.findViewById(R.id.textViewRate);
             textViewQuantity = itemView.findViewById(R.id.textViewQuantity);
             linearLayoutPaymentStatus = itemView.findViewById(R.id.linearLayoutPaymentStatus);

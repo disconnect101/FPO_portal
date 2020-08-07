@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.BalanceSheetFragment"
+    android:id="@+id/relativeLayoutBalanceSheet">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutAvailableBalance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/available_balance"
+            android:textSize="20sp"
+            android:fontFamily="@font/muli_black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewAvailableBalance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/muli_semibold"
+            android:textSize="20sp"
+            android:text="0.00"
+            android:paddingLeft="10dp"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewBalanceSheet"
+        android:layout_below="@+id/linearLayoutAvailableBalance"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <TextView
+        android:id="@+id/textViewNoTransactions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="40sp"
+        android:text="@string/no_transactions"
+        android:visibility="gone"/>
+
+</RelativeLayout>

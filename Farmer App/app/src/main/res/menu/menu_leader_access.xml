@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/addNewFarmer"
+        android:title="@string/add_new_farmer"
+        android:orderInCategory="1"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/switchToLeaderProfile"
+        android:title="@string/switch_to_leader_profile"
+        android:orderInCategory="2"
+        app:showAsAction="never"/>
+
+</menu>

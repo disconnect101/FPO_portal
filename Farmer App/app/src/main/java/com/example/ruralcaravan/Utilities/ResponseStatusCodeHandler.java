@@ -28,8 +28,11 @@ public class ResponseStatusCodeHandler {
             case "18": return "Unable to update cart";
             case "19": return "Crop not available";
             case "20": return "Unauthorized access";
-            case "21": return "arguments missing";
+            case "21": return "Arguments missing";
+            case "22": return "No entry in farmer table";
+            case "23": return "No meeting token found";
+            case "24": return "No matching meeting token found";
         }
-        return "Android system error";
+        return "Unknown error";
     }
 }

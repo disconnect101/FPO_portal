@@ -21,7 +21,7 @@
         <item
             android:id="@+id/eWallet"
             android:icon="@drawable/ic_e_wallet"
-            android:title="@string/eWallet" />
+            android:title="@string/balanceSheet" />
 
         <item
             android:id="@+id/meetings"
@@ -39,9 +39,9 @@
             android:title="@string/yourCart" />
 
         <item
-            android:id="@+id/news"
+            android:id="@+id/govt_schemes"
             android:icon="@drawable/ic_news"
-            android:title="@string/news" />
+            android:title="@string/govt_schemes" />
 
         <item
             android:id="@+id/weather"
@@ -52,6 +52,11 @@
             android:id="@+id/plans"
             android:icon="@drawable/ic_plans"
             android:title="@string/plans" />
+
+        <item
+            android:id="@+id/produce"
+            android:icon="@drawable/ic_produce"
+            android:title="@string/produce" />
 
     </group>
 

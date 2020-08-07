@@ -33,7 +33,7 @@ public class CatalogueCategoryAdapter extends RecyclerView.Adapter<CatalogueCate
     @NonNull
     @Override
     public CatalogueCategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.catalogue_category_row_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.name_image_row_layout, parent, false);
         CatalogueCategoryAdapter.CatalogueCategoryViewHolder catalogueCategoryViewHolder = new CatalogueCategoryViewHolder(view);
         return catalogueCategoryViewHolder;
     }
@@ -63,8 +63,8 @@ public class CatalogueCategoryAdapter extends RecyclerView.Adapter<CatalogueCate
         private CardView cardView;
         public CatalogueCategoryViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageViewCategoryImage = itemView.findViewById(R.id.imageViewCategoryImage);
-            textViewCategory = itemView.findViewById(R.id.textViewCategory);
+            imageViewCategoryImage = itemView.findViewById(R.id.imageViewImage);
+            textViewCategory = itemView.findViewById(R.id.textViewName);
             cardView = itemView.findViewById(R.id.cardView);
         }
     }
