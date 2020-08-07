@@ -1,14 +1,16 @@
-from django import forms 
+from django import forms
+from twilio.rest.verify.v2 import form
+
 from farmer.models import *
 from django.contrib.auth.forms import UserCreationForm
 # from django.contrib.auth.models import 
+
 
 def if_phone(x):
     if x.isnumeric and x.len()==10:
         return True 
     else:
         return False
-
 
 
 class FarmerForm(forms.ModelForm):
@@ -55,7 +57,7 @@ class LeaderForm(forms.ModelForm):
             "pin",
             "photo",
             "profession",
-            "farmers",
+            #"farmers",
         ]
 
 
@@ -92,7 +94,13 @@ class FPOLedgerForm(forms.ModelForm):
         model = FPOLedger
 
         # specify fields to be used
-        fields = '__all__'
+        fields = [
+            "crop" ,                 
+            "amount_sold" ,                
+            "rate",                         
+            "sold_to",                
+            "description" ,              
+        ]
 
 
 class ProduceForm(forms.ModelForm):
@@ -102,7 +110,15 @@ class ProduceForm(forms.ModelForm):
         model = Produce
 
         # specify fields to be used
-        fields = '__all__'
+        fields = [
+            "crop"  ,     
+            "amount",       
+                
+              
+            "quality" ,       
+            "owner"  ,      
+          
+        ]
 
 
 class TransactionForm(forms.ModelForm):
@@ -113,7 +129,6 @@ class TransactionForm(forms.ModelForm):
 
         # specify fields to be used
         fields = [
-            "refno",
             "user",
             "amount",
             "description"
@@ -127,4 +142,39 @@ class OrdersForm(forms.ModelForm):
         model = Orders
 
         # specify fields to be used
+        fields = [
+            "type",            
+            "item",             
+            "buyer",         
+            "quantity",             
+            "is_paid",             
+            "is_delivered", 
+            "date" ,           
+            
+
+        ]
+
+
+class LandForm(forms.ModelForm):
+    # create meta class
+    class Meta:
+        # specify model to be used
+        model = Land
+
+        # specify fields to be used
         fields = '__all__'
+
+
+class BankForm(forms.ModelForm):
+    # create meta class
+    class Meta:
+        # specify model to be used
+        model = BankDetails
+
+        # specify fields to be used
+        fields = '__all__'
+
+
+class farmerCropMapForm(forms.Form):
+    # create meta class
+    crop = forms.CharField(max_length=100)

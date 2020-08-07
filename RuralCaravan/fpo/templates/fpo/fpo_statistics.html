@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Meetings</title>
+    <title>Statistics</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <!-- Bootstrap core CSS -->
@@ -95,17 +95,64 @@
           border: 1px solid #4caf50;
       }
 
+.counter-box {
+    display: block;
+    background: #f6f6f6;
+    padding: 40px 20px 37px;
+    text-align: center
+}
+
+.counter-box p {
+    margin: 5px 0 0;
+    padding: 0;
+    color: #909090;
+    font-size: 18px;
+    font-weight: 500
+}
+
+.counter-box i {
+    font-size: 60px;
+    margin: 0 0 15px;
+    color: #d2d2d2
+}
+
+.counter {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: #666;
+    line-height: 28px
+}
+.profit{
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: #666;
+    line-height: 28px
+
+}
+
+.counter-box.colored {
+    background: #3acf87
+}
+
+.counter-box.colored p,
+.counter-box.colored i,
+.counter-box.colored .counter {
+    color: #fff
+}
+
     </style>
 </head>
 
 <body>
 
   <!-- Navbar -->
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+ <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}" target="_blank">
+      <a class="navbar-brand" href="{% url 'home' %}">
         <strong>FPO PORTAL</strong>
       </a>
 
@@ -125,40 +172,62 @@
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="{% url 'plans' %}" >Plans</a>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
           </li>
+             <li class="nav-item">
+            <a class="nav-link" href="{% url 'produce' %}" >Production</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
-          <li class="nav-item">
-            <a href="orders.html" class="nav-link" >
-             <i class="fas fa-shopping-cart"></i>
+            <li class="nav-item">
+            <a href="{% url 'add_user' %}" class="nav-link" data-toggle="tooltip" title="Add New User">
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'transaction'%}" class="nav-link" data-toggle="tooltip" title="Transactions">
+             <i class="fas fa-rupee-sign"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="statistics.html" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" data-toggle="tooltip" title="Orders">
+             <i class="fas fa-shopping-cart"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'products' %}" class="nav-link" data-toggle="tooltip" title="Products">
+             <i class="fas fa-shopping-basket"></i>
+            </a>
+          </li>
+          <li class="nav-item active">
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" data-toggle="tooltip" title="Statistics">
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
           <li class="nav-item">
             <a href="{% url 'members' %}" class="nav-link border border-light rounded"
-              target="_blank">
+             >
               <i class="fas fa-user"></i>Members
             </a>
           </li>
-		   <li class="nav-item">
+		  <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
-        </ul>
 
+
+        </ul>
 
       </div>
 
@@ -173,49 +242,40 @@
     <div class="container" >
         <div class="row">
             <div class="col-12">
-                <div class="text-center">
-                    <i class="fas fa-calculator fa-4x mb-2 green-text" style="opacity: 0.2"></i>
-                </div>
-                <p style="text-align: center; opacity: 0.2" class="mb-0"><strong>CLOSER LOOK AT THE NUMBERS</strong></p>
+
+
                 <h1 style="text-align: center;" class="green-text mt-0 mb-3">The Organisation at a Glance</h1>
                 <hr style="margin: auto; width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
                 <br>
             </div>
         </div>
-        <div class="row">
-            <div class="col-3">
-                <div class="card" style="background-color: #4caf50;">
-                <div class="card-body">
-                    <h2 class="text-center mb-0" style="color: white;">800</h2>
-                    <p class="text-center mb-0"><strong style="color: white;">FARMERS</strong></p>
-                </div>
-                </div>
+         <div class="row" style="margin: 4rem auto;">
+        <div class="four col-md-3">
+            <div class="counter-box colored"> <i class="fas fa-users"></i> <span class="counter">{{num_farmers}}</span>
+                <p>FARMERS</p>
             </div>
-            <div class="col-3">
-                <div class="card" style="background-color: #4caf50;">
-                <div class="card-body">
-                    <h2 class="text-center mb-0" style="color: white;">21</h2>
-                    <p class="text-center mb-0"><strong style="color: white;">VILLAGES</strong></p>
-                </div>
-                </div>
+        </div>
+        <div class="four col-md-3">
+            <div class="counter-box colored"> <i class="fas fa-home"></i> <span class="counter">{{num_villages}}</span>
+                <p>VILLAGES</p>
             </div>
-            <div class="col-3">
-                <div class="card" style="background-color: #4caf50;">
-                <div class="card-body">
-                    <h2 class="text-center mb-0" style="color: white;">3000</h2>
-                    <p class="text-center mb-0"><strong style="color: white;">QT. PRODUCTION</strong></p>
-                </div>
-                </div>
+        </div>
+        <div class="four col-md-3">
+            <div class="counter-box colored"> <i class="fas fa-weight-hanging"></i> <span class="counter">{{avg_production}}</span>
+                <p>QT. PRODUCTION</p>
             </div>
-            <div class="col-3">
-                <div class="card" style="background-color: #4caf50;">
-                <div class="card-body">
-                    <h2 class="text-center mb-0" style="color: white;">₹ 10L</h2>
-                    <p class="text-center mb-0"><strong style="color: white;">PROFITS</strong></p>
-                </div>
-                </div>
+        </div>
+             <div class="four col-md-3">
+            <div class="counter-box colored"> <i class="fas fa-money-bill"></i> <span class="profit" style="color:white;">₹ {{avg_profits}}</span>
+                <p>PROFITS</p>
             </div>
-        </div>   
+        </div>
+
+    </div>
+
+
+
+
         <div class="row" style="margin-top: 4rem;">
             <div class="col-6">
                 <h1 style="text-align: center;" class="green-text mb-4">Communcation Channels</h1>
@@ -238,12 +298,12 @@
         </div>
         <div class="row" style="margin-top: 4rem;">
             <div class="col-6 mt-4">
-                <h1 style="text-align: center;" class="green-text">Villages</h1>
+                <h1 style="text-align: center;" class="green-text">Farmers Per Village</h1>
                 <hr class="mb-4" style="width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
                 <canvas id="villages" width="100" height="100"></canvas>
             </div>
             <div class="col-6 mt-4">
-                <h1 style="text-align: center;" class="green-text">Crops</h1>
+                <h1 style="text-align: center;" class="green-text">Production Per Crop</h1>
                 <hr class="mb-4" style="width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
                 <canvas id="crops" width="100" height="100"></canvas>
             </div>
@@ -255,12 +315,25 @@
                 <div class="form-group">
                     <label for="cropSelector" style="color: #4caf50;"><strong>Select Crop</strong></label>
                     <select class="form-control" style="border: 1px solid #4caf50; color: #4caf50;" id="cropSelector">
-                        <option style="color: #4caf50">Rice</option>
-                        <option style="color: #4caf50">Wheat</option>
-                        <option style="color: #4caf50">Bajra</option>
+                        {% for option in crop_selector_options %}
+                        <option style="color: #4caf50;">{{option}}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <canvas id="productionByCrop" width="100" height="100"></canvas>
+            </div>
+            <div class="col-6 mt-4">
+                <h1 style="text-align: center;" class="green-text">Amount Per Crop</h1>
+                <hr class="mb-4" style="width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
+                <div class="form-group">
+                    <label for="cropPriceSelector" style="color: #4caf50;"><strong>Select Crop</strong></label>
+                    <select class="form-control" style="border: 1px solid #4caf50; color: #4caf50;" id="cropPriceSelector">
+                        {% for option in crop_price_selector_options %}
+                        <option style="color: #4caf50;">{{option}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <canvas id="amountPerCrop" width="100" height="100"></canvas>
             </div>
         </div>
         <div class="row" style="margin-top: 4rem;">
@@ -271,9 +344,9 @@
                 <div class="form-group">
                     <label for="yearSelector" style="color: #4caf50;"><strong>Select Year</strong></label>
                     <select class="form-control" style="border: 1px solid #4caf50; color: #4caf50;" id="yearSelector">
-                        <option style="color: #4caf50">2017</option>
-                        <option style="color: #4caf50">2018</option>
-                        <option style="color: #4caf50">2019</option>
+                        {% for option in year_selector_options %}
+                        <option style="color: #4caf50">{{option}}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <canvas id="profitsByYear" width="100" height="60"></canvas>
@@ -311,17 +384,21 @@
       <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
+    //new WOW().init();
 
     //Javascript for Graphs and Rendering
 
     // Communication Channels for the farmers
+
+    var communicationChannelsData = {{ communication_channels_data|safe }};
+    var communicationChannelsLabels = {{ communication_channels_labels|safe }};
+
     var ctxCommunicationChannel = document.getElementById('communicationChannel').getContext('2d');
     var communicationChannel = new Chart(ctxCommunicationChannel, {
         type: 'pie',
         data: {
             datasets: [{
-                data: [200, 100, 500],
+                data: communicationChannelsData,
                 backgroundColor: [
                 'rgba(255, 206, 86, 0.4)',
                 'rgba(78, 205, 196, 0.4)',
@@ -333,18 +410,20 @@
                 'rgba(255, 107, 107, 1)',
                 ] 
             }],
-            labels: ['Smartphones', 'Feature Phones', 'No Phones']
+            labels: communicationChannelsLabels
         },
         options: {}
     });
 
     // Farmers with Leaders
+    var farmersWithLeadersData = {{ farmers_with_leaders_data|safe }};
+
     var ctxFarmersWithLeaders = document.getElementById('farmersWithLeaders').getContext('2d');
     var farmersWithLeaders = new Chart(ctxFarmersWithLeaders, {
         type: 'pie',
         data: {
             datasets: [{
-                data: [500, 300],
+                data: farmersWithLeadersData,
                 backgroundColor: [
                 'rgba(255, 206, 86, 0.4)',
                 'rgba(78, 205, 196, 0.4)',
@@ -362,12 +441,16 @@
     });
 
     // Villages for farmers
+    var villagesData = {{ villages_data|safe }}
+    var villagesLabels = {{ villages_labels|safe }}
+
+
     var ctxVillages = document.getElementById('villages').getContext('2d');
     var villages = new Chart(ctxVillages, {
         type: 'pie',
         data: {
             datasets: [{
-                data: [100, 50, 250, 100, 50, 150, 100],
+                data: villagesData,
                 backgroundColor: [
                 'rgba(255, 206, 86, 0.4)',
                 'rgba(78, 205, 196, 0.4)',
@@ -387,18 +470,91 @@
                 'rgba(75, 192, 192, 1)',
                 ] 
             }],
-            labels: ['Amravati', 'Nashik', 'Kolhapur', 'Ratnagiri', 'Dhule', 'Bilaspur', 'Mungeli']
+            labels: villagesLabels
         },
         options: {}
     });
 
+        // For the visualization of engagement of farmers
+    var farmerEngagementData = {{ farmer_engagement_data|safe }};
+
+    var smartphoneFarmerEngagement = farmerEngagementData[0];
+    var featurephoneFarmerEngagement = farmerEngagementData[1]; 
+    var nophoneFarmerEngagement = farmerEngagementData[2];
+
+    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    var ctxFarmerEngagement = document.getElementById('farmerEngagement').getContext('2d');
+	var farmerEngagement = new Chart(ctxFarmerEngagement, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                label:[smartphoneFarmerEngagement.label],
+                backgroundColor: ['rgba(255, 206, 86, 0.2)'],
+                borderColor: ['rgba(255, 206, 86, 1)'],
+                data: smartphoneFarmerEngagement.data,
+                fill: false
+            },
+            {
+                label:[featurephoneFarmerEngagement.label],
+                backgroundColor: ['rgba(78, 205, 196, 0.2)',],
+                borderColor: ['rgba(78, 205, 196, 1)',],
+                data: featurephoneFarmerEngagement.data,
+                fill: false
+            },
+            {
+                label:[nophoneFarmerEngagement.label],
+                backgroundColor: ['rgba(54, 162, 235, 0.2)',],
+                borderColor: ['rgba(54, 162, 235, 1)',],
+                data: nophoneFarmerEngagement.data,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Percentage Engagement of Farmers'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Month'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Value'
+                    },
+                    ticks: {max:100, min:0}
+                }]
+            }
+        }
+    });
+
     // Crops by farmers
+    var cropsData = {{ crops_data|safe }}
+    var cropsLabels = {{ crops_labels|safe }}
+
     var ctxCrops = document.getElementById('crops').getContext('2d');
     var crops = new Chart(ctxCrops, {
         type: 'pie',
         data: {
             datasets: [{
-                data: [1570, 1200, 1500, 580, 1900, 1650, 100],
+                data: cropsData,
                 backgroundColor: [
                 'rgba(255, 206, 86, 0.4)',
                 'rgba(78, 205, 196, 0.4)',
@@ -418,32 +574,19 @@
                 'rgba(75, 192, 192, 1)',
                 ] 
             }],
-            labels: ['Rice', 'Wheat', 'Corn', 'Sugarcane', 'Bajra', 'Paddy', 'Maize']
+            labels: cropsLabels
         },
         options: {}
     });
 
 
     // Production By Crop
-    var cropByYears = [
-    {
-        name: 'Rice',
-        data: [100, 200, 300, 400, 500],
-        years: ['2015', '2016', '2017', '2018', '2019']
-    },
-    {
-        name: 'Wheat',
-        data: [200, 300, 400, 500, 600],
-        years: ['2015', '2016', '2017', '2018', '2019']
-    },
-    {
-        name: 'Bajra',
-        data: [400, 300, 500, 600, 900],
-        years: ['2015', '2016', '2017', '2018', '2019']
-    }
-    ];
+    var cropByYears = {{ crops_by_years_data|safe }};
 
-    var crops = ['Rice', 'Wheat', 'Bajra'];
+    var crops = [];
+    for(let i = 0; i < cropByYears.length; i++){
+        crops.push(cropByYears[i].name);
+    }
 
     var cropData = cropByYears[0].data;
     var cropYears = cropByYears[0].years;
@@ -454,7 +597,7 @@
         data: {
         labels: cropYears,
         datasets: [{
-            label: 'Crop Production By Year',
+            label: 'Crop Production By Year (In Quintals)',
             data: cropData,
             backgroundColor: [
                 'rgba(255, 206, 86, 0.2)',
@@ -500,27 +643,82 @@
     });
 
 
-    // For visualization of Profits
-    var profitByYearsData = [
-    {
-        year: '2017',
-        data: [100, 200, 300, 400, 500, 500, 100, 200, 300, 400, 900, 200],
-    },
-    {
-        year: '2018',
-        data: [200, 300, 400, 500, 600, 400, 500, 500, 100, 200, 300, 400],
-    },
-    {
-        year: '2019',
-        data: [400, 300, 500, 600, 900, 100, 200, 300, 400, 500, 200, 100],
-    }
-    ];
 
-    var years = ['2017', '2018', '2019'];
+    // Amount Per Crop
+    var cropByAmount = {{ crops_profits_by_years_data|safe }};
+
+    var cropsNames = [];
+    for(let i = 0; i < cropByAmount.length; i++){
+        cropsNames.push(cropByAmount[i].name);
+    }
+
+    var cropPriceData = cropByAmount[0].data;
+    var cropPriceYears = cropByAmount[0].years;
+
+    var ctxAmountPerCrop = document.getElementById('amountPerCrop').getContext('2d');
+    var amountPerCrop = new Chart(ctxAmountPerCrop, {
+        type: 'bar',
+        data: {
+        labels: cropPriceYears,
+        datasets: [{
+            label: 'Selling Price For Every Crop By Year',
+            data: cropPriceData,
+            backgroundColor: [
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(78, 205, 196, 0.2)',
+                'rgba(255, 107, 107, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 206, 86, 1)',
+                'rgba(78, 205, 196, 1)',
+                'rgba(255, 107, 107, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+        options: {
+             scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+        }
+    });
+
+    // For selecting the crop from the dropdown menu
+    document.querySelector('#cropPriceSelector').addEventListener('change', function() {
+        var cropName = document.querySelector('#cropPriceSelector').value;
+        var cropIndex = cropsNames.indexOf(cropName);
+        cropPriceData = cropByAmount[cropIndex].data;
+        cropPriceYears = cropByAmount[cropIndex].years;
+        amountPerCrop.data.datasets[0].data = cropPriceData;
+        amountPerCrop.data.labels = cropPriceYears; 
+        amountPerCrop.update();
+    });
+
+
+
+
+
+    // For visualization of Profits
+    var profitByYearsData = {{ profit_by_years_data|safe }};
+
+    var years = [];
+    for(let j = 0; j < profitByYearsData.length; j++){
+        years.push(profitByYearsData[j].year);
+    }
 
     var profitsData = profitByYearsData[0].data;
-
-
 
     var ctxProfitsByYear = document.getElementById('profitsByYear').getContext('2d');
 	var profitsByYear = new Chart(ctxProfitsByYear, {
@@ -539,7 +737,8 @@
             responsive: true,
             title: {
                 display: true,
-                text: 'Profits in Lakhs'
+                text: 'Profits in Rupees'
+
             },
             tooltips: {
                 mode: 'index',
@@ -562,7 +761,8 @@
                     scaleLabel: {
                         display: true,
                         labelString: 'Value'
-                    }
+                    },
+                    ticks: {min:0}
                 }]
             }
         }
@@ -579,69 +779,25 @@
 
 
 
-    // For the visualization of engagement of farmers
-    var ctxFarmerEngagement = document.getElementById('farmerEngagement').getContext('2d');
-	var farmerEngagement = new Chart(ctxFarmerEngagement, {
-        type: 'line',
-        data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            datasets: [{
-                label:['Farmers with Smartphones'],
-                backgroundColor: ['rgba(255, 206, 86, 0.2)'],
-                borderColor: ['rgba(255, 206, 86, 1)'],
-                data: [45, 67, 86, 12, 45, 32, 73, 89,  43, 45, 56, 34],
-                fill: false
-            },
-            {
-                label:['Farmers with Feature Phones'],
-                backgroundColor: ['rgba(78, 205, 196, 0.2)',],
-                borderColor: ['rgba(78, 205, 196, 1)',],
-                data: [34, 45, 67, 86, 73, 89, 12, 45, 32, 43, 45, 56],
-                fill: false
-            },
-            {
-                label:['Farmers with no Phones'],
-                backgroundColor: ['rgba(54, 162, 235, 0.2)',],
-                borderColor: ['rgba(54, 162, 235, 1)',],
-                data: [12, 45, 67, 86, 73, 86, 73, 89, 89, 12, 45, 67],
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            title: {
-                display: true,
-                text: 'Percentage Engagement of Farmers'
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false,
-            },
-            hover: {
-                mode: 'nearest',
-                intersect: true
-            },
-            scales: {
-                xAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Month'
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Value'
-                    }
-                }]
-            }
-        }
-    });
-
-
   </script>
+<script>
+ $(document).ready(function() {
+
+$('.counter').each(function () {
+$(this).prop('Counter',0).animate({
+Counter: $(this).text()
+}, {
+duration: 4000,
+easing: 'swing',
+step: function (now) {
+$(this).text(Math.ceil(now));
+}
+});
+});
+
+});
+
+</script>
 </body>
 
 </html>

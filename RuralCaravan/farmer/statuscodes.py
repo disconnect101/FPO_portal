@@ -20,6 +20,11 @@ status_codes = [
     ('18', 'Unable to update Kart'),
     ('19', 'Crop not available'),
     ('20', 'Unauthorized Access'),
-    ('21', 'arguments missing')
-    ('22', 'no Entry in farmer table')
+    ('21', 'arguments missing'),
+    ('22', 'no Entry in farmer table'),
+    ('23', 'no meetingtoken found'),
+    ('24', 'no matching meetingtoken could be found'),
+    ('25', 'not enough data to predict, register your land at FPO if not done already'),
+    ('26', 'username already taken'),
+    ('27', 'user does not exists')
 ]

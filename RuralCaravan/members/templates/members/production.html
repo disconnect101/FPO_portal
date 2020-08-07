@@ -57,7 +57,6 @@
 }
 
 
-
       @media (min-width: 800px) and (max-width: 850px) {
         html,
         body,
@@ -78,7 +77,7 @@ footer {
    width: 100%;
    height:50px;
 }
-body {font-family: Arial;}
+/*body {font-family: Arial;}*/
 th {
   background-color: #547e40;
   color: white;
@@ -87,11 +86,24 @@ th,td{
     padding:0.3%;
     padding-left:1%
 }
+
+#DataTables_Table_0_filter{
+  text-align: right;
+}
+
+#DataTables_Table_0_filter.label{
+  text-align: left;
+}
+
+.pagination, .dataTables_info {
+  margin-top: 2rem;
+  margin-bottom: 0;
+}
     </style>
 </head>
-<body >
+<body style="overflow-x: hidden;">
 <!-- Navbar -->
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+   <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
     <div class="container">
 
       <!-- Brand -->
@@ -110,7 +122,7 @@ th,td{
 
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}">Home
               <span class="sr-only">(current)</span>
             </a>
@@ -119,33 +131,43 @@ th,td{
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'meetings' %}">Plans</a>
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
           </li>
-             <li class="nav-item">
+             <li class="nav-item active">
             <a class="nav-link" href="{% url 'produce' %}" >Production</a>
           </li>
             <li class="nav-item">
-            <a class="nav-link" href="{% url 'FPOLedger' %}" >Ledger</a>
-          </li>
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
-        <ul class="navbar-nav nav-flex-icons">
+         <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item">
+            <a href="{% url 'add_user' %}" class="nav-link" data-toggle="tooltip" title="Add New User">
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
              <li class="nav-item">
-            <a href="{% url 'transaction'%}" class="nav-link" >
+            <a href="{% url 'transaction'%}" class="nav-link" data-toggle="tooltip" title="Transactions">
              <i class="fas fa-rupee-sign"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'orders' %}" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" data-toggle="tooltip" title="Orders">
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
+             <li class="nav-item">
+            <a href="{% url 'products' %}" class="nav-link" data-toggle="tooltip" title="Products">
+             <i class="fas fa-shopping-basket"></i>
+            </a>
+          </li>
           <li class="nav-item">
-            <a href="statistics.html" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" data-toggle="tooltip" title="Statistics">
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
@@ -156,7 +178,7 @@ th,td{
             </a>
           </li>
 		  <li class="nav-item">
-            <a class="nav-link" href="govtschemes.html" >Logout</a>
+            <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
 
 
@@ -167,36 +189,38 @@ th,td{
     </div>
   </nav>
   <!-- Navbar -->
-<main style="padding-top:5%;min-height:90%" >
-<h3 style="padding-left: 2%;padding-top:2%">Production Records</h3><hr>
+<main style="padding-top: 8rem;min-height:90%" >
+<!--<h3 style="padding-left: 2%;padding-top:2%">Production Records</h3><hr>-->
+      <div class="row">
+        <div class="col-12">
+
+          <h3 class="h3 text-center mb-4" >Produce Records</h3>
+          <hr style="margin: auto; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
+        </div>
+      </div>
 <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
-         <span><a href="{% url 'add_Produce' %}" class="btn btn-primary">Add New Record</a></span>
+         <div class="text-right"><a href="{% url 'add_Produce' %}" style="font-size: 1rem;" class="btn btn-outline-success">Add New Record</a></div>
         <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
-    <table
-        class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+    <table id="produce_id"
+        class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
             <thead>
-                <th>Date Added</th>
-                 <th>Owner</th>
-                <th>Crop Code</th>
-                <th>Produce(in quintals)</th>
-                <th>Quality</th>
-                <th>Delete Record</th>
+                <th>DATE ADDED </th>
+                 <th>OWNER</th>
+                <th>CROP CODE</th>
+                <th>PRODUCE(IN QUINTALS)</th>
+                <th>AMOUNT SOLD</th>
+                <th>DELETE RECORD</th>
 
              </thead>
             <tbody>
-        {% for entry in produce%}
+        {% for entry in produce %}
              <tr>
                     <td>{{entry.date}}</td>
                     <td>{{entry.owner.username}}</td>
                     <td>{{entry.crop.code}}</td>
                     <td>{{entry.amount}}</td>
-                    <td>{% if entry.quality %}
-                            High
-                        {% else %}
-                            Low
-                        {% endif %}
-                    </td>
-                    <td><p data-placement="top" data-toggle="tooltip" title="Delete Farmer Details"><a href="produce/delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt"></i></a></p></td>
+                    <td>{{entry.amountsold}}</td>
+                    <td><p data-placement="top" data-toggle="tooltip" title="Delete Farmer Details"><a href="produce/delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt blue-text"></i></a></p></td>
              </tr>
         {% endfor %}
 
@@ -218,6 +242,9 @@ th,td{
     <!--/.Copyright-->
 
   </footer>
+<script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+    <!-- Bootstrap core JavaScript -->
+ <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 <script>
     $(document).on('click', '.confirm-delete', function(){
@@ -234,6 +261,21 @@ th,td{
     } );
 document.getElementById("defaultOpen").click();
 </script>
-
+<script type="text/javascript">
+    // Animations initialization
+    //new WOW().init();
+  </script>
+<script>
+      $(document).ready(function () {
+ $('#produce_id').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [5]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
+});
+  </script>
 </body>
 </html>

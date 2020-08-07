@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Meetings</title>
+    <title>Plan Details</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <!-- Bootstrap core CSS -->
@@ -51,9 +51,45 @@
               }
           }
 
-    .no-click {
-    pointer-events: none;
+.counter-box {
+    display: block;
+    background: #f6f6f6;
+    padding: 40px 20px 37px;
+    text-align: center
 }
+
+.counter-box p {
+    margin: 5px 0 0;
+    padding: 0;
+    color: #909090;
+    font-size: 18px;
+    font-weight: 500
+}
+
+.counter-box i {
+    font-size: 60px;
+    margin: 0 0 15px;
+    color: #d2d2d2
+}
+
+.counter {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: #666;
+    line-height: 28px
+}
+
+.counter-box.colored {
+    background: #3acf87
+}
+
+.counter-box.colored p,
+.counter-box.colored i,
+.counter-box.colored .counter {
+    color: #fff
+}
+
 
     </style>
 </head>
@@ -65,7 +101,7 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}" target="_blank">
+      <a class="navbar-brand" href="{% url 'home' %}">
         <strong>FPO PORTAL</strong>
       </a>
 
@@ -85,46 +121,62 @@
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
-          <li class="nav-item active ">
-            <a class="nav-link" href="{% url 'plans' %}" >Plans</a>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
           </li>
+             <li class="nav-item">
+            <a class="nav-link" href="{% url 'produce' %}" >Production</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item">
+            <a href="{% url 'add_user' %}" class="nav-link" data-toggle="tooltip" title="Add New User">
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'transaction'%}" class="nav-link" data-toggle="tooltip" title="Transactions">
+             <i class="fas fa-rupee-sign"></i>
+            </a>
+          </li>
           <li class="nav-item">
-            <a href="{% url 'orders' %}" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" data-toggle="tooltip" title="Orders">
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
-            <li class="nav-item">
-            <a href="{% url 'products' %}" class="nav-link" >
+             <li class="nav-item">
+            <a href="{% url 'products' %}" class="nav-link" data-toggle="tooltip" title="Products">
              <i class="fas fa-shopping-basket"></i>
             </a>
           </li>
-
           <li class="nav-item">
-            <a href="statistics.html" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" data-toggle="tooltip" title="Statistics">
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
           <li class="nav-item">
             <a href="{% url 'members' %}" class="nav-link border border-light rounded"
-              target="_blank">
+             >
               <i class="fas fa-user"></i>Members
             </a>
           </li>
-		   <li class="nav-item">
+		  <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
-        </ul>
 
+
+        </ul>
 
       </div>
 
@@ -135,87 +187,218 @@
 
 
   <!--Main layout-->
-  <main style="padding-top:10%">
+  <main style="padding-top:8rem;">
     <div class="container" >
 
 
         <!--Section: Main features & Quick Start-->
+
+       {% block content %}
       <section style="padding-bottom:5%">
-              <!--Grid row-->
-        <div class="row wow fadeIn">
-
-         <div class="col-lg-12 col-md-12">
-			<!--Card-->
-            <div class="card">
-
-              <!--Card content-->
-              <div class="card-body">
-
-                <h3 class="dark-grey-text text-center" >
-                    <strong>PLAN DETAILS</strong>
-                  </h3>
-                  <hr>
+          <!-- Grid row -->
+      <div class="row" style="margin-bottom: 4rem;">
+          <div class="col-12">
 
 
+              <h1 style="text-align: center;" class="green-text mt-0 mb-3">Plan Details</h1>
+              <hr style="margin: auto; width: 6rem; border: 2px solid #4aa327; border-radius: 20rem;">
+              <br>
+          </div>
+      </div>
 
-
-
- {% block content %}
-
-            <div class="row">
-
-              <div class="col-lg-6 col-md-12">
-                   <div class="card">
-
-              <!--Card content-->
-              <div class="card-body">
-                  <p><div class="btn btn-grey no-click">CROP CODE</div><span><strong>{{plans.code}}</strong></span></p>
-               <p>   <div class="btn btn-grey no-click">CROP NAME</div><span><strong>{{plans.name}}</strong></span></p>
-                <p>  <div class="btn btn-grey no-click">CROP TYPE</div><span><strong>{{plans.type}}</strong></span></p>
-              </div>
-                   </div>
-              </div>
-                 <div class="col-lg-6 col-md-12">
-                      <div class="card">
-
-              <!--Card content-->
-              <div class="card-body">
-                <p>   <div class="btn btn-grey no-click">MAXIMUM CAPACITY</div><span><strong>{{plans.max_cap}}</strong></span></p>
-                 <p> <div class="btn btn-grey no-click">WEIGHT PER LAND</div><span><strong>{{plans.weigth_per_land}}</strong></span></p>
-
-                 <p>  <div class="btn btn-grey no-click">CURRENT AMOUNT</div><span><strong>{{plans.current_amount}}</strong></span></p>
-                 </div>
-                      </div>
-                 </div>
-
-
-
-
-              </div>
-                   <hr>
-
-                   <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                              <div class="card">
-
-              <!--Card content-->
-              <div class="card-body">
-                    <p>  <div class="btn btn-green no-click">GUIDELINES</div><span>{{plans.guidance | safe}}</span></p>
-                        </div>
-                              </div></div>
+           <div class="row" style="margin: 4rem auto;">
+        <div class="four col-md-3">
+            <div class="counter-box colored"> <i class="fas fa-thumbs-up"></i> <span class="counter">{{num_subscribers}}</span>
+                <p>SUBSCRIBERS</p>
             </div>
-            <!--/First row-->
+        </div>
+        <div class="four col-md-3">
+            <div class="counter-box"> <i class="fas fa-weight"></i> <span class="counter">{{plans.max_cap}}</span>
+                <p>REQUIREMENT(Quintals)</p>
+            </div>
+        </div>
+        <div class="four col-md-3">
+            <div class="counter-box"> <i class="fa fa-shopping-cart"></i> <span class="counter">{{plans.current_amount}}</span>
+                <p>COLLECTED(Quintals)</p>
+            </div>
+        </div>
+        <div class="four col-md-3">
+            <div class="counter-box"> <i class="fas fa-weight-hanging"></i> <span class="counter">{{plans.weigth_per_land}}</span>
+                <p>WEIGHT PER ACRE(Quintals)</p>
+            </div>
+        </div>
+    </div>
+
+          <div class="row wow fadeIn">
+
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+
+
+                        {% if plans.image %}
+                          <center><img src="{{plans.image.url}}" height="280px" width="280px" /></center>
+                          {% else %}
+                         <center><img src="{% static 'img/download.png'%}" height="280px" width="280px"/></center>
+                          {% endif %}
 
 
 
 
-      {% endblock content %}
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+
+          <!--Card-->
+          <div class="card" style="margin-top:3rem;">
+
+            <!--Card content-->
+            <div class="card-body" >
+
+                <h5 style="text-align: left;"><strong class="green-text">Plan Code:</strong> {{plans.code}}</h5>
+                <h5 style="text-align: left;"><strong class="green-text">Crop Name:</strong> {{plans.name}}</h5>
+               <h5 style="text-align: left;"><strong class="green-text">Crop Type:</strong> {{plans.type}}</h5>
+                 <h5 style="text-align: left;"><strong class="green-text">Plan Status:</strong>
+                     {% if plans.live %}
+                           <strong class="blue-text"> ACTIVE</strong>
+                    {% else %}
+                           <strong class="orange-text"> INACTIVE</strong>
+                    {% endif %}
+
+
+
+
+
+                </h5>
+
+
+
+
+            </div>
 
           </div>
-          <!--/Grid column-->
+          <!--/.Card-->
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
 
 
+
+
+      <div class="row" style="margin-top: 6rem;">
+        <div class="col-md-6">
+          <h1 style="text-align: center;" class="green-text mb-4">Estimated Crop Contribution</h1>
+          <hr class="mb-4" style="width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
+          <canvas id="pieChart1" width="100" height="100"></canvas>
+        </div>
+        <div class="col-md-6">
+          <h1 style="text-align: center;" class="green-text mb-2">Products</h1>
+          <hr style="width: 6rem; border: 2px solid #4caf50; border-radius: 20rem; margin-bottom: 2rem;">
+          <div class="text-center">
+            <i class="fas fa-sitemap fa-3x mb-4" style="opacity: 0.15; color: #4caf50"></i>
+          </div>
+          <p style="text-align: center;">These are the products that are required for the cultivation of {{plans.name}}</p>
+          <ul class="list-group">
+            {% for product in products %}
+            <li class="list-group-item list-group-item-success">{{product.name}}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8rem;">
+        <div class="col-md-12">
+
+            <h1 style="text-align: left;" class="green-text mt-0 mb-3">Guidelines</h1>
+            <hr style="margin: 0; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
+            <br>
+
+            <h5 style="text-align: left;"><strong class="green-text">Details:</strong></h5>
+            {{plans.guidance|safe}}
+        </div>
+      </div>
+          <div class="row" style="margin-top:2rem;">
+          <div class="col-md-12 ">
+                <h1 style="text-align: left;" class="green-text mt-0 mb-3">Investment Requirements:</h1>
+                <hr style="margin: 0; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
+                <br>
+
+
+
+                {{plans.investment_requirements}}
+
+            </div>
+
+      </div>
+           <div class="row" style="margin-top:2rem;">
+          <div class="col-md-12 ">
+                <h1 style="text-align: left;" class="green-text mt-0 mb-3">Facilities:</h1>
+                <hr style="margin: 0; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
+                <br>
+
+
+
+                {{plans.facilities}}
+
+            </div>
+
+      </div>
+
+
+      <div class="row" style="margin:4rem auto;">
+        <div class="col-12">
+          <h1 style="text-align: center;" class="green-text mb-4">Subscribers By Villages</h1>
+          <hr class="mb-4" style="width: 6rem; border: 2px solid #4caf50; border-radius: 20rem;">
+          <canvas id="myChart" width="100" height="60"></canvas>
+        </div>
+      </div>
+      
+      {% if subscribers_by_villages %}
+      <p style="text-align: left; opacity: 0.2" class="mb-0 mt-4"><strong>BY VILLAGES</strong></p>
+      <h1 class="green-text">Subscribers</h1>
+      <hr style="margin: 0; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
+      {% for village in subscribers_by_villages %}
+      <div class="row">
+          <button class="btn btn-outline-success mb-4 mt-4" style="border-color:{% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important; color:{% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important" type="button" data-toggle="collapse" data-target="#village{{village.locality_id}}" aria-expanded="false" aria-controls="village{{village.locality_id}}">
+                <h4><i class="fas fa-map-marker-alt"></i> {{village.locality_name}}</h4>
+            </button>
+      </div>
+          <div class="collapse" id="village{{village.locality_id}}"> 
+              <h4><strong class="green-text">Reach At</strong> +919999999991</h4>
+              <div class="mt-2">
+                  <span style="font-size: 1.2rem; border: 1px solid {% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important; padding: 0.2rem 0.8rem; border-radius: 0.2rem; color:{% if village.engagement > 75 %}#2a9d8f {% elif village.engagement < 35 %} #e76f51 {% else %} #e9c46a {% endif %}!important"><strong>Past Engagement {{village.engagement}}%</strong></span>
+              </div>
+              <div class="row mt-4">
+              {% for token in village.farmers %}
+                  <div class="col-lg-3 col-md-4 mb-4">
+                      <div class="card">
+                          <div class="card-body">
+                              <h5 class="card-title green-text">{{token.farmer}}</h5>
+                              <h6 class="card-subtitle mb-2 text-muted">{{token.locality}}</h6>
+                              <a href="#" class="card-link">
+                                  {% if token.smartphone_type == "Smartphone" %}
+                                  <i class="fas fa-mobile fa-2x float-right green-text" ></i>
+                                  {% elif token.smartphone_type == "Featurephone" %}
+                                  <i class="fas fa-phone fa-2x float-right green-text" ></i>
+                                  {% else %}
+                                  <i class="fas fa-phone-slash fa-2x float-right green-text"></i>
+                                  {% endif %}
+                              </a>
+                          </div>
+                      </div>
+                  </div>
+              {% endfor %}
+          </div>
+          </div>
+      {% endfor %}
+      {% endif %}
+      </div>
+      
       </section>
+      {% endblock content %}
     </div>
   </main>
   <!--Main layout-->
@@ -247,12 +430,109 @@
       <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
+    //new WOW().init();
   </script>
- <script>
-        CKEDITOR.replace('guidance');
 
-    </script>
+<script>
+
+    // Line
+    var villages = {{ villages|safe }};
+    var villageTotal = {{ village_total|safe }};
+
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: villages, //village names
+        datasets: [{
+          label: 'Total Number of Subscribers',
+          data: villageTotal,
+          backgroundColor: [
+            'rgba(255, 99, 132,0.3)',
+            'rgba(54, 162, 235,0.3)',
+            'rgba(255, 206, 86,0.3)',
+            'rgba(75, 192, 192,0.3)',
+            'rgba(153, 102, 255,0.3)',
+            'rgba(255, 159, 64,0.3)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+    
+    //pie2
+    var produceAmountPercentages = {{ produce_amount_percentages|safe }};
+    var produceVillages = {{ produce_villages|safe }};
+    
+    var ctxP2 = document.getElementById("pieChart1").getContext('2d');
+    var myPieChart = new Chart(ctxP2, {
+      type: 'pie',
+      data: {
+        labels: produceVillages,
+        datasets: [{
+          data: produceAmountPercentages,
+          backgroundColor: [
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(78, 205, 196, 0.2)',
+                'rgba(255, 107, 107, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)'
+            ],
+          borderColor: [
+                'rgba(255, 206, 86, 1)',
+                'rgba(78, 205, 196, 1)',
+                'rgba(255, 107, 107, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)'
+            ]
+        }]
+      },
+      options: {
+        responsive: true,
+      }
+    });
+
+  </script>
+<script>
+ $(document).ready(function() {
+
+$('.counter').each(function () {
+$(this).prop('Counter',0).animate({
+Counter: $(this).text()
+}, {
+duration: 4000,
+easing: 'swing',
+step: function (now) {
+$(this).text(Math.ceil(now));
+}
+});
+});
+
+});
+
+</script>
+
 </body>
 
 </html>

@@ -6,11 +6,20 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
 from django.contrib import messages
-from .forms import FarmerForm, leader_add_farmerForm, ProduceForm, FPOLedgerForm, TransactionForm, OrdersForm
+from .forms import FarmerForm, leader_add_farmerForm, ProduceForm, FPOLedgerForm, TransactionForm, OrdersForm, LandForm, \
+    BankForm, farmerCropMapForm
 from .forms import LeaderForm
 from .forms import UserProfileForm
 from farmer.models import *
+from django.db.models import Q
+import random
 
+from fpo.get_production_prediction import predict_production
+from .stats import *
+from fpo.statisticalanalysis import *
+from datetime import datetime
+from django.db.models import ProtectedError
+from django.contrib import messages
 
 # Create your views here.
 
@@ -31,6 +40,20 @@ posts = [
     }
 
 ]
+stateObject = {
+        "district1": {"village1": "",
+                      "village2": "",
+                      "village3": "",
+                      },
+        "district2": {"village4": "",
+                      "village5": "",
+                      "village6": "",
+                      },
+        "district3": {"village7": "",
+                      "village8": "",
+                      "village9": "",
+                      },
+    }
 
 
 def farmer_profile(request):
@@ -58,15 +81,26 @@ def delete_farmer(request, id):
   
     # fetch the object related to passed id 
     obj = get_object_or_404(Farmer, id = id) 
-  
-  
+    print(obj.user.id)
+    obj1 = get_object_or_404(UserProfile, id = obj.user.id) 
+    print(obj1)
+    try:
+        obj1.delete() 
+        messages.success(request, 'Farmer Deleted Successfully.')       
+    except ProtectedError:
+        messages.error(request, 'Cannot delete this farmer')
+        return redirect("/members/member_page/")
+        
+
+    # obj1.delete() 
+    # obj.delete() 
     if request.method =="POST": 
         # delete object 
-        obj.delete() 
+        
         # after deleting redirect to  
         # home page 
         return redirect("/members/member_page/")
-    obj.delete()
+    # obj.delete()
     return redirect("/members/member_page/")
    # return render(request, "members/members.html", context)
 
@@ -95,8 +129,8 @@ def update_farmer(request, id):
         return redirect("/members/member_page/")
   
     # add form dictionary to context 
-    context["form"] = form 
-  
+    context["form"] = form
+    context['stateObject'] = stateObject
     return render(request, "members/editfarmer.html", context)  #editfarmer
 
 
@@ -108,11 +142,55 @@ def detail_farmer(request, id):
   
     # add the dictionary during initialization 
     context["data"] = Farmer.objects.get(id = id)
-    #context["bank_details"] = BankDetails.objects.all()
-    #context["land_details"] = Land.objects.get(id = id)
     context["produce"] = Produce.objects.all()
     context["transactions"] = ew_transaction.objects.filter(user = context["data"].user)
     context["orders"] = Orders.objects.filter(buyer = context["data"].user)
+    context["landdetails"] = Land.objects.filter(owner=context["data"].user)
+    context["bankdetails"] = BankDetails.objects.filter(user=context["data"].user)
+
+    staticalanalysis = stats(context["data"])
+    # Crops
+    cropdata = staticalanalysis.getCropWiseProduce()
+    context['crops_data'] = cropdata.get('productions')
+    context['crops_labels'] = cropdata.get('crops')
+
+    # Crop Production By Years
+    crops_by_years_data = staticalanalysis.getCropProductionByYear()
+
+    print(f'\n\nThis is the data\n\n{crops_by_years_data}\n\n')
+
+    for crop in crops_by_years_data:
+        data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
+        # data = {
+        #     'Production': [600, 400,700],
+        #     'Year': [2018, 2019, 2020]
+        # }
+        prediction = predict_production(data)
+        print(prediction)
+        crop['years'].append(f'{prediction[0]} (Prediction)')
+        crop['data'].append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
+
+    context['crop_selector_options'] = [x['name'] for x in crops_by_years_data]
+
+    context['crops_by_years_data'] = crops_by_years_data
+
+    # Profits Per Crop
+    crops_profits_by_years_data = staticalanalysis.getCropProfitsByYear()
+    print(f'\n\nThis is the data\n\n{crops_profits_by_years_data}\n\n')
+
+
+    for crop in crops_profits_by_years_data:
+        data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
+        print()
+        print(f'Data->>{data}')
+        print()
+        prediction = predict_production(data)
+        crop['years'].append(f'{prediction[0]} (Prediction)')
+        crop['data'].append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
+
+    context['crop_price_selector_options'] = [x['name'] for x in crops_profits_by_years_data]
+
+    context['crops_profits_by_years_data'] = crops_profits_by_years_data
     return render(request, "members/farmer_profile.html", context) 
 
 
@@ -123,12 +201,20 @@ def add_farmer(request):
   
     # add the dictionary during initialization 
     form = FarmerForm(data = request.POST , files=request.FILES) 
-    if form.is_valid(): 
+    if form.is_valid():
+        aadhar = form.cleaned_data['aadhar']
+        contact = form.cleaned_data['contact']
+        user = form.cleaned_data['user']
+        if len(aadhar) != 12 or len(contact) != 10:
+            return redirect('/members/member_page/add_farmer')
+        p = Contact.objects.create(user=user, number=contact, verification_status=True)
         form.save() 
         return redirect('/members/member_page')
           
     context['form']= form
     context['users'] = UserProfile.objects.all()
+    
+    context['stateObject'] = stateObject
     return render(request, 'members/addnewfarmer.html', context)
 
 
@@ -141,16 +227,28 @@ def delete_leader(request, id):
     context ={} 
   
     # fetch the object related to passed id 
+    
     obj = get_object_or_404(Leader, id = id) 
+    print(obj.user.id)
+    obj1 = get_object_or_404(UserProfile, id = obj.user.id) 
+    print(obj1)
+
+    # obj1.delete() 
+    try:
+        obj1.delete()   
+        messages.success(request, 'Leader Deleted Successfully.')     
+        # messages.success(request, _("Product deleted"))
+    except ProtectedError:
+        messages.error(request, 'Cannot delete this leader')
+        return redirect("/members/member_page/")
   
-  
-    if request.method =="POST": 
-        # delete object 
-        obj.delete() 
-        # after deleting redirect to  
-        # home page 
-        return redirect("/fpo/member_page/")
-    obj.delete()
+    # if request.method =="POST": 
+    #     # delete object 
+    #     obj.delete() 
+    #     # after deleting redirect to  
+    #     # home page 
+    #     return redirect("/fpo/member_page/")
+    # obj.delete()
     return redirect("/members/member_page/")
   
     #return render(request, "members/delete_leader.html", context)
@@ -178,7 +276,8 @@ def update_leader(request, id):
         return redirect("/members/member_page/")
   
     # add form dictionary to context 
-
+   
+    context['stateObject'] = stateObject
     return render(request, "members/editleader.html", context)
 
 
@@ -187,12 +286,25 @@ def detail_leader(request, id):
     # dictionary for initial data with  
     # field names as keys 
     context ={} 
+    leader = Leader.objects.get(id = id)
+    users = leader.farmers.all()
+    farmer1 = []
+    print(users)
+    for farmer in users:
+        far = Farmer.objects.filter(user_id = farmer.id)
+        farmer1.append(far.first())
+
+        # print(far.first().village)
+
+
   
     # add the dictionary during initialization 
+    context["leader"]=farmer1
     context["data"] = Leader.objects.get(id = id)
     context["farmers"] = Farmer.objects.all()
-          
+    context["transactions"] = ew_transaction.objects.filter(user=context["data"].user)
     return render(request, "members/leader_profile.html", context)
+
 
 
 def add_leader(request):
@@ -203,12 +315,22 @@ def add_leader(request):
     # add the dictionary during initialization
     form = LeaderForm(data=request.POST, files=request.FILES)
     if form.is_valid():
+        aadhar = form.cleaned_data['aadhar']
+        contact = form.cleaned_data['contact']
+        user = form.cleaned_data['user']
+        if len(aadhar) != 12 or len(contact) != 10:
+            return redirect('/members/member_page/add_farmer')
+
+        p = Contact.objects.create(user=user, number=contact, verification_status=True)
         form.save()
         return redirect('/members/member_page')
 
     context['form'] = form
-    context['farmers'] =Farmer.objects.all()
+    context['farmers'] = Farmer.objects.all()
     context['users'] = UserProfile.objects.all()
+
+    
+    context['stateObject'] = stateObject
     return render(request, 'members/addnewleader.html', context)
 
 
@@ -223,6 +345,7 @@ def add_user(request):
 
     if form.is_valid():
         user = form.save()
+        # p = Contact.objects.create(user=, number=, verification_status=True)
         # password = form.cleaned_data['password']
         user.set_password(user.password)
         user.save()
@@ -231,7 +354,63 @@ def add_user(request):
     context['form'] = form
     context['users'] = UserProfile.objects.all()
     # context['form_u']=form
-    return render(request, 'members/addtest.html', context) #add
+    return render(request, 'members/add.html', context) #add
+
+
+# def leader_del_farmer(request, id1, id2):
+#     # dictionary for initial data with
+#     # field names as keys
+#     context = {}
+
+#     # add the dictionary during initialization
+#     # user
+#     # context["leader"] = Leader2.objects.get(user_id = id).all()
+#     obj = get_object_or_404(Leader, id=id1)
+#     sub = get_object_or_404(obj.farmers, id=id2)
+#     # sub = Leader.objects.filter(user_id = id1, farmers_id = id2)
+
+#     obj.farmers.remove(sub)
+#     if (obj.farmers.count() >= 0):
+#         print(obj.farmers.all())
+#         return redirect('detail_leader',id=id1)
+
+#     # farmer = []
+
+#     # print(sub)
+#     # for leader in sub :
+#     #     obj = leader.farmers
+#     #     farmer.append(obj)
+#     #     print(obj)
+#     # context["farmers"] = farmer
+#     return render(request, "members/leader_farmer.html", context)
+
+
+# def leader_add_farmer(request, id):
+#     # dictionary for initial data with
+#     # field names as keys
+#     context = {}
+
+#     form = leader_add_farmerForm(request.POST or None, files=request.FILES)
+#     if form.is_valid():
+#         # form.save()
+#         context["form"] = form
+#         username = form.cleaned_data['username']
+#         print(username)
+#         obj = get_object_or_404(UserProfile, username=username, category='F')
+#         print(obj.id)
+#         obj2 = get_object_or_404(Farmer, user=obj.id)
+#         sub = get_object_or_404(Leader, id=id)
+#         sub.farmers.add(obj2)
+#         sub.save()
+#         if (sub.farmers.count() > 0):
+#             # for far in sub.farmers.all():
+#             #     print("hello")
+#             print(sub.farmers.all())
+#             return redirect('detail_leader',id=id)
+
+#     context['form'] = form
+#     context['users'] = UserProfile.objects.all()
+#     return render(request, "members/leader_profile.html", context)  # change according to tempalate
 
 
 def leader_del_farmer(request, id1, id2):
@@ -249,7 +428,7 @@ def leader_del_farmer(request, id1, id2):
     obj.farmers.remove(sub)
     if (obj.farmers.count() >= 0):
         print(obj.farmers.all())
-        return redirect('detail_leader',id=id1)
+    return redirect('detail_leader',id=id1)
 
     # farmer = []
 
@@ -270,25 +449,41 @@ def leader_add_farmer(request, id):
     form = leader_add_farmerForm(request.POST or None, files=request.FILES)
     if form.is_valid():
         # form.save()
+        context["data"] = form
         context["form"] = form
+
         username = form.cleaned_data['username']
         print(username)
-        obj = get_object_or_404(UserProfile, username=username, category='F')
-        print(obj.id)
-        obj2 = get_object_or_404(Farmer, user=obj.id)
+        q1 = Q(category='F')
+        q2 = Q(category='P')
+        q3 = Q(category='N')
+        q4 = Q(username=username)
+        obj = UserProfile.objects.filter((q1 | q2 | q3) & q4)   
+        # obj = get_object_or_404(UserProfile, username=username, category='F')
+        print(obj.count())
+
+        
+        if obj.count() < 1:
+            return redirect('/members/member_page/view_leader/'+id)
+        objt = get_object_or_404(UserProfile, username=obj[0].username)
+        # print(obj[0].username)
+    
+        
+        obj2 = get_object_or_404(Farmer, user=objt.id)   
+        print(obj2)
         sub = get_object_or_404(Leader, id=id)
-        sub.farmers.add(obj2)
+        sub.farmers.add(objt)
         sub.save()
         if (sub.farmers.count() > 0):
-            # for far in sub.farmers.all():
-            #     print("hello")
-            print(sub.farmers.all())
-            return redirect('detail_leader',id=id)
+            for far in sub.farmers.all():
+                print(far.id)
+            # print(sub.farmers.all())
+            # return redirect('detail_leader',id=id)
+        return redirect('/members/member_page/view_leader/'+id)
 
     context['form'] = form
     context['users'] = UserProfile.objects.all()
     return render(request, "members/leader_profile.html", context)  # change according to tempalate
-
 
 #def add_FPOLedger(request):
     # field names as keys
@@ -317,23 +512,49 @@ def add_FPOLedger(request):
     # form = FarmerForm(data = request.POST , files=request.FILES)
     form = FPOLedgerForm(data=request.POST, files=request.FILES)
     if form.is_valid():
-        form.save()
-        name = form.cleaned_data['crop']
-        price = form.cleaned_data['price']
+        
+        crop = form.cleaned_data['crop']
+        rate = form.cleaned_data['rate']
+        sold_to = form.cleaned_data['sold_to']
         amount_sold = form.cleaned_data['amount_sold']
-        sub = Produce.objects.filter(crop=name)
+        description = form.cleaned_data['description']        
+        
+        price = rate*amount_sold
+        # form.price = price
+        p = FPOLedger.objects.create(crop=crop, rate=rate, sold_to=sold_to, amount_sold=amount_sold, description=description, price=price)
+        # form.save()
+        print("id is ",p.id)
+        print("hello")
+        # amountsold = form.cleaned_data['amountsold']
+        sub = Produce.objects.filter(crop=crop)
         total = 0.0
         for e in sub:
-            total = total + e.amount
+            total = total + (e.amount-e.amountsold)
         for e in sub:
             print(e.amount)
-            cost = (e.amount / total) * price
+            cost = ( (e.amount-e.amountsold) / total) * rate * amount_sold
+            e.income += cost
+            e.amountsold += ( (e.amount-e.amountsold) / total)*(amount_sold)
+            e.amountsold = round(e.amountsold,2)
+            e.save()
+            # if e.amountsold >= e.amount:
+            #     e.delete()
             owner = e.owner
             last_amount = 0.0
             if ew_transaction.objects.count() > 0:
                 last = ew_transaction.objects.filter(user=owner).last()
-                last_amount = last.currrent_amount
-            p = ew_transaction.objects.create(user=owner, amount=cost, currrent_amount=last_amount + cost, description='crop sold')
+                if last:
+                    last_amount = last.currrent_amount
+                else:
+                    last_amount = 0
+
+            num = ew_transaction.objects.all().count() + 1
+            year = datetime.now().year
+            refno = "PRO" + str(year) + str(p.id) + ":" +str(e.id)
+            print(p.id, p.rate)
+            cost = round(cost,2)
+            p1 = ew_transaction.objects.create(refno=refno, user=owner, amount=cost, currrent_amount=last_amount + cost, description='crop sold')
+
         # form_u.save()
         return redirect('/members/member_page/fpoledger')
 
@@ -342,15 +563,53 @@ def add_FPOLedger(request):
     context['crops'] = Crops.objects.all()
 
     # context['form_u']=form
-    return render(request, 'members/addfpoledger.html', context)
+    return render(request, 'members/addfpoledger.html', context)#addfpoledger
 
 
 def del_FPOLedger(request, id):
     context = {}
 
     obj = get_object_or_404(FPOLedger, id=id)
-
+    rate = obj.rate
+    print(rate)
     if obj.id > 0:
+        for transaction in ew_transaction.objects.all():
+            refno = transaction.refno
+            prefix = refno[:3]
+            suffix = refno[7:]
+            # print(refno[10:])
+            if prefix == "PRO":
+                x = suffix.split(":")    
+                prod_id = x[0]
+                ew_id = x[1]
+                # print(x)
+                if prod_id == str(id):
+                    obj1 = get_object_or_404(Produce, id=int(ew_id))
+                    obj1.amountsold = obj1.amountsold - (transaction.amount/rate)   #to find the qauntity which has to be reduced
+                    obj1.income -= transaction.amount
+                    obj1.save()    
+                    user = transaction.user
+                    amount = -transaction.amount
+                    description = "Recorrection"
+                    last = ew_transaction.objects.filter(user=user).last()
+                    if last:
+                        last_amount = last.currrent_amount
+                    else:
+                        last_amount = 0
+                    currrent_amount = last_amount + amount
+                    num = ew_transaction.objects.all().count() + 1
+                    year = datetime.now().year
+                    refno = "REF" + str(year) + str(random.randint(100, 999)) + str(num)
+                    # print(refno)
+                    # print(hello)
+                    amount = round(amount,2)
+                    currrent_amount = round(currrent_amount,2)
+                    p = ew_transaction.objects.create(refno=refno, user=user, amount=amount, currrent_amount=currrent_amount, description=description)
+                    # obj1.delete()
+
+
+                    print("yes",refno[10:],user)
+
         # delete object
         obj.delete()
         # after deleting redirect to
@@ -382,7 +641,7 @@ def add_Produce(request):
         return redirect('/members/member_page/produce')
 
     context['form'] = form
-    context['users'] = UserProfile.objects.all()
+    context['farmers'] = Farmer.objects.all()
     context['crops'] = Crops.objects.all()
 
     # context['form_u']=form
@@ -449,9 +708,17 @@ def add_transaction(request):
         amount = form.cleaned_data['amount']
         description = form.cleaned_data['description']
         last = ew_transaction.objects.filter(user=user).last()
-        last_amount = last.currrent_amount
+        if last:
+            last_amount = last.currrent_amount
+        else:
+            last_amount = 0
         currrent_amount = last_amount + amount
-        p = ew_transaction.objects.create(user=user, amount=amount, currrent_amount=currrent_amount,
+        num = ew_transaction.objects.all().count() + 1
+        year = datetime.now().year
+        refno = "REF" + str(year) + str(random.randint(100, 999)) + str(num)
+        # print(refno)
+        # print(hello)
+        p = ew_transaction.objects.create(refno=refno, user=user, amount=amount, currrent_amount=currrent_amount,
                                           description=description)
         # form.save()
         # form_u.save()
@@ -574,9 +841,9 @@ def orders_delete(request, id):
         obj.delete()
         # after deleting redirect to
         # home page
-        return redirect("/member/member_page/orders")
+        return redirect("/members/member_page/orders")
 
-    return render(request, "members/orders.html", context)
+    return redirect('/members/member_page/orders')
 
 
 def orders_add(request):
@@ -585,13 +852,22 @@ def orders_add(request):
     }
     form = OrdersForm(request.POST or None)
     if form.is_valid():
-        form.save()
+        type = form.cleaned_data['type']
+        item = form.cleaned_data['item']
+        buyer = form.cleaned_data['buyer']
+        quantity = form.cleaned_data['quantity']
+        is_paid = form.cleaned_data['is_paid']
+        is_delivered = form.cleaned_data['is_delivered']
+        rate = item.rate
+        price = rate*quantity
+        p = Orders.objects.create(type=type, item=item, buyer=buyer, quantity=quantity, is_paid=is_paid, is_delivered=is_delivered, rate=rate, price=price)
+        # form.save()
         return redirect('/members/member_page/orders')
 
     context['form'] = form
-    context['users'] = UserProfile.objects.all()
+    context['farmers'] = Farmer.objects.all()
     context['items'] = Products.objects.all()
-    return render(request, 'members/addneworder.html', context)
+    return render(request, 'members/addneworder.html', context)#addneworder
 
 
 def orders_edit(request, id):
@@ -613,6 +889,40 @@ def orders_edit(request, id):
     context["form"] = form
 
     return render(request, "members/orders.html", context)
+
+
+def bank_add_farmer(request,id):
+    context = {}
+    form = BankForm(data=request.POST, files=request.FILES)
+    if form.is_valid():
+        form.save()
+        return redirect('/members/member_page')
+
+    context['form'] = form
+    context['users'] = UserProfile.objects.all()
+    return render(request, 'members/addbank.html', context)
+
+
+def land_add_farmer(request,id):
+    context = {}
+    form = LandForm(data=request.POST, files=request.FILES)
+    if form.is_valid():
+        form.save()
+        return redirect('/members/member_page/')
+
+    context['form'] = form
+    context['users'] = UserProfile.objects.all()
+    return render(request, 'members/addland.html', context)
+
+
+def plan_add_farmer(request,id):
+    context = {}
+    form = farmerCropMapForm(request.POST or None, files=request.FILES)
+    if form.is_valid():
+        context["form"] = form
+        crop = form.cleaned_data['crop']
+
+
 # def order(request):
 #   return render(request, "members/farmer_profile.html")
 # def leader_profile(request):

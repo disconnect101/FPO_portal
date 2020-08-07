@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>FPO Orders</title>
+    <title>Orders</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -18,14 +18,14 @@
     <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
-    <!--- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>--->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
     <style type="text/css">
 
 /* Style the tab */
 .tab {
   overflow: hidden;
   border: 1px solid #ccc;
-  background-color:#4CAF50;
+  background-color:#547e40;
 }
 
 /* Style the buttons inside the tab */
@@ -42,12 +42,12 @@
 
 /* Change background color of buttons on hover */
 .tab button:hover {
-  background-color: #ddd;
+  background-color:Lightgreen;
 }
 
 /* Create an active/current tablink class */
 .tab button.active {
-  background-color: blueviolet;
+    background-color:#75c178;
 }
 
 /* Style the tab content */
@@ -80,18 +80,36 @@ footer {
    width: 100%;
    height:50px;
 }
-body {font-family: Arial;}
+/*body {font-family: Arial;}*/
 th {
   background-color: #547e40;
   color: white;
+  text-transform:uppercase;
 }
 th,td{
     padding:0.3%;
     padding-left:1%
+    padding-right:1%
 }
+
+.pagination, .dataTables_info {
+  margin-top: 2rem;
+  margin-bottom: 0;
+}
+
+.tablinks {
+  text-align: center;
+  padding: auto !important;
+}
+
+
+.dataTables_filter{
+  text-align: right;
+}
+
     </style>
 </head>
-<body>
+<body style="overflow-x: hidden;">
 <!-- Navbar -->
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
     <div class="container">
@@ -112,7 +130,7 @@ th,td{
 
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}">Home
               <span class="sr-only">(current)</span>
             </a>
@@ -121,7 +139,7 @@ th,td{
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'meetings' %}">Plans</a>
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
@@ -135,19 +153,29 @@ th,td{
         </ul>
 
         <!-- Right -->
-        <ul class="navbar-nav nav-flex-icons">
+         <ul class="navbar-nav nav-flex-icons">
             <li class="nav-item">
-            <a href="{% url 'transaction'%}" class="nav-link" >
+            <a href="{% url 'add_user' %}" class="nav-link" data-toggle="tooltip" title="Add New User">
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'transaction'%}" class="nav-link" data-toggle="tooltip" title="Transactions">
              <i class="fas fa-rupee-sign"></i>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="{% url 'orders' %}" class="nav-link" >
+          <li class="nav-item active">
+            <a href="{% url 'orders' %}" class="nav-link" data-toggle="tooltip" title="Orders">
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
+             <li class="nav-item">
+            <a href="{% url 'products' %}" class="nav-link" data-toggle="tooltip" title="Products">
+             <i class="fas fa-shopping-basket"></i>
+            </a>
+          </li>
           <li class="nav-item">
-            <a href="" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" data-toggle="tooltip" title="Statistics">
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
@@ -158,7 +186,7 @@ th,td{
             </a>
           </li>
 		  <li class="nav-item">
-            <a class="nav-link" href="govtschemes.html" >Logout</a>
+            <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
 
 
@@ -169,24 +197,37 @@ th,td{
     </div>
   </nav>
   <!-- Navbar -->
-<main style="padding-top:5%;min-height:90%" >
-<br>
-     <span ><a href="{% url 'orders-add' %}" class="btn btn-primary" >Add New Order</a></span>
-<div class="col-md-11" style="padding-left:5%; margin-top:25px;">
-    <h3 style="padding-left: 2%;padding-top:2%"> Unpaid Orders:</h3>
+<main style="padding-top: 8rem;min-height:90%" >
+    <div class="row">
+        <div class="col-12">
 
+          <h3 class="h3 text-center mb-4" >Orders</h3>
+          <hr style="margin: auto; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
+        </div>
+      </div>
+     <div class="text-right mr-4"><a href="{% url 'orders-add' %}" class="btn btn-outline-success" style="font-size: 1.2rem;">Add New Order</a></div>
+    <div class="tab" style="margin-top:2%">
+    <button class="tablinks" onclick="openCity(event, 'unpaid_orders')" id="defaultOpen"style="color:white">Unpaid</button>
+  <button class="tablinks" onclick="openCity(event, 'paid_orders')" style="padding: auto 0.4rem !important; color:white">Paid</button>
+
+
+</div>
+    <div id="unpaid_orders" class="tabcontent">
+        <div class="col-md-12" style="padding-left:2%; margin-top:25px;">
         <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
-    <table
-        class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
+    <table id="unpaid_id"
+        class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
             <thead>
-                <th>S No.</th>
-                <th>Buyer</th>
+                <th >Order ID</th>
+                <th >Buyer</th>
+                <th >Date</th>
                  <th>Type of Payment</th>
-                 <th>Item</th>
-                <th>Quantity</th>
-                <th>Total Price</th>
-                 <th>Payment Action</th>
-                <th>Delivery Status</th>
+                 <th >Item</th>
+                <th >Quantity</th>
+                <th >Total Price</th>
+                 <th >Payment Status</th>
+                <th >Delivery Status</th>
+                <th>Delete Record</th>
 
              </thead>
             <tbody>
@@ -195,16 +236,18 @@ th,td{
              <tr>
                     <td>{{entry.id}}</td>
                     <td>{{entry.buyer}}</td>
+                    <td>{{entry.date}}</td>
                     <td>{{entry.type}}</td>
                     <td>{{entry.item.name}}</td>
                     <td>{{entry.quantity}}</td>
                     <td>{{entry.price}}</td>
-                 <td><p data-placement="top" data-toggle="tooltip" title="Not Paid"><button type="button" class="confirm-paid"><a href="paid/{{entry.id}}" style="color:white">Payment Done</a></button></p></td>
+                 <td><p data-placement="top" data-toggle="tooltip">Unpaid<br><button type="button" class="btn-outline-primary"><a href="paid/{{entry.id}}" style="color:blue;" class="confirm-paid">Change Status</a></button></p></td>
                  {% if entry.is_delivered %}
                   <td>Delivered</td>
                  {% else %}
-                 <td><p data-placement="top" data-toggle="tooltip" >Not Delivered<br><button type="button" class="btn-primary"><a href="delivered/{{entry.id}}" style="color:white">Change Status</a></button></p></td>
+                 <td><p data-placement="top" data-toggle="tooltip" >Not Delivered<br><button type="button" class="btn-outline-primary"><a href="delivered/{{entry.id}}" style="color:blue">Change Status</a></button></p></td>
                  {% endif %}
+                 <td><p data-placement="top" data-toggle="tooltip" title="Delete Entry"><a href="delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt blue-text"></i></a></p></td>
              </tr>
             {% endif %}
         {% endfor %}
@@ -213,20 +256,24 @@ th,td{
 
     </table>
         </div>
-    <hr>
-    <h3 style="padding-left: 2%;padding-top:2%"> Paid Orders:</h3>
-     <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
-    <table
-        class=" table-striped table-bordered display" width="100%" style="margin-top: 20px;">
-            <thead>
-                <th>S No.</th>
-                <th>Buyer</th>
-                 <th>Type of Payment</th>
-                 <th>Item</th>
-                <th>Quantity</th>
-                <th>Total Price</th>
-                <th>Is Delivered</th>
+    </div>
+    </div>
 
+     <div id="paid_orders" class="tabcontent">
+         <div class="col-md-11" style="padding-left:5%; margin-top:25px;">
+         <div class="table-responsive" style="margin-top:25px; margin-bottom: 50px;">
+    <table id="paid_id"
+        class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
+            <thead>
+                <th class="th-sm">Order ID</th>
+                <th class="th-sm">Buyer</th>
+                <th class="th-sm">Date</th>
+                 <th class="th-sm">Type of Payment</th>
+                 <th class="th-sm">Item</th>
+                <th class="th-sm">Quantity</th>
+                <th class="th-sm">Total Price</th>
+                <th class="th-sm">Delivery Status</th>
+                <th class="th-sm">Delete Record</th>
              </thead>
             <tbody>
         {% for entry in orders %}
@@ -234,6 +281,7 @@ th,td{
              <tr>
                     <td>{{entry.id}}</td>
                     <td>{{entry.buyer}}</td>
+                    <td>{{entry.date}}</td>
                     <td>{{entry.type}}</td>
                     <td>{{entry.item.name}}</td>
                     <td>{{entry.quantity}}</td>
@@ -241,8 +289,9 @@ th,td{
                     {% if entry.is_delivered %}
                   <td>Delivered</td>
                  {% else %}
-                 <td><p data-placement="top" data-toggle="tooltip" >Not Delivered<br><button type="button" class="btn-primary"><a href="delivered/{{entry.id}}" style="color:white">Change Status</a></button></p></td>
+                 <td><p data-placement="top" data-toggle="tooltip" >Not Delivered<br><button type="button" class="btn-outline-primary"><a href="delivered/{{entry.id}}" style="color:blue">Change Status</a></button></p></td>
                  {% endif %}
+                 <td><p data-placement="top" data-toggle="tooltip" title="Delete Entry"><a href="delete/{{ entry.id }}" class="confirm-delete"><i class="fas fa-trash-alt blue-text"></i></a></p></td>
              </tr>
             {% endif %}
         {% endfor %}
@@ -251,6 +300,7 @@ th,td{
 
     </table>
         </div>
+    </div>
     </div>
 </main>
 <footer class="page-footer text-center font-small mt-4 wow fadeIn" >
@@ -268,7 +318,9 @@ th,td{
   <!--/.Footer-->
 
     <!-- SCRIPTS -->
-
+<script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+    <!-- Bootstrap core JavaScript -->
+ <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
       <!-- Initializations -->
   <script type="text/javascript">
@@ -293,6 +345,22 @@ th,td{
            }
 
         );
+         $('#unpaid_id').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [7,8,9]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
+   $('#paid_id').DataTable({
+  "aaSorting": [],
+  columnDefs: [{
+  orderable: false,
+  targets: [7,8]
+  }]
+});
+  $('.dataTables_length').addClass('bs-select');
     } );
       function openCity(evt, Name) {
   var i, tabcontent, tablinks;

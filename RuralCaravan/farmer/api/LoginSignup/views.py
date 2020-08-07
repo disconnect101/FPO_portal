@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.serializers import AuthTokenSerializer
-from farmer.api.serializers import RegistrationSerializer, FarmerSerializer
+from farmer.api.serializers import RegistrationSerializer, FarmerSerializer, LeaderSerializer
 from rest_framework.authtoken.models import Token
 from farmer.SMSservice import sms
 import random
@@ -11,10 +11,10 @@ from farmer.models import Contact
 from django.utils import timezone
 from datetime import datetime
 from django.contrib.auth import login
-from farmer.models import Farmer, UserProfile
+from farmer.models import Farmer, UserProfile, Leader
 from rest_framework.authtoken.views import ObtainAuthToken
 import pytz
-
+from farmer.api.utils import *
 
 @api_view(['POST'],)
 def register(request):
@@ -31,9 +31,15 @@ def register(request):
             old_user = check_user.first()
             contact = Contact.objects.filter(user=old_user)
             if contact.count()>0 and contact.first().verification_status==False:
-                old_user.delete()
+                try:
+                    old_user.delete()
+                except:
+                    return Response(statuscode('26'))
             elif contact.count()==0:
-                old_user.delete()
+                try:
+                    old_user.delete()
+                except:
+                    return Response(statuscode('26'))
 
         if serializer.is_valid():
             User = serializer.save()
@@ -60,7 +66,7 @@ def register(request):
         else:
             return Response({
                 'statuscode': '0',
-                'token': Token.objects.get(user=User)
+                'token': Token.objects.get(user=User).key
             })
 
         otp = random.randint(100000, 999999)
@@ -104,12 +110,21 @@ def userData(request):
     user = request.user
 
     if request.method=='GET':
-        try:
-            farmer = Farmer.objects.get(user=user)
-            print(farmer.first_name)
-        except Farmer.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = FarmerSerializer(farmer)
+        if user.category=='L':
+            try:
+                leader = Leader.objects.get(user=user)
+                print(leader.first_name)
+            except Leader.DoesNotExist:
+                return Response("Leader Does not exist")
+            serializer = LeaderSerializer(leader)
+        else:
+            try:
+                farmer = Farmer.objects.get(user=user)
+                print(farmer.first_name)
+            except Farmer.DoesNotExist:
+                return Response(statuscode('farmer details not available'))
+            serializer = FarmerSerializer(farmer)
+            
         return Response(serializer.data)
 
     if request.method=='POST':
@@ -123,6 +138,48 @@ def userData(request):
             return Response({
                 'statuscode': '5'
             })
+
+
+@api_view(['POST', ])
+@permission_classes((IsAuthenticated, ))
+def updateUserData(request):
+    user = request.user
+    first_name = request.data.get('first_name')
+    last_name = request.data.get('last_name')
+    village = request.data.get('village')
+    district = request.data.get('district')
+
+    if user.category=='L':
+        profession = request.data.get('profession')
+        try:
+            leader = Leader.objects.get(user=user)
+        except:
+            return Response(statuscode('27'))
+        leader.first_name = first_name
+        leader.last_name = last_name
+        leader.village = village
+        leader.district = district
+        leader.profession = profession
+        try:
+            leader.save()
+        except:
+            return Response(statuscode('12'))
+
+    else:
+        try:
+            farmer = Farmer.objects.get(user=user)
+        except:
+            return Response(statuscode('27'))
+        farmer.first_name = first_name
+        farmer.last_name = last_name
+        farmer.village = village
+        farmer.district = district
+        try:
+            farmer.save()
+        except:
+            return Response(statuscode('12'))
+
+    return Response(statuscode('0'))
 
 
 @api_view(['POST'],)

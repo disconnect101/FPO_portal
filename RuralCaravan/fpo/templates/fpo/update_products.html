@@ -1,5 +1,5 @@
 {% load static %}
-{% load crispy_forms_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Meetings</title>
+    <title>Products</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <!-- Bootstrap core CSS -->
@@ -61,7 +61,7 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}" target="_blank">
+      <a class="navbar-brand" href="{% url 'home' %}">
         <strong>FPO PORTAL</strong>
       </a>
 
@@ -81,45 +81,62 @@
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="{% url 'plans' %}" >Plans</a>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
           </li>
+             <li class="nav-item">
+            <a class="nav-link" href="{% url 'produce' %}" >Production</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item">
+            <a href="{% url 'add_user' %}" class="nav-link" data-toggle="tooltip" title="Add New User">
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'transaction'%}" class="nav-link" data-toggle="tooltip" title="Transactions">
+             <i class="fas fa-rupee-sign"></i>
+            </a>
+          </li>
           <li class="nav-item">
-            <a href="{% url 'orders' %}" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" data-toggle="tooltip" title="Orders">
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
-             <li class="nav-item active ">
-            <a href="{% url 'products' %}" class="nav-link" >
+             <li class="nav-item active">
+            <a href="{% url 'products' %}" class="nav-link" data-toggle="tooltip" title="Products">
              <i class="fas fa-shopping-basket"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="statistics.html" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" data-toggle="tooltip" title="Statistics">
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
           <li class="nav-item">
             <a href="{% url 'members' %}" class="nav-link border border-light rounded"
-              target="_blank">
+             >
               <i class="fas fa-user"></i>Members
             </a>
           </li>
-		   <li class="nav-item">
+		  <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
-        </ul>
 
+
+        </ul>
 
       </div>
 
@@ -135,8 +152,11 @@
 
 
         <!--Section: Main features & Quick Start-->
-      <section style="padding-bottom:5%">
+        <section style="padding-bottom:5%">
+<form method="POST" enctype="multipart/form-data">
 
+    <!-- Security token -->
+    {% csrf_token %}
 
  <div class="col-lg-12 col-md-12">
 			<!--Card-->
@@ -146,22 +166,62 @@
               <div class="card-body">
 
                 <h3 class="dark-grey-text text-center">
-                    <strong>UPDATE A PLAN</strong>
+                    <strong>UPDATE A PRODUCT</strong>
                   </h3>
                   <hr>
-                <form method="POST" enctype="multipart/form-data">
-                       {% csrf_token %}
-                       {{form.media}}
+                <div class="md-form form-inline">
 
-                        {{ form|crispy }}
+                    <i class="fas fa-shopping-bag prefix green-text"></i>
 
-                         <div class="text-center">
-                            <button class="btn btn-green" type="submit" value="Submit">ADD</button>
+                   <input type="text"  class="form-control" name="name" required id="id_name" value="{{form.name.value}}"/>
+                      <label class="active" for="id_name">Product Name</label>
+                  </div>
 
-                          </div>
-                   </form>
 
-              </div></div></div>
+                   <div class="md-form form-inline">
+
+                   <i class="fas fa-rupee-sign prefix green-text"></i>
+                   <input type="number"  class="form-control" name="rate"  required id="id_rate" value="{{form.rate.value}}"/>
+                     <label class="active" for="id_rate">Price</label>
+                  </div>
+
+                  <div class="md-form">
+                      <div>
+
+                          <p><strong>Enter Description:</strong></p>
+                      </div>
+
+
+                    <textarea   type="text"  class="md-textarea" name="description" cols="40" rows="10">
+                        {{form.description.value}}
+                    </textarea>
+
+
+
+                </div>
+
+                <div class="form-row field-image">
+                    <div>
+                        <p id="previousImageName"></p>
+                        <label for="id_image"><strong>Upload Image:</strong></label>
+                        <input type="file" name="image" accept="image/*" id="id_image" />
+                    </div>
+                 </div>
+                  <div style="margin-top:1rem;">
+                      <b>Category:</b>
+                      {{form.category}}
+                  </div>
+                    <div style="margin-top:1rem;">
+                  <p>{{form.available}}<b>Active/Inactive</b></p>
+                    </div>
+                  <div class="text-center">
+                    <button class="btn btn-green" type="submit" value="Submit">SUBMIT</button>
+
+                  </div>
+                   </div>  </div> </div>
+
+
+</form>
 
 
 
@@ -197,12 +257,54 @@
       <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
+    //new WOW().init();
   </script>
- <script>
-        CKEDITOR.replace('guidance');
+     <!-- Initializations -->
+  <script type="text/javascript">
+    // Animations initialization
+    {% comment %} new WOW().init(); {% endcomment %}
 
-    </script>
+    var imageName = {% if form.instance.image %} '{{form.instance.image}}' {% else %} 'Not Uploaded' {% endif %};
+
+
+    if(imageName !== 'Not Uploaded'){
+      imageName = '{{form.instance.image}}';
+      var split = imageName.split('/');
+      imageName = split[split.length-1];
+    }
+
+    document.getElementById('previousImageName').innerHTML = `<strong>Previous Image:</strong> ${imageName}`;
+
+
+      var toolbarGroups = [
+        { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+        { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+        { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+        { name: 'forms', groups: [ 'forms' ] },
+        '/',
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+        { name: 'links', groups: [ 'links' ] },
+        { name: 'insert', groups: [ 'insert' ] },
+        { name: 'styles', groups: [ 'styles' ] },
+        { name: 'colors', groups: [ 'colors' ] },
+        { name: 'tools', groups: [ 'tools' ] },
+        { name: 'others', groups: [ 'others' ] },
+        { name: 'about', groups: [ 'about' ] }
+      ];
+
+      var removeButtons = 'Source,Save,Templates,NewPage,Preview,Print,Cut,Copy,Redo,Undo,Paste,PasteText,PasteFromWord,Find,SelectAll,Replace,Scayt,Form,Checkbox,Radio,Textarea,TextField,Select,Button,ImageButton,HiddenField,CopyFormatting,RemoveFormat,CreateDiv,BidiLtr,BidiRtl,Language,Anchor,Unlink,Image,Flash,HorizontalRule,Table,Smiley,PageBreak,SpecialChar,Iframe,About,Maximize,ShowBlocks';
+
+
+
+    CKEDITOR.replace('description', {
+      toolbar: 'Basic',
+      uiColor: '#295e10',
+      toolbarGroups,
+      removeButtons
+    });
+
+  </script>
 </body>
 
 </html>

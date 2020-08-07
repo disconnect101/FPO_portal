@@ -96,7 +96,7 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}" target="_blank">
+      <a class="navbar-brand" href="{% url 'home' %}">
         <strong>FPO PORTAL</strong>
       </a>
 
@@ -119,37 +119,59 @@
           <li class="nav-item active">
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="{% url 'plans' %}" >Plans</a>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
           </li>
+             <li class="nav-item">
+            <a class="nav-link" href="{% url 'produce' %}" >Production</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
-        <ul class="navbar-nav nav-flex-icons">
-          <li class="nav-item">
-            <a href="orders.html" class="nav-link" >
-             <i class="fas fa-shopping-cart"></i>
+         <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item">
+            <a href="{% url 'add_user' %}" class="nav-link" data-toggle="tooltip" title="Add New User">
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'transaction'%}" class="nav-link" data-toggle="tooltip" title="Transactions">
+             <i class="fas fa-rupee-sign"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="statistics.html" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" data-toggle="tooltip" title="Orders">
+             <i class="fas fa-shopping-cart"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'products' %}" class="nav-link" data-toggle="tooltip" title="Products">
+             <i class="fas fa-shopping-basket"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" data-toggle="tooltip" title="Statistics">
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
           <li class="nav-item">
             <a href="{% url 'members' %}" class="nav-link border border-light rounded"
-              target="_blank">
+             >
               <i class="fas fa-user"></i>Members
             </a>
           </li>
-		   <li class="nav-item">
+		  <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
-        </ul>
 
+
+        </ul>
 
       </div>
 
@@ -172,7 +194,7 @@
                 <h4 style="text-align: left;"><strong class="green-text">Agenda:</strong> {{data.agenda}}</h4>
                 <br>
                 <p>
-                    <span style="font-size: 1.3rem;" class="green-text"><strong>Details:</strong></span> {{data.description}}
+                    <span style="font-size: 1.3rem;" class="green-text"><strong>Details:</strong></span> {{data.description|safe}}
                 </p>    
                 <h5 style="text-align: left;"><strong class="green-text">Time:</strong> {{data.time}}</h5>
                 <h5 style="text-align: left;"><strong class="green-text">Venue:</strong> {{data.venue}}</h5>
@@ -250,7 +272,7 @@
       <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
+    //new WOW().init();
 
     var present = {{present}};
     var absent = {{absent}};
@@ -264,11 +286,12 @@
             datasets: [{
                 data: [present, absent],
                 backgroundColor: [
-                //'rgba(54, 162, 235, 0.6)',
-                //'rgba(255, 206, 86, 0.6)',
+                'rgba(78, 205, 196, 0.4)',
+                'rgba(255, 107, 107, 0.4)',
+                ],
+                borderColor: [
                 'rgba(78, 205, 196, 1)',
-                'rgba(255, 107, 107, 1)',
-            ]
+                'rgba(255, 107, 107, 1)',]
             }],
             labels: ['Present', 'Absent']
         },

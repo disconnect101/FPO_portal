@@ -61,7 +61,7 @@ body {font-family: Arial;}
 
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'home' %}">Home
               <span class="sr-only">(current)</span>
             </a>
@@ -70,7 +70,7 @@ body {font-family: Arial;}
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'meetings' %}">Plans</a>
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
@@ -79,24 +79,34 @@ body {font-family: Arial;}
             <a class="nav-link" href="{% url 'produce' %}" >Production</a>
           </li>
             <li class="nav-item">
-            <a class="nav-link" href="{% url 'FPOLedger' %}" >Ledger</a>
-          </li>
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
-        <ul class="navbar-nav nav-flex-icons">
+         <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item active">
+            <a href="{% url 'add_user' %}" class="nav-link" data-toggle="tooltip" title="Add New User">
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
              <li class="nav-item">
-            <a href="{% url 'transaction'%}" class="nav-link" >
+            <a href="{% url 'transaction'%}" class="nav-link" data-toggle="tooltip" title="Transactions">
              <i class="fas fa-rupee-sign"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'orders' %}" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" data-toggle="tooltip" title="Orders">
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
+             <li class="nav-item">
+            <a href="{% url 'products' %}" class="nav-link" data-toggle="tooltip" title="Products">
+             <i class="fas fa-shopping-basket"></i>
+            </a>
+          </li>
           <li class="nav-item">
-            <a href="statistics.html" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" data-toggle="tooltip" title="Statistics">
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
@@ -107,7 +117,7 @@ body {font-family: Arial;}
             </a>
           </li>
 		  <li class="nav-item">
-            <a class="nav-link" href="govtschemes.html" >Logout</a>
+            <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
 
 
@@ -191,10 +201,16 @@ body {font-family: Arial;}
                         <option value="" selected>---------</option>
                          <option value="A">FPO Admin</option>
                          <option value="L">Leader</option>
-                         <option value="F">Farmer</option>
+                         <option value="F">Farmer with Smart Phone</option>
+                         <option value="P">Farmer with Feature Phone</option>
+                         <option value="N">Farmer with No Phone</option>
                      </select>
                   </div>
-
+                    <div class="md-form">
+                    <i class="fas fa-key prefix green-text"></i>
+                    <input type="text" class="form-control" name="password" maxlength="128" required id="id_password">
+                    <label for="id_password">Password:</label>
+                  </div>
                   <div class="text-center">
                     <button type="submit" value="Submit" class="btn btn-green">ADD</button>
 

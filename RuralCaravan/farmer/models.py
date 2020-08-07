@@ -1,13 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.conf import settings
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.utils import timezone
 from datetime import datetime
 from ckeditor.fields import RichTextField
 from farmer.SMSservice import sms
+import random
 
 
 class MyUserProfileManager(BaseUserManager):   ## not a Model
@@ -77,8 +78,6 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Ewallet.objects.create(user=instance)
 
 
-
-
 class Products(models.Model):
     name = models.CharField(max_length=100)
 
@@ -136,6 +135,15 @@ class Farmer(models.Model):
     def __str__(self):
         return self.user.username + '-' +  self.first_name
 
+@receiver(post_save, sender='farmer.Farmer')
+def create_meeting_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        try:
+            meetings = Meetings.objects.filter(date__gte=datetime.now().date())
+            for meeting in meetings:
+                MeetingToken(token_number=int(str(random.randint(100000, 999999)) + str(instance.id)), meeting=meeting, farmer=instance).save()
+        except:
+            raise Exception('Could not generate Meeting tokens for the farmer')
 
 class FarmerCropMap(models.Model):
     farmer = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -208,7 +216,10 @@ def send_sms_notification(sender, instance=None, created=False, **kwargs):
         message = "A meeting on \"" + agenda + "\" by " + organiser + " is scheduled on " + date
         contacts = Contact.objects.filter(verification_status=True)
         for contact in contacts:
-            sms.send_message("+91"+contact.number, sms.TWILIO_NUMBER, message)
+            try:
+                sms.send_message("+91"+contact.number, sms.TWILIO_NUMBER, message)
+            except:
+                print("unable to send SMS")
 
 
 class Orders(models.Model):
@@ -235,14 +246,16 @@ class Orders(models.Model):
 class Produce(models.Model):
     crop = models.ForeignKey(Crops, on_delete=models.PROTECT)
     amount = models.FloatField()
-    date = models.DateTimeField(auto_now_add=True)
+    amountsold = models.FloatField(default=0)
+    date = models.DateTimeField(default=timezone.now)
     land = models.ForeignKey(Land, models.SET_NULL, null=True, blank=True)
     quality = models.BooleanField()
     owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
     income = models.FloatField(default=0)
 
+
     def __str__(self):
-        return self.owner + " " + self.crop.name
+        return self.owner.username + " " + self.crop.name
 
 
 class Kart(models.Model):
@@ -271,6 +284,19 @@ class ew_transaction(models.Model):
     def __str__(self):
         return self.refno
 
+@receiver(pre_save, sender='farmer.ew_transaction')
+def updateEwallet(sender, instance=None, **kwargs):
+    user = instance.user
+    try:
+        ewallet = Ewallet.objects.get(user=user)
+    except:
+        raise Exception('Could retrieve E-wallet')
+    ewallet.amount += instance.amount
+    try:
+        ewallet.save()
+    except:
+        raise Exception('Could not update E-wallet')
+
 @receiver(post_save, sender='farmer.ew_transaction')
 def send_sms_conf(sender, instance=None, created=False, **kwargs):
     if created:
@@ -278,8 +304,15 @@ def send_sms_conf(sender, instance=None, created=False, **kwargs):
             message = "Your E-wallet has been credited with Rs." + str(instance.amount)
         else:
             message = "Your E-wallet has been debited for Rs." + str(instance.amount)
-        send_to = str(instance.user.contact_set.first().number)
-        sms.send_message( '+91'+send_to, sms.TWILIO_NUMBER, message)
+        if not instance.user.category=='N':
+            send_to = str(instance.user.contact_set.first().number)
+        else:
+            return
+        try:
+            sms.send_message( '+91'+send_to, sms.TWILIO_NUMBER, message)
+        except:
+            print("unable to send sms")
+
 
 class FPOLedger(models.Model):
     crop = models.ForeignKey(Crops, on_delete=models.PROTECT)
@@ -328,8 +361,12 @@ class MeetingToken(models.Model):
     # (the incentive is not decided yet)
     is_redeemed = models.BooleanField(default=False)
     # The creation of the token
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, editable=True)
     # The event for which the token was created
     meeting = models.ForeignKey(Meetings, on_delete=models.CASCADE)
     # The farmer for which the token was created
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return str(self.farmer.first_name) + str(self.meeting.agenda)

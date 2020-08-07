@@ -91,8 +91,15 @@ def kart(request):
                 'statuscode': '12'
             })
 
+        totalamount = 0
+        for kartItem in kart:
+            productID = kartItem.get('item_id')
+            rate = Products.objects.get(id=productID).rate
+            totalamount += rate*kartItem.get('quantity')
+
         kartList = {
-            'data': list(kart)
+            'data': list(kart),
+            'total': totalamount
         }
         return Response(kartList)
 
@@ -179,7 +186,7 @@ def order(request):
                 })
 
             try:
-                order = Orders(type=type,
+                order = Orders(type=paymentType,
                                buyer=user,
                                item=product,
                                rate=product.rate,
@@ -193,21 +200,30 @@ def order(request):
             if paymentType=="CAS" or paymentType=="PEW":
                 order.is_paid = True
 
+            refno = ""
             if paymentType == "PEW":
-                description = "Paid to FPO for OrderID: " + str(order.id)
+                description = ""
                 try:
                     refno = makeTransaction(user, order.price, description)
                 except Exception as e:
                     return Response(statuscode(str(e)))
             try:
                 order.save()
+            except:
+                return Response(statuscode('12'))
+            try:
                 message = "Your order has been placed successfully, Products : " + order.item.name + ", OrderID : " + str(order.id)
                 if order.buyer.category != 'N':
                     send_to = str(order.buyer.contact_set.first().number)
                     sms.send_message('+91' + send_to, sms.TWILIO_NUMBER, message)
             except Exception as e:
-                return Response(statuscode(str(e)))
+                print("SMS could not be sent.")
 
+            if paymentType=='PEW':
+                transaction = ew_transaction.objects.get(refno=refno)
+                transaction.description = "Paid to FPO for OrderID: " + str(order.id)
+                transaction.save()
+            
             return Response({
                 'statuscode': '0',
                 'orderID': order.id,

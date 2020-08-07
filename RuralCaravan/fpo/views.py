@@ -10,7 +10,6 @@ from .forms import *
 #from .models import *
 from farmer.models import *
 # Changes
-from .generate_data import get_data
 import random
 import datetime
 import faker 
@@ -18,8 +17,11 @@ import json
 f = faker.Faker()
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count, Q
-
-
+from .sms import send_message as Send_Text_Message
+from .get_production_prediction import predict_production
+from fpo.statisticalanalysis import *
+import datetime
+from .crop_prediction import get_crop_prediction
 # Create your views here.
 
 posts = [
@@ -167,24 +169,6 @@ def error_404_view(request, exception):
 def error_500_view(request):
     return render('fpo/500.html')
 
-
-        # Right now it will pass only one singular meeting object for all cases. 
-##### POPULATE DATABASE
-def populate_farmers(request):
-
-    for _ in range(0):
-        village = random.choice(['Konkan', 'Pune', 'Nashik', 'Aurangabad', 'Amravati'])
-
-        farmer = Farmer(first_name=f.first_name(), last_name=f.last_name(), aadhar=str(f.random_number(12)), contact=str(f.random_number(10)), village=village, district='Mumbai', pin=str(f.random_number(6)))
-
-        farmer.save()
-    
-    return HttpResponse('Thanks')
-
-
-
-#### Changes made to this function
-
 # This method will mark all the tokens as rsvped
 def mark_rsvp(request):
     if request.method == 'POST':
@@ -203,6 +187,14 @@ def mark_attendance(request):
             token = MeetingToken.objects.get(id=token_id)
             token.did_attend = True
             token.save()
+        farmers = MeetingToken.objects.values('farmer').annotate(total=Count('farmer'))
+        for farmer in farmers:
+            farmer_id = farmer['farmer']
+            farmer_object = Farmer.objects.get(id=farmer_id)
+            attended_meetings = MeetingToken.objects.filter(farmer=farmer_object, did_attend=True)
+            engagement_score = 0 if farmer['total'] == 0 else round(len(attended_meetings)/farmer['total'],2)*100
+            farmer_object.engagement = engagement_score
+            farmer_object.save()
         return JsonResponse({"message": "The tokens have been marked as attended"})
 
 # This method will mark all the tokens as attended
@@ -245,14 +237,29 @@ def detail_meetings(request, id):
 
     context["data"] = Meetings.objects.get(id=id) # getting the specific meeting
 
+    # if context['data'].id == 4:
+    #     tokens = MeetingToken.objects.all().filter(meeting=context['data'])
+    #     date_time_may = (datetime.datetime.now() - datetime.timedelta(80))
+    #     for token in tokens:
+    #         token.created_at = date_time_may
+    #         token.save()
+    #     print([x.created_at for x in tokens])
+
     meeting_tokens = MeetingToken.objects.all().filter(meeting=context['data'])
     Phone_Type = ['Smartphone', 'Featurephone', 'NoSmartphone']
-
-    
+        
     tokens = []
     
     for t in meeting_tokens:
-        leader = Leader.objects.filter(farmers=t.farmer)
+        leader = Leader.objects.filter(farmers=t.farmer.user)
+
+        communication_type = t.farmer.user.category
+        if communication_type == 'F':
+            communication_type = Phone_Type[0]
+        elif communication_type == 'P':
+            communication_type = Phone_Type[1]
+        else:
+            communication_type = Phone_Type[2]
         
         if leader:
             leader_name = f'{leader[0].first_name} {leader[0].last_name}'
@@ -267,10 +274,26 @@ def detail_meetings(request, id):
             "did_attend": t.did_attend,
             "leader": leader_name,
             "has_leader": has_leader,
+            "engagement": t.farmer.engagement,
             "locality": t.farmer.village,
-            "smartphone_type": random.choice(Phone_Type)
+            "smartphone_type": communication_type
         })
     
+    leader_engagement = {}
+    village_engagement = {}
+
+    for token in tokens:
+        if token['has_leader']:
+            if token['leader'] in leader_engagement.keys():
+                leader_engagement[token['leader']].append(token['engagement'])
+            else:
+                leader_engagement[token['leader']] = [token['engagement']]
+        else:
+            if token['locality'] in village_engagement.keys():
+                village_engagement[token['locality']].append(token['engagement'])
+            else:
+                village_engagement[token['locality']] = [token['engagement']]
+
     TOTAL_TOKENS = len(tokens)
     
 
@@ -286,16 +309,18 @@ def detail_meetings(request, id):
                     leader['farmers'] = sorted(leader['farmers'], key=lambda x: x['farmer'])
                     placed = True
             if not placed:
+                engagement_score = round(sum(leader_engagement[token['leader']])/len(leader_engagement[token['leader']]), 2)
                 farmers_by_leaders.append({
                     "leader_id": random.randint(10000, 99999), 
                     "leader_name": token['leader'], 
-                    "engagement": int(round(random.uniform(0,1), 2)*100),
+                    "engagement": engagement_score,
                     "farmers": [token],
                 })
                 
         else:
             normal_farmers.append(token)
-
+    
+    
     farmers_by_locality = []
     for farmer in normal_farmers:
         placed = False
@@ -305,13 +330,13 @@ def detail_meetings(request, id):
                 locality['farmers'] = sorted(locality['farmers'], key=lambda x: x['farmer'])
                 placed = True
         if not placed:
+            engagement_score = round(sum(village_engagement[farmer['locality']])/len(village_engagement[farmer['locality']]), 2)
             farmers_by_locality.append({
                 "locality_id": random.randint(10000, 99999), 
                 "locality_name": farmer['locality'], 
-                "engagement": int(round(random.uniform(0,1), 2)*100),
+                "engagement": engagement_score,
                 "farmers": [farmer],
             })
-
 
     # There are three cases for the event: Before, Active and After
     # Before the event we show the RSVP
@@ -320,7 +345,7 @@ def detail_meetings(request, id):
 
     today_date = datetime.datetime.now().date()
     meeting_date = context['data'].date
-    print(today_date, meeting_date)
+    
 
     if(today_date > meeting_date):
         # This if form rendering the page of an event that is done
@@ -332,15 +357,19 @@ def detail_meetings(request, id):
 
         context['villages'] = {
             "names": [x['locality_name'] for x in farmers_by_locality],
-            "engagements": [(sum(y['did_attend'] for y in  x['farmers'])//len(x['farmers']))*100 for x in farmers_by_locality],
-            "rsvp": [(sum(y['has_rsvped'] for y in  x['farmers'])//len(x['farmers']))*100 for x in farmers_by_locality]
+            "engagements": [round((sum(y['did_attend'] for y in  x['farmers'])/len(x['farmers'])), 2)*100 for x in farmers_by_locality],
+            "rsvp": [round((sum(y['has_rsvped'] for y in  x['farmers'])/len(x['farmers'])), 2)*100 for x in farmers_by_locality]
         }
 
         context['leaders'] = {
             "names": [x['leader_name'] for x in farmers_by_leaders],
-            "engagements": [(sum(y['did_attend'] for y in  x['farmers'])//len(x['farmers']))*100 for x in farmers_by_leaders],
-            "rsvp": [(sum(y['has_rsvped'] for y in  x['farmers'])//len(x['farmers']))*100 for x in farmers_by_leaders]
+            "engagements": [round((sum(y['did_attend'] for y in  x['farmers'])/len(x['farmers'])), 2)*100 for x in farmers_by_leaders],
+            "rsvp": [round((sum(y['has_rsvped'] for y in  x['farmers'])/len(x['farmers'])), 2)*100 for x in farmers_by_leaders]
         }
+
+        meeting = context['data']
+
+        context['average'] = round(context['present']/(context['present']+context['absent']), 2)*100
 
         return render(request, 'fpo/meeting_stats.html', context)        
     elif (today_date == meeting_date):
@@ -372,10 +401,11 @@ def detail_meetings(request, id):
                             leader['farmers'] = sorted(leader['farmers'], key=lambda x: x['farmer'])
                             placed = True
                     if not placed:
+                        engagement_score = round(sum(leader_engagement[token['leader']])/len(leader_engagement[token['leader']]), 2)
                         farmers_by_leaders.append({
                             "leader_id": random.randint(10000, 99999), 
                             "leader_name": token['leader'], 
-                            "engagement": int(round(random.uniform(0,1), 2)*100),
+                            "engagement": engagement_score,
                             "farmers": [token],
                         })
                         
@@ -391,19 +421,18 @@ def detail_meetings(request, id):
                     locality['farmers'] = sorted(locality['farmers'], key=lambda x: x['farmer'])
                     placed = True
             if not placed:
+                engagement_score = round(sum(village_engagement[farmer['locality']])/len(village_engagement[farmer['locality']]), 2)
                 farmers_by_locality.append({
                     "locality_id": random.randint(10000, 99999), 
                     "locality_name": farmer['locality'], 
-                    "engagement": int(round(random.uniform(0,1), 2)*100),
+                    "engagement": engagement_score,
                     "farmers": [farmer],
                 })
-
-
 
         temp_farmers_by_locality = []
         special_attention_villages = []
         for locality in farmers_by_locality:
-            if locality['engagement'] < 20 and len(special_attention_villages) <= 5:
+            if len(special_attention_villages) <= 5 and locality['engagement'] < 20:
                 special_attention_villages.append(locality)
             else:
                 temp_farmers_by_locality.append(locality)
@@ -411,6 +440,7 @@ def detail_meetings(request, id):
         farmers_by_locality = temp_farmers_by_locality
         special_attention_villages = sorted(special_attention_villages, key=lambda x: len(x['farmers']), reverse=True)
         # add the dictionary during initialization
+        # Right now it will pass only one singular meeting object for all cases. 
 
         context['leaders'] = sorted(farmers_by_leaders, key=lambda x: x['leader_name'])
 
@@ -441,11 +471,11 @@ def home(request):
 
 @login_required
 def meetings_view(request):
-# dictionary for initial data with  
+    # dictionary for initial data with  
     # field names as keys 
     context ={} 
 
-    meetings = Meetings.objects.order_by('date')
+    meetings = Meetings.objects.order_by('-date')
 
     # add the dictionary during initialization      # Add and view both
     form = MeetingsForm(request.POST or None) 
@@ -454,7 +484,7 @@ def meetings_view(request):
         # Creating the tokens for meetings
         farmers = Farmer.objects.all()
         for farmer in farmers:
-            token = MeetingToken(token_number=random.randint(100000,999999), meeting=meeting, farmer=farmer)
+            token = MeetingToken(token_number=random.randint(100000,999999)+farmer.id, meeting=meeting, farmer=farmer)
             token.save()
         return redirect('/fpo/meetings')
 
@@ -476,6 +506,7 @@ def meetings_view(request):
 
     context['form']= form 
     return render(request, 'fpo/meetings.html',context)
+
 
 @login_required
 def meetings_delete(request, id):
@@ -528,6 +559,11 @@ def govtschemes_view(request):
     form = GovtForm(request.POST or None) 
     if form.is_valid(): 
         form.save() 
+        message_body = f'Government Scheme Alert: {request.POST["name"]}. Contact the FPO for further details. Call: 9892629763'
+        farmers = Farmer.objects.all()
+        for farmer in farmers:
+            if farmer.user.category != 'N':
+                Send_Text_Message(f'+91{farmer.contact}', message_body=message_body)
         return redirect('/fpo/govtschemes')
           
     # Code for pagination
@@ -615,17 +651,27 @@ def govtschemes_single(request, id):
     villages = Farmer.objects.values('village').annotate(total=Count('village'))
     villages_total = {x['village']:x['total'] for x in villages}
 
-    farmers = Farmer.objects.filter(~Q(govt_schemes=scheme))
+    #Condition: filter(~Q(govt_schemes=scheme))
+    farmers = Farmer.objects.all()
     context['data'] = scheme
 
     farmers_by_scheme = []
     
     for farmer in farmers:
+        communication_type = farmer.user.category
+        if communication_type == 'F':
+            communication_type = Phone_Type[0]
+        elif communication_type == 'P':
+            communication_type = Phone_Type[1]
+        else:
+            communication_type = Phone_Type[2]
+
         farmers_by_scheme.append({
             "id": farmer.id,
             "farmer": f'{farmer.first_name} {farmer.last_name}',
             "locality": farmer.village,
-            "smartphone_type": random.choice(Phone_Type)
+            "smartphone_type": communication_type,
+            "schemes": farmer.govt_schemes.all()
         })
     
     farmers_by_locality = []
@@ -634,20 +680,21 @@ def govtschemes_single(request, id):
         for locality in farmers_by_locality:
             if locality['locality_name'] == farmer['locality']:
                 locality['farmers'].append(farmer)
-                locality['engagement'] = 100 - round(len(locality['farmers'])/villages_total[farmer['locality']], 2)*100
+                locality['engagement'] = round(sum(scheme in x['schemes'] for x in locality['farmers'])/villages_total[farmer['locality']], 2)*100
                 locality['farmers'] = sorted(locality['farmers'], key=lambda x: x['farmer'])
                 placed = True
         if not placed:
             farmers_by_locality.append({
                 "locality_id": random.randint(10000, 99999), 
                 "locality_name": farmer['locality'], 
-                "engagement": 100 - (round(1/villages_total[farmer['locality']], 2))*100,
+                "engagement": (round([1 if scheme in farmer['schemes'] else 0][0]/villages_total[farmer['locality']], 2))*100,
                 "farmers": [farmer],
             })
+
     temp_farmers_by_locality = []
     special_attention_villages = []
     for locality in farmers_by_locality:
-        if locality['engagement'] < 20 and len(special_attention_villages) <= 5:
+        if len(special_attention_villages) <= 5 and locality['engagement'] < 20:
             special_attention_villages.append(locality)
         else:
             temp_farmers_by_locality.append(locality)
@@ -655,8 +702,13 @@ def govtschemes_single(request, id):
     farmers_by_locality = temp_farmers_by_locality
     special_attention_villages = sorted(special_attention_villages, key=lambda x: len(x['farmers']), reverse=True)
 
-    context['specials'] = special_attention_villages
-    context['villages'] = farmers_by_locality
+    farmers_by_locality = sorted(farmers_by_locality, key=lambda x: x['locality_name'])
+
+    for locality in farmers_by_locality:
+        locality['farmers'] = list(filter(lambda x: scheme not in x['schemes'], locality['farmers']))
+
+    for locality in special_attention_villages:
+        locality['farmers'] = list(filter(lambda x: scheme not in x['schemes'], locality['farmers']))
 
     village_data = [(x['locality_name'], x['engagement']) for x in farmers_by_locality] + [(x['locality_name'], x['engagement']) for x in special_attention_villages]
     
@@ -670,12 +722,221 @@ def govtschemes_single(request, id):
     context['village_names'] = village_names
     context['village_total'] = village_total
     context['village_population'] = villages_total
+
+
+    special_attention_villages = list(filter(lambda x: len(x['farmers'])>0, special_attention_villages))
+    farmers_by_locality = list(filter(lambda x: len(x['farmers'])>0, farmers_by_locality))
+
+
+    context['specials'] = special_attention_villages
+    context['villages'] = farmers_by_locality
+
+
     return render(request, 'fpo/govt_scheme.html', context)
 
 
 #---------------------------------------------------------------------------------------------------------
 def fpo_statistics(request):
-    return render(request, 'fpo/fpo_statistics.html')
+    context = {}
+    
+    # Get all the farmers
+    farmers = Farmer.objects.all()
+
+    staticalanalysis = StatisticalAnalysis()
+
+    # Basic numbers
+    num_farmers = len(farmers)
+    num_villages = len(farmers.values('village').distinct())
+    avg_production_every_year = staticalanalysis.getAvgProduction()
+    avg_profits_every_year = staticalanalysis.getAvgProfit()
+
+    context['num_farmers'] = num_farmers
+    context['num_villages'] = num_villages
+    context['avg_production'] = round(avg_production_every_year, 2)
+    context['avg_profits'] = round(avg_profits_every_year, 2)
+
+
+    # Communication Channels
+    communication_channels = UserProfile.objects.values('category').annotate(total=Count('category'))
+    communication_channels_data = [x['total'] for x in communication_channels if x['category'] not in ['A','L', '']]
+    communication_channels_labels = [x['category'] for x in communication_channels if x['category'] not in ['A','L','']]
+    context['communication_channels_data'] = communication_channels_data if len(communication_channels_data) == 3 else communication_channels_data + [0 for x in range(3-len(communication_channels_data))]
+
+    for i in range(len(communication_channels_labels)):
+        if communication_channels_labels[i] == 'F':
+            communication_channels_labels[i] = 'Farmers with Smartphones'
+        elif communication_channels_labels[i] == 'P':
+            communication_channels_labels[i] = 'Farmers with Feature Phones'
+        elif communication_channels_labels[i] == 'N':
+            communication_channels_labels[i] = 'Farmers with No Phones'
+
+    if len(communication_channels_labels) < 3:
+        if 'Farmers with Smartphones' not in communication_channels_labels:
+            communication_channels_labels.append('Farmers with Smartphones')
+        if 'Farmers with Feature Phones' not in communication_channels_labels:
+            communication_channels_labels.append('Farmers with Feature Phones')
+        if 'Farmers with No Phones' not in communication_channels_labels:
+            communication_channels_labels.append('Farmers with No Phones')
+
+    context['communication_channels_labels'] = communication_channels_labels 
+    
+    # Farmers by Leaders
+    leaders = Leader.objects.all()
+    farmers_with_leaders = sum([len(x.farmers.all()) for x in leaders])
+    farmers_without_leaders = len(farmers) - farmers_with_leaders
+    context['farmers_with_leaders_data'] = [farmers_with_leaders, farmers_without_leaders]
+
+
+
+    # Farmer Engagement 
+
+    SP_by_months = {
+        'label': 'Farmers with Smartphones',
+        'data':[]
+    }
+
+    FP_by_months = {
+        'label': 'Farmers with Feature Phones',
+        'data':[]
+    }
+
+    NP_by_months = {
+        'label': 'Farmers with No Phones',
+        'data':[]
+    }
+
+    for month in range(1, 13):
+        meetings = Meetings.objects.filter(date__month=month)
+        meetings_tokens = []
+        for meeting in meetings:
+            meetings_tokens.extend(MeetingToken.objects.filter(meeting=meeting))
+        
+        SP = []
+        FP = []
+        NP = []
+        
+        for token in meetings_tokens:
+            if token.farmer.user.category == 'F':
+                SP.append(token)
+            elif token.farmer.user.category == 'P':
+                FP.append(token)
+            else:
+                NP.append(token)
+        
+        SP_engagement = round(sum(x.did_attend for  x in SP) / len(SP), 4)*100 if SP else 0.0
+        FP_engagement = round(sum(x.did_attend for  x in FP) / len(FP), 4)*100 if FP else 0.0
+        NP_engagement = round(sum(x.did_attend for  x in NP) / len(NP), 4)*100 if NP else 0.0
+
+        SP_by_months['data'].append(round(SP_engagement, 2))
+        FP_by_months['data'].append(round(FP_engagement, 2))
+        NP_by_months['data'].append(round(NP_engagement, 2))
+
+    farmer_engagement_data = [SP_by_months, FP_by_months, NP_by_months]
+    
+    context['farmer_engagement_data'] = farmer_engagement_data
+
+
+    # Villages
+    villages = farmers.values('village').annotate(total=Count('village'))
+    villages_data = [x['total'] for x in villages]
+    villages_labels = [x['village'] for x in villages]
+    context['villages_data'] = villages_data
+    context['villages_labels'] = villages_labels
+
+
+    # Crops
+    cropdata = staticalanalysis.getCropWiseProduce()
+    context['crops_data'] = cropdata.get('productions')
+    context['crops_labels'] = cropdata.get('crops')
+    # context['crops_data'] = [1570, 1200, 1500, 580, 1900, 1650, 100]
+    # context['crops_labels'] = ['Rice', 'Wheat', 'Corn', 'Sugarcane', 'Bajra', 'Paddy', 'Maize']
+
+
+    # Crop Production By Years
+    crops_by_years_data = staticalanalysis.getCropProductionByYear()
+    # crops_by_years_data = [
+    # {
+    #     'name': 'Rice',
+    #     'data': [100, 200, 300, 400, 500],
+    #     'years': ['2015', '2016', '2017', '2018', '2019']
+    # },
+    # {
+    #     'name': 'Wheat',
+    #     'data': [200, 300, 400, 500, 600],
+    #     'years': ['2015', '2016', '2017', '2018', '2019']
+    # },
+    # {
+    #     'name': 'Bajra',
+    #     'data': [400, 300, 500, 600, 900],
+    #     'years': ['2015', '2016', '2017', '2018', '2019']
+    # }
+    # ]
+
+    for crop in crops_by_years_data:
+        data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
+        prediction = predict_production(data)
+        crop['years'].append(f'{prediction[0]} (Prediction)')
+        crop['data'].append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
+
+    context['crop_selector_options'] = [x['name'] for x in crops_by_years_data]
+
+    context['crops_by_years_data'] = crops_by_years_data
+
+
+    # Profits Per Crop
+    crops_profits_by_years_data = staticalanalysis.getCropProfitsByYear()
+    # crops_profits_by_years_data = [
+    # {
+    #     'name': 'Corn',
+    #     'data': [80, 60, 100, 150, 300],
+    #     'years': ['2015', '2016', '2017', '2018', '2019']
+    # },
+    # {
+    #     'name': 'Sugarcane',
+    #     'data': [60, 180, 120, 150, 130],
+    #     'years': ['2015', '2016', '2017', '2018', '2019']
+    # },
+    # {
+    #     'name': 'Paddy',
+    #     'data': [120, 300, 180, 80, 250],
+    #     'years': ['2015', '2016', '2017', '2018', '2019']
+    # }
+    # ]
+
+    for crop in crops_profits_by_years_data:
+        data = {'Production': crop['data'], 'Year': [int(x) for x in crop['years']]}
+        prediction = predict_production(data)
+        crop['years'].append(f'{prediction[0]} (Prediction)')
+        crop['data'].append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
+
+    context['crop_price_selector_options'] = [x['name'] for x in crops_profits_by_years_data]
+
+    context['crops_profits_by_years_data'] = crops_profits_by_years_data
+
+
+    # Profits By Year
+    profit_by_years_data = staticalanalysis.getProfitsByYear()
+    # profit_by_years_data = [
+    # {
+    #     'year': '2017',
+    #     'data': [100, 200, 300, 400, 500, 500, 100, 200, 300, 400, 900, 200],
+    # },
+    # {
+    #     'year': '2018',
+    #     'data': [200, 300, 400, 500, 600, 400, 500, 500, 100, 200, 300, 400],
+    # },
+    # {
+    #     'year': '2019',
+    #     'data': [400, 300, 500, 600, 900, 100, 200, 300, 400, 500, 200, 100],
+    # }
+    # ]
+
+    context['profit_by_years_data'] = profit_by_years_data
+    context['year_selector_options'] = [x['year'] for x in profit_by_years_data]
+
+    return render(request, 'fpo/fpo_statistics.html', context)
+
+
 
 
 
@@ -687,6 +948,19 @@ def fpo_statistics(request):
 
 
 #...................................................................................................................
+
+@login_required
+def predict_crop(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        nitrogen = data['nitrogen']
+        phosphorous = data['phosphorous']
+        potassium = data['potassium']
+        pH = data['pH']
+        climate = data['climate']
+        temperature = data['temperature']
+        get_crop_names = get_crop_prediction(nitrogen, phosphorous, potassium, pH, temperature, climate)
+        return JsonResponse(get_crop_names, safe=False)
 
 
 @login_required
@@ -695,11 +969,14 @@ def plans_view(request):
     # field names as keys 
     context ={
         'crop' : Crops.objects.all()
-    } 
+    }
+
+    products = Products.objects.all() 
+    context['products'] = products
   
     # add the dictionary during initialization      # Add and view both
-    form = CropsForm(request.POST or None) 
-    if form.is_valid(): 
+    form = CropsForm(request.POST or None, request.FILES)
+    if form.is_valid():
         form.save() 
         return redirect('/fpo/plans')
           
@@ -743,21 +1020,109 @@ def plans_toggle(request,id):
 @login_required
 def plans_detail(request, id):
     plans = get_object_or_404(Crops,id=id)
+    farmers = FarmerCropMap.objects.filter(crop=plans)
+    farmers = [Farmer.objects.get(user=x.farmer) for x in farmers]
+    num_subscribers = len(farmers)
+    temp_farmers = farmers
 
-    return render(request, "fpo/plan_detail.html",context={'plans': plans})
+    farmers_by_villages = {}
+    for farmer in farmers:
+        if farmer.village in farmers_by_villages.keys():
+            farmers_by_villages[farmer.village] += 1
+        else:
+            farmers_by_villages[farmer.village] = 1
+
+    villages = []
+    village_total = []
+    for village, total in farmers_by_villages.items():
+        villages.append(village)
+        village_total.append(total)
+    
+    products = plans.products.all()
+
+    current_year = datetime.datetime.now().year
+    produces = Produce.objects.filter(crop=plans, date__year=current_year-1)
+    farmers = [Farmer.objects.get(user=x.owner) for x in produces]
+    produces_villages = []
+    produces_amount = []
+    produces_by_villages = {}
+    for produce, farmer in zip(produces, farmers):
+        if farmer.village in produces_by_villages.keys():
+            produces_by_villages[farmer.village] += produce.amount
+        else:
+            produces_by_villages[farmer.village] = produce.amount
+    
+    for village, total in produces_by_villages.items():
+        produces_villages.append(village)
+        produces_amount.append(total)
+
+
+    farmers = []
+    Phone_Type = ['Smartphone', 'Featurephone', 'NoSmartphone']
+    for farmer in temp_farmers:
+        communication_type = farmer.user.category
+        if communication_type == 'F':
+            communication_type = Phone_Type[0]
+        elif communication_type == 'P':
+            communication_type = Phone_Type[1]
+        else:
+            communication_type = Phone_Type[2]
+        farmers.append({
+            "id": farmer.id,
+            "farmer": f'{farmer.first_name} {farmer.last_name}',
+            "engagement": farmer.engagement,
+            "locality": farmer.village,
+            "smartphone_type": communication_type
+        })
+    subscribers_by_villages = []
+    for farmer in farmers:
+        placed = False
+        for subscriber_village in subscribers_by_villages:
+            if subscriber_village['locality_name'] == farmer['locality']:
+                subscriber_village['farmers'].append(farmer)
+                subscriber_village['farmers'] = sorted(subscriber_village['farmers'], key=lambda x: x['farmer'])
+                placed = True
+        if not placed:
+            subscribers_by_villages.append({
+                'locality_id': random.randint(10000, 99999),
+                'locality_name': farmer['locality'],
+                'farmers': [farmer]
+            })
+    
+    for subscriber_village in subscribers_by_villages:
+        engagement_score = round(sum(x['engagement'] for x in subscriber_village['farmers'])/len(subscriber_village['farmers']), 2)
+        subscriber_village['engagement'] = engagement_score
+
+    produces_amount_percentages = [round(x/sum(produces_amount), 2)*100 for x in produces_amount]
+    context = {
+        'plans': plans, 
+        'products': products,
+        'villages': villages,
+        'village_total': village_total,
+        'produce_villages': produces_villages,
+        'produce_amount_percentages': produces_amount_percentages,
+        'subscribers_by_villages': subscribers_by_villages,
+        'num_subscribers': num_subscribers
+    }
+
+    return render(request, "fpo/plan_detail.html",context)
 	
 @login_required	
 def plans_update(request, id): 
     # dictionary for initial data with  
     # field names as keys 
     context ={} 
-  
     # fetch the object related to passed id 
     obj = get_object_or_404(Crops, id = id) 
   
     # pass the object as instance in form 
-    form = CropsForm(request.POST or None, instance = obj) 
-  
+    form = CropsForm(request.POST or None, request.FILES or None, instance = obj) 
+
+    products = Products.objects.all() 
+    context['products'] = products
+    context['selected_products'] = obj.products.all()
+
+
     # save the data from the form and 
     # redirect to detail_farmer 
     if form.is_valid(): 
@@ -769,6 +1134,114 @@ def plans_update(request, id):
   
     return render(request, "fpo/update_plans.html", context)
 
+def add_FarmerCropMap(request):
+    context ={}
+    form = FarmerCropMapForm(request.POST or None, request.FILES or None) 
+    if form.is_valid(): 
+        # form.crop.subscribers += 1.0
+        form.save() 
+        return redirect("/fpo/plans/")
+    context["form"] = form 
+    return render(request, "fpo/add.html",context)    
+
+# api data for plans............................................................................. 
+def data_village_count(request, *args, **kwargs):
+    
+    data={}
+    
+    farmers = FarmerCropMap.objects.all()
+    for farmer in farmers:
+        obj = get_object_or_404(Farmer, user=farmer.farmer)#, category='F' and or 'P' or 'N')
+        if obj.village in data:
+            data[obj.village]+=1
+        else:
+            data[obj.village]=1
+    
+    return JsonResponse(data)
+def data_village_quantity(request, *args, **kwargs):
+    
+    data={}
+    
+    farmers = FarmerCropMap.objects.all()
+    for farmer in farmers:
+        obj = get_object_or_404(Farmer, user=farmer.farmer)#, category='F' and or 'P' or 'N')
+        crop1 = farmer.crop
+        obj1 = get_object_or_404(Crops, id=crop1.id)
+        weight = obj1.weigth_per_land
+        # print(farmer.crop.weight_per_land)
+        if obj.village in data:
+            data[obj.village]+=(farmer.landarea)*weight
+        else:
+            data[obj.village]=(farmer.landarea)*weight
+    
+    return JsonResponse(data)    
+
+#..........................................................
+#add products in a plan 
+
+def plan_del_product(request, id1, id2):
+    # dictionary for initial data with
+    # field names as keys
+    context = {}
+
+    # add the dictionary during initialization
+    # user
+    # context["leader"] = Leader2.objects.get(user_id = id).all()
+    obj = get_object_or_404(Crops, id=id1)
+    sub = get_object_or_404(obj.products, id=id2)
+    # sub = Leader.objects.filter(user_id = id1, farmers_id = id2)
+
+    obj.products.remove(sub)
+    if (obj.products.count() >= 0):
+        pass
+    return redirect('plans-detail',id=id1)
+
+    
+    return render(request, "fpo/plans.html", context)
+
+def plan_add_product(request, id):
+    # dictionary for initial data with
+    # field names as keys
+    context = {}
+
+    form = plan_add_productForm(request.POST or None, files=request.FILES)
+    if form.is_valid():
+        # form.save()
+        context["data"] = form
+        context["form"] = form
+
+        ID = form.cleaned_data['ID']
+        # print(ID)
+        # q1 = Q(category='F')
+        # q2 = Q(category='P')
+        # q3 = Q(category='N')
+        # q4 = Q(ID=ID)
+        # obj = UserProfile.objects.filter((q1 | q2 | q3) & q4)   
+        obj = Products.objects.filter( id=ID)
+
+        
+        if obj.count() < 1:
+            return redirect('/fpo/plans/detail/'+id)
+        
+        # print(obj[0].username)
+    
+        
+        obj2 = get_object_or_404(Products, id=obj.first().id)   
+        sub = get_object_or_404(Crops, id=id)
+        sub.products.add(obj2)
+        sub.save()
+        if (sub.products.count() > 0):
+            for far in sub.products.all():
+                pass
+            # print(sub.farmers.all())
+            # return redirect('detail_leader',id=id)
+        return redirect('/fpo/plans/detail/'+id)
+
+    context['form'] = form
+    context['crops'] = Crops.objects.all()
+    return render(request, "fpo/add.html", context)  # change according to tempalate
+
+#.............................................................................................
 
 @login_required
 def products_view(request):
@@ -812,7 +1285,7 @@ def products_update(request, id):
     obj = get_object_or_404(Products, id=id)
 
     # pass the object as instance in form
-    form = ProductsForm(request.POST or None, instance=obj)#, request.FILES
+    form = ProductsForm(request.POST or None, request.FILES or None, instance = obj)#, request.FILES
 
     if form.is_valid():
         form.save()
@@ -824,17 +1297,101 @@ def products_update(request, id):
     return render(request, "fpo/update_products.html", context) #update_products
 
 @login_required
+def products_toggle(request, id):
+    # dictionary for initial data with
+    # field names as keys
+    context = {}
+
+    # fetch the object related to passed id
+    obj = get_object_or_404(Products, id=id)
+
+    obj.available ^= True
+    obj.save()
+
+    return redirect("/fpo/products")
+
+
+
+
+
+@login_required
 def products_detail(request, id):
+    context = {}
     products = get_object_or_404(Products,id=id)
+    context['products'] = products
+    current_year = datetime.datetime.now().year
+    previous_orders = Orders.objects.filter(item=products)
+    previous_year_orders = previous_orders.filter(date__year=current_year-1)
+    
+    orders_by_years = {}
+    for order in previous_orders:
+        if order.date.year in orders_by_years.keys():
+            orders_by_years[order.date.year] += order.quantity
+        else:
+            orders_by_years[order.date.year] = order.quantity
+    
+    Years = []
+    Amount = []
 
-    return render(request, "fpo/product_detail.html",context={'products': products})
+    years_amount = []
 
+    for k, v in orders_by_years.items():
+        years_amount.append((k,v))
 
+    years_amount = sorted(years_amount, key=lambda x: x[0])
+    
+    for year, amount in years_amount:
+        Years.append(year)
+        Amount.append(amount)
+
+    data = {'Production': Amount, 'Year': Years}
+    
+    prediction = predict_production(data)
+    
+    Years.append(f'{prediction[0]} (Prediction)')
+    Amount.append(round(prediction[1], 2) if round(prediction[1], 2) >= 0 else 0)
+
+    context['years'] = Years
+    context['year_amounts'] = Amount
+
+    products_by_villages = {}
+    for order in previous_year_orders:
+        farmer = Farmer.objects.get(user=order.buyer)
+        if farmer.village in products_by_villages.keys():
+            products_by_villages[farmer.village] += order.quantity
+        else:
+            products_by_villages[farmer.village] = order.quantity
+
+    villages = []
+    amount = []
+    for k, v in products_by_villages.items():
+        villages.append(k)
+        amount.append(v)
+    
+    context['villages'] = villages
+    context['amount'] = amount
+
+    return render(request, "fpo/product_detail.html",context)
+
+def products_toggle(request,id):
+    # dictionary for initial data with  
+    # field names as keys 
+    context ={} 
+  
+    # fetch the object related to passed id 
+    obj = get_object_or_404(Products, id = id) 
+  
+  
+    obj.available^=True
+    obj.save()
+
+    return redirect("/fpo/products")
 #Orders
 @login_required
 def orders_view(request):
     # dictionary for initial data with
     # field names as keys
+    
     context = {
         'orders': Orders.objects.all()
     }
@@ -881,3 +1438,12 @@ def orders_delete(request, id):
 def about(request):
     return HttpResponse('<h1> About </h1>')
 
+
+def send_message(request):
+    if request.method == 'POST':
+        message_body = json.loads(request.body)["message_body"]
+        farmers = Farmer.objects.all()
+        for farmer in farmers:
+            if farmer.user.category != 'N':
+                Send_Text_Message(f'+91{farmer.contact}', message_body=message_body)
+        return JsonResponse({"message": "The message has been broadcast"})

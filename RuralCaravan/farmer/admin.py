@@ -12,6 +12,15 @@ class UserProfileAdmin(UserAdmin):
     list_filter = ()
     fieldsets = ()
 
+class MeetingTokenAdmin(admin.ModelAdmin):
+    list_display = ('id', '__str__', 'has_rsvped', 'did_attend', 'get_village', 'created_at')
+    list_filter = ('has_rsvped', 'did_attend')
+    list_editable = ('has_rsvped', 'did_attend')
+    list_perpage = 25
+	
+    def get_village(self, obj):
+        return obj.farmer.village
+
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Leader)
 admin.site.register(Farmer)
@@ -29,7 +38,7 @@ admin.site.register(FPOLedger)
 #admin.site.register(Produce_FPOLedger_Map)
 admin.site.register(Contact)
 admin.site.register(Ewallet)
-admin.site.register(MeetingToken)
+admin.site.register(MeetingToken, MeetingTokenAdmin)
 admin.site.register(Govt)
 
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from farmer.models import UserProfile, Farmer, Products, Kart, Meetings, Crops
+from farmer.models import UserProfile, Farmer, Products, Kart, Meetings, Crops, Leader
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -41,6 +41,10 @@ class FarmerSerializer(serializers.ModelSerializer):
 
         farmer.save()
 
+class LeaderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Leader
+        fields = ['first_name', 'last_name', 'village', 'district', 'profession']
 
 class ProductSerializer(serializers.ModelSerializer):
 

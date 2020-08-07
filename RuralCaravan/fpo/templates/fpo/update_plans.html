@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Meetings</title>
+    <title>Plans</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <!-- Bootstrap core CSS -->
@@ -18,6 +18,7 @@
     <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
     <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
     <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor/config.js' %}"></script>
     <style type="text/css">
 
       html,
@@ -61,7 +62,7 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}" target="_blank">
+      <a class="navbar-brand" href="{% url 'home' %}">
         <strong>FPO PORTAL</strong>
       </a>
 
@@ -81,45 +82,62 @@
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
-          <li class="nav-item active ">
-            <a class="nav-link" href="{% url 'plans' %}" >Plans</a>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
           </li>
+             <li class="nav-item">
+            <a class="nav-link" href="{% url 'produce' %}" >Production</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item">
+            <a href="{% url 'add_user' %}" class="nav-link" data-toggle="tooltip" title="Add New User">
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'transaction'%}" class="nav-link" data-toggle="tooltip" title="Transactions">
+             <i class="fas fa-rupee-sign"></i>
+            </a>
+          </li>
           <li class="nav-item">
-            <a href="{% url 'orders' %}" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" data-toggle="tooltip" title="Orders">
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
              <li class="nav-item">
-            <a href="{% url 'products' %}" class="nav-link" >
+            <a href="{% url 'products' %}" class="nav-link" data-toggle="tooltip" title="Products">
              <i class="fas fa-shopping-basket"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="statistics.html" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" data-toggle="tooltip" title="Statistics">
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
           <li class="nav-item">
             <a href="{% url 'members' %}" class="nav-link border border-light rounded"
-              target="_blank">
+             >
               <i class="fas fa-user"></i>Members
             </a>
           </li>
-		   <li class="nav-item">
+		  <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
-        </ul>
 
+
+        </ul>
 
       </div>
 
@@ -181,7 +199,7 @@
                   <div class="md-form">
 				  <i class="fas fa-weight-hanging prefix green-text"></i>
 
-                    <input type="number" name="weigth_per_land" step="any" required id="id_weigth_per_land"  class="form-control" value="{{form.weigth_per_land.value }}" >
+                    <input type="number" name="weigth_per_land" step="any" required id="id_weigth_per_land"  class="form-control" value="{{form.weigth_per_land.value }}" />
                     <label class="required active" for="id_weigth_per_land">Enter Weight per land</label>
                   </div>
 
@@ -199,7 +217,49 @@
 
 
                 </div>
-                  <div >
+                <div class="md-form">
+                  <p><strong>Products that can be availed</strong></p>
+                  <select class="custom-select" multiple name="products">
+                    {% for product in products %}
+                    <option value="{{product.id}}" {% if product in selected_products %} selected {% else %}{% endif %}>{{product.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-row field-image">
+                    <div>
+                        <p id="previousImageName"></p>
+                        <label for="id_image"><strong>Upload Image:</strong></label>
+                        <input type="file" name="image" accept="image/*" id="id_image" />
+                    </div>
+                 </div>
+                     <div class="md-form">
+                    <i class="fas fa-rupee-sign prefix green-text"></i>
+                    <textarea type="text" class="md-textarea" name="investment_requirements" cols="40" rows="10" required id="id_investment_requirements"
+               >{{form.investment_requirements.value}}</textarea>
+                    <label for="id_investment_requirements">Enter Investment Requirements:</label>
+                  </div>
+                       <div class="md-form">
+                    <i class="fas fa-pencil-alt prefix green-text"></i>
+                    <textarea type="text"  class="md-textarea" name="facilities" cols="40" rows="10" required id="id_facilities"
+                  >{{form.facilities.value}}</textarea>
+                    <label for="id_facilities">Enter Facilities</label>
+                  </div>
+                    <div>
+               
+
+
+
+                <i class="fas fa-warehouse prefix green-text"></i>
+
+
+
+
+                        <label class="required" for="id_subscribers"><strong>Subscribers:</strong></label>
+
+                            <input type="number" name="subscribers" value="{{form.subscribers.value}}"  required id="id_subscribers">
+
+
+
 
 
                 <i class="fas fa-warehouse prefix green-text"></i>
@@ -215,7 +275,7 @@
                     <button class="btn btn-green" type="submit" value="Submit">SUBMIT</button>
 
                   </div>
-                   </div> </div> </div>
+                   </div>  </div> </div>
 
 
 </form>
@@ -254,12 +314,49 @@
       <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
-  </script>
- <script>
-        CKEDITOR.replace('guidance');
+    {% comment %} new WOW().init(); {% endcomment %}
 
-    </script>
+    var imageName = {% if form.instance.image %} '{{form.instance.image}}' {% else %} 'Not Uploaded' {% endif %};
+
+
+    if(imageName !== 'Not Uploaded'){
+      imageName = '{{form.instance.image}}';
+      var split = imageName.split('/');
+      imageName = split[split.length-1];
+    }
+
+    document.getElementById('previousImageName').innerHTML = `<strong>Previous Image:</strong> ${imageName}`;
+
+    
+      var toolbarGroups = [
+        { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+        { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+        { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+        { name: 'forms', groups: [ 'forms' ] },
+        '/',
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+        { name: 'links', groups: [ 'links' ] },
+        { name: 'insert', groups: [ 'insert' ] },
+        { name: 'styles', groups: [ 'styles' ] },
+        { name: 'colors', groups: [ 'colors' ] },
+        { name: 'tools', groups: [ 'tools' ] },
+        { name: 'others', groups: [ 'others' ] },
+        { name: 'about', groups: [ 'about' ] }
+      ];
+
+      var removeButtons = 'Source,Save,Templates,NewPage,Preview,Print,Cut,Copy,Redo,Undo,Paste,PasteText,PasteFromWord,Find,SelectAll,Replace,Scayt,Form,Checkbox,Radio,Textarea,TextField,Select,Button,ImageButton,HiddenField,CopyFormatting,RemoveFormat,CreateDiv,BidiLtr,BidiRtl,Language,Anchor,Unlink,Image,Flash,HorizontalRule,Table,Smiley,PageBreak,SpecialChar,Iframe,About,Maximize,ShowBlocks';
+
+
+
+    CKEDITOR.replace('guidance', {
+      toolbar: 'Basic',
+      uiColor: '#295e10',
+      toolbarGroups,
+      removeButtons
+    });
+
+  </script>
 </body>
 
 </html>

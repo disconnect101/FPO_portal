@@ -64,7 +64,7 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand" href="{% url 'home' %}" target="_blank">
+      <a class="navbar-brand" href="{% url 'home' %}">
         <strong>FPO PORTAL</strong>
       </a>
 
@@ -84,79 +84,103 @@
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'meetings' %}" >Meetings</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="{% url 'plans' %}" >Plans</a>
+            <a class="nav-link" href="{% url 'plans' %}">Plans</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'govtschemes' %}" >Government Schemes</a>
           </li>
+             <li class="nav-item">
+            <a class="nav-link" href="{% url 'produce' %}" >Production</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'FPOLedger'%}">Ledger</a>
+            </li>
         </ul>
 
         <!-- Right -->
-        <ul class="navbar-nav nav-flex-icons">
+       <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item">
+            <a href="{% url 'add_user' %}" class="nav-link" data-toggle="tooltip" title="Add New User">
+             <i class="fas fa-user-plus"></i>
+            </a>
+          </li>
+             <li class="nav-item">
+            <a href="{% url 'transaction'%}" class="nav-link" data-toggle="tooltip" title="Transactions">
+             <i class="fas fa-rupee-sign"></i>
+            </a>
+          </li>
           <li class="nav-item">
-            <a href="{% url 'orders' %}" class="nav-link" >
+            <a href="{% url 'orders' %}" class="nav-link" data-toggle="tooltip" title="Orders">
              <i class="fas fa-shopping-cart"></i>
             </a>
           </li>
              <li class="nav-item">
-            <a href="{% url 'products' %}" class="nav-link" >
+            <a href="{% url 'products' %}" class="nav-link" data-toggle="tooltip" title="Products">
              <i class="fas fa-shopping-basket"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="statistics.html" class="nav-link" >
+            <a href="{% url 'fpo_statistics' %}" class="nav-link" data-toggle="tooltip" title="Statistics">
              <i class="fas fa-chart-bar"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a href="members.html" class="nav-link border border-light rounded"
-              target="_blank">
+            <a href="{% url 'members' %}" class="nav-link border border-light rounded"
+             >
               <i class="fas fa-user"></i>Members
             </a>
           </li>
-		   <li class="nav-item">
+		  <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}" >Logout</a>
           </li>
+
+
         </ul>
-		
-		   
+
       </div>
 
     </div>
   </nav>
   <!-- Navbar -->
 
- 
+
 
   <!--Main layout-->
-  <main style="padding-top:10%">
+  <main style="padding-top:8rem;">
     <div class="container" >
 
-     
+      <div class="row">
+        <div class="col-12">
+
+          <h3 class="h3 text-center mb-4" >Plans</h3>
+          <hr style="margin: auto; width: 4rem; border: 2px solid #4caf50; border-radius: 20rem;">
+        </div>
+      </div>
         <!--Section: Main features & Quick Start-->
       <section style="padding-bottom:5%;margin-top:2em;">
 
 
         <!--Grid row-->
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-          <li class="nav-item">
-            <a class="btn btn-green" id="home-tab" data-toggle="tab" href="#active" role="tab" aria-controls="active"
+        <ul class="nav nav-tabs" id="myTab" role="tablist" style="border: none;">
+          <li class="nav-item mx-auto">
+            <a class="btn btn-outline-green" id="home-tab" data-toggle="tab" href="#active" role="tab" aria-controls="active" style="font-size: 1.2rem;"
               aria-selected="true">ACTIVE PLANS</a>
           </li>
-          <li class="nav-item">
-            <a class="btn btn-red" id="profile-tab" data-toggle="tab" href="#inactive" role="tab" aria-controls="inactive"
+          <li class="nav-item mx-auto">
+            <a class="btn btn-outline-orange" id="profile-tab" data-toggle="tab" href="#inactive" role="tab" aria-controls="inactive" style="font-size: 1.2rem;"
               aria-selected="false">INACTIVE PLANS</a>
           </li>
-          <li class="nav-item">
-            <a class="btn btn-blue" id="contact-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add"
+          <li class="nav-item mx-auto">
+            <a class="btn btn-outline-blue" id="contact-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" style="font-size: 1.2rem;"
               aria-selected="false">ADD NEW PLAN</a>
           </li>
       </ul>
-<div class="tab-content" id="myTabContent">
+
+<div class="tab-content" id="myTabContent" style="margin-top: 2rem;">
   <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="home-tab" >
      <table id="dtBasicExample1" class="table table-responsive-sm table-striped table-bordered" cellspacing="0" width="100%" style="text-align:center">
             <thead class="green lighten-4 " >
@@ -167,20 +191,15 @@
                 <th class="th-sm">CROP NAME
 
                 </th>
-                <th class="th-sm">CROP TYPE
+                <th class="th-sm">NUMBER OF SUBSCRIBERS
 
                 </th>
 
 
-                 <th class="th-sm">EDIT PLAN
+                 <th class="th-sm">ACTIONS
 
                 </th>
-                  <th class="th-sm">VIEW DETAILS
 
-                </th>
-                <th class="th-sm">MAKE IT INACTIVE
-
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -189,13 +208,13 @@
                 {% if plans.live %}
               <tr>
 
-                <td>{{plans.code}}</td>
-                <td>{{plans.name}}</td>
-                <td>{{plans.type}}</td>
+                <td style="text-transform: uppercase;">{{plans.code}}</td>
+                <td style="text-transform: uppercase;">{{plans.name}}</td>
+                <td style="text-transform: uppercase;">{{plans.subscribers}}</td>
 
-                <td><a href="update/{{ plans.id }}"><p style="text-align:center"><i class="fas fa-edit blue-text"></i></p></a></td>
-                  <td><a href="detail/{{ plans.id }}"><p style="text-align:center"><i class="fas fa-eye purple-text"></i></p></a></td>
-                <td><a href="toggle/{{ plans.id }}" onclick="return confirm('Are you sure you want to make this plan inactive?');"><p style="text-align:center"><i class="fas fa-ban red-text"></i></p></a></td>
+                  <td><p style="text-align:center"><a href="update/{{ plans.id }}" title="Edit Plan"><i class="fas fa-edit blue-text" style="margin-right:2rem;"></i></a>
+                  <a href="detail/{{ plans.id }}" title="View Details"><i class="fas fa-eye purple-text" style="margin-right:2rem;"></i></a>
+                    <a href="toggle/{{ plans.id }}" onclick="return confirm('Are you sure you want to make this plan inactive?');" title="Make it inactive"><i class="fas fa-ban red-text"></i></a></p></td></tr>
                 {% endif %}
                 {% endfor %}
       {% endblock contentactive %}
@@ -213,19 +232,14 @@
                 <th class="th-sm">CROP NAME
 
                 </th>
-                <th class="th-sm">TYPE
+                <th class="th-sm">NUMBER OF SUBSCRIBERS
 
                 </th>
 
-                 <th class="th-sm">EDIT PLAN
+                 <th class="th-sm">ACTIONS
 
                 </th>
-                   <th class="th-sm">VIEW DETAILS
 
-                </th>
-                <th class="th-sm">MAKE IT ACTIVE
-
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -234,12 +248,12 @@
                 {% if not plans.live %}
               <tr>
 
-                <td>{{plans.code}}</td>
-                <td>{{plans.name}}</td>
-                <td>{{plans.type}}</td>
-                 <td><a href="update/{{ plans.id }}"><p style="text-align:center"><i class="fas fa-edit blue-text"></i></p></a></td>
-                   <td><a href="detail/{{ plans.id }}"><p style="text-align:center"><i class="fas fa-eye purple-text"></i> </p></a></td>
-                 <td><a href="toggle/{{ plans.id }}" onclick="return confirm('Are you sure you want to make this plan active?');"><p style="text-align:center"><i class="fas fa-check green-text"></i></p></a></td>
+                <td style="text-transform: uppercase;">{{plans.code}}</td>
+                <td style="text-transform: uppercase;">{{plans.name}}</td>
+                <td style="text-transform: uppercase;">{{plans.subscribers}}</td>
+                 <td><p style="text-align:center"><a href="update/{{ plans.id }}" title="Edit Plan"><i class="fas fa-edit blue-text" style="margin-right:2rem;"></i></a>
+                   <a href="detail/{{ plans.id }}" title="View Details"><i class="fas fa-eye purple-text" style="margin-right:2rem;"></i> </a>
+                     <a href="toggle/{{ plans.id }}" onclick="return confirm('Are you sure you want to make this plan active?');" title="Make it active"><i class="fas fa-check green-text"></i></a></p></td>
                  {% endif %}
                 {% endfor %}
       {% endblock contentinactive %}
@@ -302,17 +316,55 @@
 
 
                 </div>
+                <div class="md-form">
+                  <p><strong>Products that can be availed</strong></p>
+                  <select class="custom-select" multiple name="products">
+                    {% for product in products %}
+                    <option value="{{product.id}}">{{product.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                       <div class="form-row field-image">
+                        <div>
+                          <label for="id_image"><strong>Upload Image:</strong></label>
+                          <input type="file" name="image" accept="image/*" id="id_image">
+                        </div>
+                 </div>
+                       <div class="md-form">
+                    <i class="fas fa-rupee-sign prefix green-text"></i>
+                    <textarea type="text" class="md-textarea" name="investment_requirements" cols="40" rows="10" required id="id_investment_requirements"></textarea>
+                    <label for="id_investment_requirements">Enter Investment Requirements:</label>
+                  </div>
+                       <div class="md-form">
+                    <i class="fas fa-pencil-alt prefix green-text"></i>
+                    <textarea type="text"  class="md-textarea" name="facilities" cols="40" rows="10" required id="id_facilities"></textarea>
+                    <label for="id_facilities">Enter Facilities</label>
+                  </div>
                     <div>
 
 
                 <i class="fas fa-warehouse prefix green-text"></i>
-                    <label class="required" for="id_current_amount">Current amount:</label>
+
+
+
+
+                        <label class="required" for="id_subscribers"><strong>Subscribers:</strong></label>
+
+                            <input type="number" name="subscribers" value="0"  required id="id_subscribers" readonly>
+
+
+
+
+                        <label class="required" for="id_current_amount"><strong>Current amount:</strong></label>
                           <input type="number" name="current_amount"  value="0" required id="id_current_amount" readonly >
+                    </div>
+                       <div>
                         <input type="checkbox" name="live" id="id_live" checked readonly>
-                          <label  for="id_live">Add as an active plan</label>
+                        <label  for="id_live"><strong>Add as an active plan</strong></label>
 
 
                 </div>
+
 
 
 
@@ -356,9 +408,51 @@
 
   </div>
 </div>
+<div class="row" style="margin-bottom: 2rem; margin-top: 4rem;">
+          <div class="col-12">
+              <p style="text-align: center; opacity: 0.2" class="mb-0"><strong>PREDICTIONS</strong></p>
+              <h1 style="text-align: center;" class="green-text mt-0 mb-3">Crop Recommendation</h1>
+              <hr style="margin: auto; width: 6rem; border: 2px solid #4aa327; border-radius: 20rem;">
+              <br>
+          </div>
+      </div>
+      <form method="POST" id="cropPredictor">
+        {% csrf_token %}
+  <h1 style="text-align: left;" class="green-text mt-0 mb-3">Input Values</h1>
+  <hr style="margin-left: 0;width: 6rem; border: 2px solid lightgray; opacity: 0.6; border-radius: 20rem;">
+  <div class="form-row">
+    <div class="col">
+      <input required type="number" id="nitrogen" name="nitrogen" class="form-control" placeholder="Nitrogen">
+    </div>
+    <div class="col">
+      <input required type="number" id="phosphorous" name="phosphorous" class="form-control" placeholder="Phosphorous">
+    </div>
+    <div class="col">
+      <input required type="number" id="potassium" name="potassium" class="form-control" placeholder="Potassium">
+    </div>
+    <div class="col">
+      <input required type="number" step="0.1" id="pH" name="pH" class="form-control" placeholder="pH">
+    </div>  
+    <div class="col">
+      <input required type="number" id="temperature" name="temperature" class="form-control" placeholder="Temperature">
+    </div>
+    <div class="col">
+      <select required name="climate" id="climate" class="form-control">
+        <option selected value="summer">Summer</option>
+        <option value="monsoon">Monsoons</option>
+        <option value="winter">Winter</option>
+      </select>
+    </div>
+  </div>
+  <div class="col mt-4 text-right">
+      <button type="submit" class="btn btn-outline-success" style="font-size: 1rem;">Submit</button>
+    </div>
+</form>
 
-</div>
-
+      <h1 class="green-text mt-4 mb-2">Results</h1>
+        <div class="row mt-4" id="resultsRow">
+          <h5 class="ml-3" style="color: lightgray;">No results being displayed</h5>
+        </div>
 
 
       </section>
@@ -370,12 +464,12 @@
   <!--Footer-->
   <footer class="page-footer text-center font-small mt-4 wow fadeIn" >
 
-   
+
 
     <!--Copyright-->
     <div class="footer-copyright py-3">
       © 2020 Copyright:
-  Rural Caravan 
+  Rural Caravan
     </div>
     <!--/.Copyright-->
 
@@ -398,7 +492,7 @@ $(document).ready(function () {
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [0,2,3,4,5]
+  targets: [0,2,3]
   }]
 });
   $('.dataTables_length').addClass('bs-select');
@@ -410,7 +504,7 @@ $('#dtBasicExample2').DataTable({
   "aaSorting": [],
   columnDefs: [{
   orderable: false,
-  targets: [0,2,3,4,5]
+  targets: [0,2,3]
   }]
 });
 
@@ -421,12 +515,130 @@ $('#dtBasicExample2').DataTable({
       <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
-    new WOW().init();
-  </script>
-<script>
-        CKEDITOR.replace('guidance');
+    {% comment %} new WOW().init(); {% endcomment %}
+    var toolbarGroups = [
+        { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+        { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+        { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+        { name: 'forms', groups: [ 'forms' ] },
+        '/',
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+        { name: 'links', groups: [ 'links' ] },
+        { name: 'insert', groups: [ 'insert' ] },
+        { name: 'styles', groups: [ 'styles' ] },
+        { name: 'colors', groups: [ 'colors' ] },
+        { name: 'tools', groups: [ 'tools' ] },
+        { name: 'others', groups: [ 'others' ] },
+        { name: 'about', groups: [ 'about' ] }
+      ];
 
- </script>
+      var removeButtons = 'Source,Save,Templates,NewPage,Preview,Print,Cut,Copy,Redo,Undo,Paste,PasteText,PasteFromWord,Find,SelectAll,Replace,Scayt,Form,Checkbox,Radio,Textarea,TextField,Select,Button,ImageButton,HiddenField,CopyFormatting,RemoveFormat,CreateDiv,BidiLtr,BidiRtl,Language,Anchor,Unlink,Image,Flash,HorizontalRule,Table,Smiley,PageBreak,SpecialChar,Iframe,About,Maximize,ShowBlocks';
+
+
+
+    CKEDITOR.replace('guidance', {
+      toolbar: 'Basic',
+      uiColor: '#295e10',
+      toolbarGroups,
+      removeButtons
+    });
+
+
+    document.querySelector('#cropPredictor').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var nitrogen = document.getElementById('nitrogen').value;
+      var phosphorous = document.getElementById('phosphorous').value;
+      var potassium = document.getElementById('potassium').value;
+      var pH = document.getElementById('pH').value;
+      var temperature = document.getElementById('temperature').value;
+      var climate = document.getElementById('climate').value;
+      
+
+      let data = {
+          nitrogen,
+          phosphorous,
+          potassium,
+          pH,
+          temperature,
+          climate
+      }
+
+      let url = `${window.location.origin}/fpo/predict_crop/`;
+
+      function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              const cookies = document.cookie.split(';');
+              for (let i = 0; i < cookies.length; i++) {
+                  const cookie = cookies[i].trim();
+                  // Does this cookie string begin with the name we want?
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+      const csrftoken = getCookie('csrftoken');
+      
+      const json_data = JSON.stringify(data);
+
+      const headers = {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          "X-CSRFToken": csrftoken
+      }
+      
+      fetch(url, {method: 'post', headers: headers, body: json_data})
+          .then(function(response) {
+              if(response.status===200){
+                var rowHTML = document.querySelector('#resultsRow');
+                  response.json().then(function(data){
+                      rowHTML.children[0].remove();
+                      for(let i = 0; i < data.length; i++){
+                        let climate;
+                        if(data[i].climate === 1){
+                          climate="Summer";
+                        } else if (data[i].climate === 2){
+                          climate="Monsoons";
+                        } else {
+                          climate="Winter";
+                        }
+                        let newHtml = `<div class="col-lg-3 col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title green-text">${data[i].Crop}</h4>
+                        <h6 class="card-subtitle mb-2 text-muted"><strong>Nitrogen:</strong> ${data[i].K}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted"><strong>Phosphorous:</strong> ${data[i].P}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted"><strong>Potassium:</strong> ${data[i].K}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted"><strong>pH:</strong> ${data[i].pH}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted"><strong>Temperature:</strong> ${data[i].temp}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted"><strong>Temperature:</strong> ${climate}</h6>
+                    </div>
+                </div>
+            </div>`
+                      resultsRow.innerHTML += newHtml;
+                      }
+                      document.getElementById('nitrogen').value = '';
+                      document.getElementById('phosphorous').value = '';
+                      document.getElementById('potassium').value = '';
+                      document.getElementById('pH').value = '';
+                      document.getElementById('temperature').value = '';
+                      document.getElementById('climate').value = 'summer';
+                  })
+              }
+          })
+          .catch(function(err) {
+              console.log('The errror is', err);
+          });
+
+
+    });
+
+
+  </script>
 </body>
 
 </html>
